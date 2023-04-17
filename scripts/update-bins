@@ -1,0 +1,6 @@
+#!/bin/bash
+
+git clone https://github.com/Pipetto-crypto/3in1ProotX86Emus.git ~/3in1ProotX86Emus
+chmod +x ~/3in1ProotX86Emus/scripts/*
+mv ~/3in1ProotX86Emus/scripts/* /usr/bin
+rm -rf ~/3in1ProotX86Emus
