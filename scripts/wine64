@@ -1,0 +1,44 @@
+#!/bin/bash
+
+
+VERSION=7.1
+ARCH=amd64
+DATE=$(date -u +%F@%T)
+TERMINAL_LOGFILE=~/box64_logs/terminal_log@$DATE.txt
+
+log(){
+
+echo -e "This wine session will be logged in $TERMINAL_LOGFILE"
+exec 3>&1 4>&2
+trap 'exec 2>&4 1>&3' 0 1 2 3
+exec 1>$TERMINAL_LOGFILE 2>&1
+
+}
+
+index=1
+for var in "$@"
+do
+   if [ -f $var ]
+   then
+        absfile=$(realpath -e $var)
+        argslist[$index]="$absfile"
+   elif [ "$var" == "-log" ]
+   then
+        log
+   else
+        argslist[$index]=$var
+   fi
+   index=$((index+1))
+done
+
+if [ ! -d ~/wine-$VERSION-$ARCH ]
+then
+     echo -e "Wine not found"
+     exit
+fi
+
+BOX64_LD_LIBRARY_PATH=~/wine-$VERSION-$ARCH/lib/wine/i386-unix/:~/wine-$VERSION-$ARCH/lib/wine/:~/wine-$VERSION-$ARCH/lib:~/wine-$VERSION-$ARCH/lib/wine/x86_64-unix/:/lib/i386-linux-gnu/:/lib/x86_64-linux-gnu:/lib/aarch64-linux-gnu:/usr/x86_64-linux-gnu/lib \
+BOX64_PATH=~/wine-$VERSION-$ARCH/bin \
+WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix64/wine-$VERSION} \
+BOX64_LOG=${BOX64_LOG:-0} \
+box64 wine64 "${argslist[@]}"

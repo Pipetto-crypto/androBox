@@ -1,0 +1,6 @@
+#!/bin/bash
+
+wget https://github.com/GloriousEggroll/wine-ge-custom/releases/download/GE-Proton7-42/wine-lutris-GE-Proton7-42-x86_64.tar.xz  -P ~
+tar -xf wine-lutris-GE-Proton7-42-x86_64.tar.xz -C ~
+rm -rf ~/wine-lutris-GE-Proton7-42-x86_64.tar.xz
+

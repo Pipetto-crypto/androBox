@@ -1,0 +1,20 @@
+#!/bin/bash
+
+index=1
+for var in "$@"
+do
+   if [ -f $var ]
+   then
+        absfile=$(realpath -e $var)
+        argslist[$index]="$absfile"
+   else
+        argslist[$index]=$var
+   fi
+   index=$((index+1))
+done
+
+VERSION=8.0
+ARCH=x86
+env WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix/wine-$VERSION} \
+exagear -- $HOME/wine-$VERSION-$ARCH/bin/wine "${argslist[@]}"
+

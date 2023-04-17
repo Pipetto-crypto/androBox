@@ -1,0 +1,21 @@
+#/usr/bin
+
+case "$1" in
+llvmpipe)
+	unset GALLIUM_DRIVER
+        unset MESA_LOADER_DRIVER_OVERRIDE
+        ;;
+zink)
+        export GALLIUM_DRIVER=zink
+        export MESA_LOADER_DRIVER_OVERRIDE=zink
+        export ZINK_DESCRIPTORS=lazy
+        ;;
+virgl)
+        unset MESA_LOADER_DRIVER_OVERRIDE
+        export GALLIUM_DRIVER=virpipe
+        export LIBGL_ALWAYS_SOFTWARE=1
+        ;;
+*)
+        echo "Usage: source gpuswitch [zink|llvmpipe|virgl]"
+esac
+

@@ -1,0 +1,72 @@
+#!/bin/bash
+
+
+if [ "$1" == "help" ]
+then
+     echo -e "Usage: wineswitch version arch"
+     echo -e "\nWith no arguments passed it starts interactive mode. Use uni in place of arch to install both x86 and amd64"
+     exit
+elif [ "$1" != "" ]
+then
+     VERSION="$1"
+else
+     read -p "Select a wine version:" VERSION
+fi
+
+if [ "$2" != "" ]
+then
+     ARCH="$2"
+else
+     read -p "Select an architecture:" ARCH
+fi
+
+installedwinever=$(cat /usr/bin/wine | awk -F '='  '/VERSION/{print $2}' | head -n1)
+installedwine64ver=$(cat /usr/bin/wine64 | awk -F '='  '/VERSION/{print $2}' | head -n1)
+installedwinearch=$(cat /usr/bin/wine | awk -F '='  '/ARCH/{print $2}' | head -n1)
+
+
+if [ "$ARCH" == "uni" ]
+then
+     ARCH=amd64
+     REALARCH=uni
+else 
+     REALARCH=""
+fi
+
+if [ ! -d ~/wine-$VERSION-$ARCH ]
+then
+     if (( $(echo "$(echo $VERSION) >= 5.5"|bc -l) ))
+     then
+          wget https://github.com/Kron4ek/Wine-Builds/releases/download/$VERSION/wine-$VERSION-$ARCH.tar.xz -P ~
+          tar -xf ~/wine-$VERSION-$ARCH.tar.xz -C ~
+     else
+          wget https://www.playonlinux.com/wine/binaries/phoenicis/upstream-linux-$ARCH/PlayOnLinux-wine-$VERSION-upstream-linux-$ARCH.tar.gz -P ~
+	  mkdir ~/wine-$VERSION-$ARCH
+	  if file ~/PlayOnLinux-wine-$VERSION-upstream-linux-$ARCH.tar.gz | grep -q gzip
+          then
+               tar -xzf ~/PlayOnLinux-wine-$VERSION-upstream-linux-$ARCH.tar.gz -C ~/wine-$VERSION-$ARCH
+          else
+               tar -xf ~/PlayOnLinux-wine-$VERSION-upstream-linux-$ARCH.tar.gz -C ~/wine-$VERSION-$ARCH
+          fi
+     fi 
+fi
+
+
+case $ARCH in
+amd64)
+      if [ "$REALARCH" == "uni" ]
+      then
+           sudo sed  -i "s/$installedwine64ver/$VERSION/g" /usr/bin/wine64
+           sudo sed  -i "s/$installedwinever/$VERSION/g" /usr/bin/wine
+           sudo sed  -i "0,/$installedwinearch/s//$ARCH/" /usr/bin/wine 
+      else
+           sudo sed  -i "s/$installedwine64ver/$VERSION/g" /usr/bin/wine64
+      fi
+      ;;
+x86)
+      sudo sed  -i "s/$installedwinever/$VERSION/g" /usr/bin/wine
+      sudo sed  -i "s/$installedwinearch/$ARCH/g" /usr/bin/wine
+      ;;
+esac
+
+rm -rf ~/*.tar.xz && rm -rf ~/*.tar.gz

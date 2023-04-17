@@ -1,0 +1,49 @@
+#!/bin/bash
+
+
+WINEVERSION=$(BOX64_NOBANNER=1 wine64 --version | awk -F "-" '{print $2}')
+WINEVERSION32=$(BOX86_NOBANNER=1 wine --version | awk -F "-" '{print $2}')
+WINEPREFIX=$HOME/.local/wineprefix64/wine-$WINEVERSION
+WINEPREFIX32=$HOME/.local/wineprefix/wine-$WINEVERSION32
+
+sed -i '3d' /usr/bin/wine64
+sed -i '3d' /usr/bin/wine
+sed -i '3d' /usr/bin/winege
+wget https://github.com/doitsujin/dxvk/releases/download/v2.1/dxvk-2.1.tar.gz
+tar -xzf dxvk-2.1.tar.gz
+wget https://github.com/doitsujin/dxvk/releases/download/v1.10.3/dxvk-1.10.3.tar.gz
+tar -xzf dxvk-1.10.3.tar.gz
+
+
+if (( $(echo "$(echo $WINEVERSION) >= 7.1" | bc -l) ))
+then
+     cp dxvk-2.1/x64/* $WINEPREFIX/drive_c/windows/system32
+     cp dxvk-2.1/x32/* $WINEPREFIX/drive_c/windows/syswow64
+     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d9,d3d10core=n,b"' /usr/bin/wine64
+elif (( $(echo "$(echo $WINEVERSION) <  7.1" | bc -l) ))
+then
+     cp dxvk-1.10.3/x64/* $WINEPREFIX/drive_c/windows/system32
+     cp dxvk-1.10.3/x32/* $WINEPREFIX/drive_c/windows/syswow64
+     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b"' /usr/bin/wine64
+fi
+
+if (( $(echo "$(echo $WINEVERSION32) >= 7.1" | bc -l) ))
+then
+     cp dxvk-2.1/x32/* $WINEPREFIX32/drive_c/windows/system32
+     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d9,d3d10core=n,b"' /usr/bin/wine
+elif (( $(echo "$(echo $WINEVERSION32) < 7.1" | bc -l) ))
+then    
+     cp dxvk-1.10.3/x32/* $WINEPREFIX32/drive_c/windows/system32
+     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b"' /usr/bin/wine
+fi
+
+
+if [ -d $HOME/.local/wineprefix64/lutris-GE-Proton7-42 ]
+then
+     cp dxvk-2.1/x64/* $HOME/.local/wineprefix64/lutris-GE-Proton7-42/drive_c/windows/system32
+     cp dxvk-2.1/x86/* $HOME/.local/wineprefix64/lutris-GE-Proton7-42/drive_c/windows/syswow64
+     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b"' /usr/bin/winege
+fi
+
+rm -rf dxvk-2.1 dxvk-1.10.3 dxvk-2.1.tar.gz dxvk-1.10.3.tar.gz
+
