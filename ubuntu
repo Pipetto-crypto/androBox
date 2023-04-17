@@ -20,7 +20,7 @@ echo -e "help        Print this help message"
 
 update(){
 
-wget 
+wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu
 chmod +x ubuntu
 mv ubuntu $PATH
 
