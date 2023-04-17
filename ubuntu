@@ -1,0 +1,72 @@
+ #!/bin/bash
+
+index=1
+for var in "$@"
+do
+        argslist[$index]=$var
+        index=$((index+1))
+done
+
+help(){
+
+echo -e "Usage: ubuntu [-x|-va|help]"
+echo -e "\nOptions: "
+echo -e "-x          Start the Termux:X11 connection"
+echo -e "-va         Start virglrenderer android vtest server"
+echo -e "help        Print this help message"
+ 
+
+}
+
+update(){
+
+wget 
+chmod +x ubuntu
+mv ubuntu $PATH
+
+}
+
+for i in ${argslist[@]}
+do
+     case "$i" in
+     help)
+          help
+          exit
+          ;;
+     update)
+          update
+          exit
+          ;;
+     -x) 
+          echo -e "\nStart the X server"
+          pkill openbox
+          pkill Xvfb
+          kill $(pidof app_process) >/dev/null 2>&1
+	  DISPLAY=:0 taskset -c 4-7 termux-x11 --no-xwayland-start >/dev/null 2>&1 &
+	  sleep 3
+	  DISPLAY=:0 Xvfb :0 -ac -screen 0 4096x4096x24 -noreset &
+          sleep 3
+          echo -e "\nStart Openbox Session Manager"
+          proot-distro login ubuntu --shared-tmp --no-sysvipc -- openbox-session >/dev/null 2>&1 &
+          ;;
+     -va)
+          kill $(pidof virgl_test_server_android) >/dev/null 2>&1
+          kill $(pidof virgl_test_server) >/dev/null 2>&1
+          MESA_NOERROR=1 taskset -c 4-7 virgl_test_server_android --use-egl-surfaceless &
+          ;;
+      -vm)
+          kill $(pidof virgl_test_server) >/dev/null 2>&1
+          kill $(pidof virgl_test_server_android) >/dev/null 2>&1
+          MESA_NOERROR=1 GALLIUM_DRIVER=zink ZINK_DESCRIPTORS=lazy MESA_GL_VERSION_OVERRIDE=4.5 taskset -c 4-7 virgl_test_server --use-egl-surfaceless &
+          ;;
+      esac
+done
+
+echo -e "\nStarting the audio server"
+
+        pulseaudio --start --exit-idle-time=-1
+        pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
+
+echo -e "\nEntering the proot"
+
+proot-distro login ubuntu --bind /sdcard:/sdcard --bind /data/data/com.termux/files/home:/termux-home --bind $TMPDIR:/tmp --isolated --no-sysvipc
