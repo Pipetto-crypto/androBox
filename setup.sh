@@ -4,7 +4,7 @@ echo -e "\nInstalling required dependencies"
 
 pkg update && pkg upgrade
 pkg install x11-repo -y
-pkg install pulseaudio virglrenderer-android mesa xorg-server-xvfb xwayland megadl proot-distro -y
+pkg install pulseaudio virglrenderer-android mesa xorg-server-xvfb xwayland wget proot-distro -y
 
 if [ ! -d ~/storage ]
 then
