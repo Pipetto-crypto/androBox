@@ -9,7 +9,7 @@ An Android phone, Termux from F-Droid and Termux:X11 app alongside its deb insta
 
 Download the rootfs from link sections and move it to the root of your Internal Storage. Copy paste this command in Termux:
 
-curl -L 
+curl -L https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/setup.sh -o setup.sh && bash setup.sh
 
 Once installation is completed, to access the proot you can type this command:
 
@@ -62,7 +62,7 @@ Mesa: https://gitlab.freedesktop.org/mesa/mesa
 
 Alexvorxx Turnip+Zink: https://github.com/alexvorxx/mesa-zink-11.06.22
 
-
+Ubuntu ROOTFS: https://drive.google.com/file/d/168psM15CwXZY6Vp8TPBt3OijtrIE9Vg1/view?usp=drivesdk
 
 
 
