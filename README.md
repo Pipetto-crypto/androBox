@@ -50,17 +50,17 @@ More to come in the nearby future
 
 # Links and Credits
 
-Termux:
+Termux: https://github.com/termux/termux-app
 
-Termux-X11:
+Termux-X11: https://github.com/termux/termux-x11
 
-Box86:
+Box86: https://github.com/ptitSeb/box86
 
-Box64:
+Box64: https://github.com/ptitSeb/box64
 
-Mesa:
+Mesa: https://gitlab.freedesktop.org/mesa/mesa
 
-Alexvorxx Turnip+Zink:
+Alexvorxx Turnip+Zink: https://github.com/alexvorxx/mesa-zink-11.06.22
 
 
 
