@@ -14,6 +14,6 @@ fi
 echo -e "\nInstalling the rootfs"
 
 mkdir -p $PREFIX/var/lib/proot-distro && mkdir -p $PREFIX/var/lib/proot-distro/installed-rootfs
-proot-distro restore ubuntu.tar.gz
+proot-distro restore /sdcard/ubuntu.tar.gz
 wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu
 chmod +x ubuntu && mv ubuntu $PREFIX/bin
