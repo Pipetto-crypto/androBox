@@ -1,5 +1,5 @@
 # 3in1ProotX86Emus
-Exagear, box64 and box86 in the same proot rootfs. Already configured and ready to use
+Exagear, box64 and box86 in the same proot rootfs. Already configured and ready to use. Pretty much a WIP, expect bugs and some broken features
 
 # Requirments
 
@@ -21,16 +21,22 @@ To update the proot launcher script, it's possible to use the update argument:
 
 ubuntu update
 
+#Tips
+
+After you login, the first thing I recommend to do is to update all the scripts with update-bins command, which needs to be run twice. Then if you plan to run Windows apps you are going to need to download wine. This can be done with wineswitch command. Optionally, you can install InputBridge with install_ib and DXVK if your phone has a Turnip compatible GPU with install_dxvk. Eventually, if you would rather use GPU acceleration instead of software, you need to switch GPU renderer with gpuswitch zink or gpuswitch virgl based on your SoC. If you see a black screen when you start Termux:X11 the first time, don't panic as this is totally normal because this program doesn't have any GUI option yet. You need to run every program from command line unless you know how to install a DE. I have already prepared helper scripts to get Wine Desktop or install a DE, when they drop in you can just use update command to download them in the proot.
+
 
 # Useful Proot commands
 
 wineswitch - Allow to switch between different wine versions
 
-update-bins - Update all the scripts inside the proot, you will need to re-execute wineswitch and install_dxvk every time you update
+update - Update all the scripts inside the proot, you will need to re-execute wineswitch and install_dxvk every time you update
 
 install_dxvk - Install DXVK in all available wineprefixes, only for Turnip compatible Adreno GPUs
 
 remove_dxvk - Remove DXVK from all available wineprefixes
+
+install_ib - Install InputBridge in all available wineprefixes, only for 32 bit wine
 
 exawine - Run a Windows program through exagear
 
