@@ -3,6 +3,8 @@
 
 DATE=$(date -u +%F@%T)
 TERMINAL_LOGFILE=~/box64_logs/terminal_log@$DATE.txt
+VERSION=7-42
+ARCH=x86_64
 
 log(){
 
