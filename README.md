@@ -28,7 +28,7 @@ wineswitch - Allow to switch between different wine versions
 
 update-bins - Update all the scripts inside the proot
 
-install_dxvk - Install DXVK in all available wineprefixes, only for Turnip compatible Adreno GPUs
+install_dxvk - Install DXVK in all available wineprefixes, only for Turnip compatible Adreno GPUs and for box86/64
 
 remove_dxvk - Remove DXVK from all available wineprefixes
 
