@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo -e "\nI am going to overwrite all the existing scripts, if you have done local changes to them and you want to back them up, please interrupt this operation with CTRL+C\n"
+read -p "Do you want to continue?"
 git clone https://github.com/Pipetto-crypto/3in1ProotX86Emus.git ~/3in1ProotX86Emus
 chmod +x ~/3in1ProotX86Emus/scripts/*
 mv ~/3in1ProotX86Emus/scripts/* /usr/bin
