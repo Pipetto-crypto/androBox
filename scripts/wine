@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WINEDLLOVERRIDES="dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b"
+
 DATE=$(date -u +%F@%T)
 TERMINAL_LOGFILE=~/box86_logs/terminal_log@$DATE.txt
 VERSION=6.0

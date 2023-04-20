@@ -3,8 +3,10 @@
 
 WINEVERSION=$(BOX64_NOBANNER=1 wine64 --version | awk -F "-" '{print $2}')
 WINEVERSION32=$(BOX86_NOBANNER=1 wine --version | awk -F "-" '{print $2}')
+EXAWINEVERSION=$(exawine --version | awk -F "-" '{print $2}')
 WINEPREFIX=$HOME/.local/wineprefix64/wine-$WINEVERSION
 WINEPREFIX32=$HOME/.local/wineprefix/wine-$WINEVERSION32
+EXAWINEPREFIX=$HOME/.local/wineprefix/wine-$EXAWINEVERSION
 
 [[ ! -z $(awk 'FNR==3' /usr/bin/wine64) ]] && sed -i '3d' /usr/bin/wine64
 [[ ! -z $(awk 'FNR==3' /usr/bin/wine) ]] && sed -i '3d' /usr/bin/wine
@@ -35,6 +37,16 @@ elif (( $(echo "$(echo $WINEVERSION32) < 7.1" | bc -l) ))
 then    
      cp dxvk-1.10.3/x32/* $WINEPREFIX32/drive_c/windows/system32
      sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b"' /usr/bin/wine
+fi
+
+if (( $(echo "$(echo $EXAWINEVERSION) >= 7.1" | bc -l) ))
+then
+     cp dxvk-2.1/x32/* $EXAWINEPREFIX/drive_c/windows/system32
+     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d9,d3d10core=n,b"' /usr/bin/exawine
+elif (( $(echo "$(echo $EXAWINEVERSION) < 7.1" | bc -l) ))
+then
+     cp dxvk-1.10.3/x32/* $EXAWINEPREFIX/drive_c/windows/system32
+     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b"' /usr/bin/exawine
 fi
 
 
