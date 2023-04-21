@@ -36,7 +36,7 @@ install_dxvk - Install DXVK in all available wineprefixes, only for Turnip compa
 
 remove_dxvk - Remove DXVK from all available wineprefixes
 
-install_ib - Install InputBridge in all available wineprefixes, only for 32 bit wine
+install_ib - Install InputBridge in all available wineprefixes, for both 32 and 64 bit
 
 exawine - Run a Windows program through exagear
 

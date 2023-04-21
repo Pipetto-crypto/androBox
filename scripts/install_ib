@@ -1,4 +1,4 @@
 #!/bin/bash
 
 for i in ~/.local/wineprefix/*;do cp /usr/bin/user32.dll /usr/bin/ib.exe $i/drive_c/windows/system32;done
-for i in ~/.local/wineprefix64/*;do cp /usr/bin/user32.dll /usr/bin/ib.exe $i/drive_c/windows/syswow64;done
+for i in ~/.local/wineprefix64/*;do cp /usr/bin/user32.dll /usr/bin/ib.exe $i/drive_c/windows/syswow64 && cp /usr/bin/ib.exe $i/drive_c/windows/system32;done
