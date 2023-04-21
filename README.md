@@ -21,16 +21,16 @@ To update the proot launcher script, it's possible to use the update argument:
 
 ubuntu update
 
-#Tips
+# Tips
 
-After you login, the first thing I recommend to do is to update all the scripts with update-bins command, which needs to be run twice. Then if you plan to run Windows apps you are going to need to download wine. This can be done with wineswitch command. Optionally, you can install InputBridge with install_ib and DXVK if your phone has a Turnip compatible GPU with install_dxvk. Eventually, if you would rather use GPU acceleration instead of software, you need to switch GPU renderer with gpuswitch zink or gpuswitch virgl based on your SoC. If you see a black screen when you start Termux:X11 the first time, don't panic as this is totally normal because this program doesn't have any GUI option yet. You need to run every program from command line unless you know how to install a DE. I have already prepared helper scripts to get Wine Desktop or install a DE, when they drop in you can just use update command to download them in the proot.
+After you login, the first thing I recommend to do is to update all the scripts with update-bins and update command. Then if you plan to run Windows apps you are going to need to download wine. This can be done with wineswitch command. Optionally, you can install InputBridge with install_ib and DXVK if your phone has a Turnip compatible GPU with install_dxvk. Eventually, if you would rather use GPU acceleration instead of software, you need to switch GPU renderer with gpuswitch zink or gpuswitch virgl based on your SoC. If you see a black screen when you start Termux:X11 the first time, don't panic as this is totally normal because this program doesn't have any GUI option yet. You need to run every program from command line unless you know how to install a DE. I have already prepared helper scripts to get Wine Desktop or install a DE, when they drop in you can just use update command to download them in the proot.
 
 
 # Useful Proot commands
 
 wineswitch - Allow to switch between different wine versions
 
-update - Update all the scripts inside the proot, you will need to re-execute wineswitch and install_dxvk every time you update
+update - Update all the scripts inside the proot, you will need to re-execute wineswitch and install_dxvk every time you update. Replaces old update-bins and in case you don't have this command you need to execute update-bins then update.
 
 install_dxvk - Install DXVK in all available wineprefixes, only for Turnip compatible Adreno GPUs
 
