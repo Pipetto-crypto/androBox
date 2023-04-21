@@ -13,6 +13,14 @@ trap 'exec 2>&4 1>&3' 0 1 2 3
 exec 1>$TERMINAL_LOGFILE 2>&1
 }
 
+winetricks_func(){
+
+if [ ! -f /usr/bin/cabextract ];then apt install cabextract;fi
+env PATH=$PATH:~/wine-$VERSION-$ARCH/bin \
+WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix/wine-$VERSION} \
+box86 winetricks
+
+}
 
 index=1
 for var in "$@"
@@ -24,6 +32,10 @@ do
    elif [ "$var" == "-log" ]
    then 
 	log 
+   elif [ "$var" == "-w" ]
+   then
+        winetricks_func 
+        exit
    else
         argslist[$index]=$var
    fi

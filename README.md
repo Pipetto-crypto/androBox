@@ -50,7 +50,7 @@ winege - Run a Windows program through Proton for Lutris
 
 wine64 - Run a Windows x86_64 program through box64
 
-wine - Run a Windows x86 program through box86
+wine - Run a Windows x86 program through box86, use -w option to run winetricks
 
 More to come in the nearby future
 
