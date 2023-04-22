@@ -20,6 +20,11 @@ else
      read -p "Select an architecture:" ARCH
 fi
 
+if [ ! "$(id -u)" = "0" ]
+then
+     echo -e "\nThis program needs to be ran with sudo"
+fi
+
 installedwinever=$(cat /usr/bin/wine | awk -F '='  '/VERSION/{print $2}' | head -n1)
 installedwine64ver=$(cat /usr/bin/wine64 | awk -F '='  '/VERSION/{print $2}' | head -n1)
 installedwinearch=$(cat /usr/bin/wine | awk -F '='  '/ARCH/{print $2}' | head -n1)

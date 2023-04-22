@@ -8,6 +8,11 @@ WINEPREFIX=$HOME/.local/wineprefix64/wine-$WINEVERSION
 WINEPREFIX32=$HOME/.local/wineprefix/wine-$WINEVERSION32
 EXAWINEPREFIX=$HOME/.local/wineprefix/wine-$EXAWINEVERSION
 
+if [ ! "$(id -u)" = "0" ] 
+then
+     echo -e "\nThis program needs to be ran with sudo"
+fi
+
 [[ ! -z $(awk 'FNR==3' /usr/bin/wine64) ]] && sed -i '3d' /usr/bin/wine64
 [[ ! -z $(awk 'FNR==3' /usr/bin/wine) ]] && sed -i '3d' /usr/bin/wine
 [[ ! -z $(awk 'FNR==3' /usr/bin/winege) ]] && sed -i '3d' /usr/bin/winege

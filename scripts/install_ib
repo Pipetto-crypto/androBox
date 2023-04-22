@@ -1,4 +1,9 @@
 #!/bin/bash
 
+if [ ! "$(id -u)" = "0" ]
+then
+     echo -e "\nThis program needs to be ran with sudo"
+fi
+
 for i in ~/.local/wineprefix/*;do cp /usr/bin/user32.dll /usr/bin/ib.exe $i/drive_c/windows/system32;done
 for i in ~/.local/wineprefix64/*;do cp /usr/bin/user32.dll /usr/bin/ib.exe $i/drive_c/windows/syswow64 && cp /usr/bin/ib.exe $i/drive_c/windows/system32;done
