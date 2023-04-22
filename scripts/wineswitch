@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+if [ "$SUDO_USER" != "" ];then HOME=/home/$SUDO_USER;fi
 if [ "$1" == "help" ]
 then
      echo -e "Usage: wineswitch version arch"

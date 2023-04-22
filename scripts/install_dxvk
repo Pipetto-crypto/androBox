@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+if [ "$SUDO_USER" != "" ];then HOME=/home/$SUDO_USER;fi
 WINEVERSION=$(BOX64_NOBANNER=1 wine64 --version | awk -F "-" '{print $2}')
 WINEVERSION32=$(BOX86_NOBANNER=1 wine --version | awk -F "-" '{print $2}')
 EXAWINEVERSION=$(exawine --version | awk -F "-" '{print $2}')

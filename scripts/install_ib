@@ -1,5 +1,6 @@
 #!/bin/bash
 
+if [ "$SUDO_USER" != "" ];then HOME=/home/$SUDO_USER;fi
 if [ ! "$(id -u)" = "0" ]
 then
      echo -e "\nThis program needs to be ran with sudo"
