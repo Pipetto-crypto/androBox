@@ -7,7 +7,7 @@ PREFIXARCH=""
 DATE=$(date -u +%F@%T)
 TERMINAL_LOGFILE=~/box86_logs/terminal_log@$DATE.txt
 
-if [ "$PREFIXARCH" == "amd64" ];then PREFIXARCH="64";fi
+if [ "$ARCH" == "amd64" ];then PREFIXARCH="64";fi
 
 log(){
 echo -e "This wine session will be logged in $TERMINAL_LOGFILE"
