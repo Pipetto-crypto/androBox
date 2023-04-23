@@ -62,16 +62,16 @@ case $ARCH in
 amd64)
       if [ "$REALARCH" == "uni" ]
       then
-           sudo sed  -i "s/$installedwine64ver/$VERSION/g" /usr/bin/wine64
-           sudo sed  -i "s/$installedwinever/$VERSION/g" /usr/bin/wine
-           sudo sed  -i "0,/$installedwinearch/s//$ARCH/" /usr/bin/wine 
+           sed  -i "s/$installedwine64ver/$VERSION/g" /usr/bin/wine64
+           sed  -i "s/$installedwinever/$VERSION/g" /usr/bin/wine
+           sed  -i -z "s/$installedwinearch/$ARCH/1" /usr/bin/wine 
       else
-           sudo sed  -i "s/$installedwine64ver/$VERSION/g" /usr/bin/wine64
+           sed  -i "s/$installedwine64ver/$VERSION/g" /usr/bin/wine64
       fi
       ;;
 x86)
-      sudo sed  -i "s/$installedwinever/$VERSION/g" /usr/bin/wine
-      sudo sed  -i "0,/$installedwinearch/s//$ARCH/" /usr/bin/wine
+      sed  -i "s/$installedwinever/$VERSION/g" /usr/bin/wine
+      sed  -i -z "s/$installedwinearch/$ARCH/1" /usr/bin/wine
       ;;
 esac
 

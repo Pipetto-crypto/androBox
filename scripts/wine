@@ -1,11 +1,11 @@
 #!/bin/bash
 
 
-DATE=$(date -u +%F@%T)
-TERMINAL_LOGFILE=~/box86_logs/terminal_log@$DATE.txt
 VERSION=6.0
 ARCH=x86
 PREFIXARCH=""
+DATE=$(date -u +%F@%T)
+TERMINAL_LOGFILE=~/box86_logs/terminal_log@$DATE.txt
 
 if [ "$PREFIXARCH" == "amd64" ];then PREFIXARCH="64";fi
 
