@@ -23,6 +23,7 @@ fi
 if [ ! "$(id -u)" = "0" ]
 then
      echo -e "\nThis program needs to be ran with sudo"
+     exit
 fi
 
 installedwinever=$(cat /usr/bin/wine | awk -F '='  '/VERSION/{print $2}' | head -n1)
@@ -70,7 +71,7 @@ amd64)
       ;;
 x86)
       sudo sed  -i "s/$installedwinever/$VERSION/g" /usr/bin/wine
-      sudo sed  -i "s/$installedwinearch/$ARCH/g" /usr/bin/wine
+      sudo sed  -i "0,/$installedwinearch/s//$ARCH/" /usr/bin/wine
       ;;
 esac
 

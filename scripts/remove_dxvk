@@ -4,6 +4,7 @@ if [ "$SUDO_USER" != "" ];then HOME=/home/$SUDO_USER;fi
 if [ ! "$(id -u)" = "0" ]
 then
      echo -e "\nThis program needs to be ran with sudo"
+     exit
 fi
 
 [[ ! -z $(awk 'FNR==3' /usr/bin/wine64) ]] && sed -i '3d' /usr/bin/wine64

@@ -12,6 +12,7 @@ fi
 if [ ! "$(id -u)" = "0" ]
 then
      echo -e "\nThis program needs to be ran with sudo"
+     exit
 fi    
 
 ARCH=x86
