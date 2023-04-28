@@ -17,8 +17,6 @@ fi
 
 ARCH=x86
 
-installedwinever=$(cat /usr/bin/exawine | awk -F '='  '/VERSION/{print $2}' | head -n1)
-
 if [ ! -d ~/wine-$VERSION-$ARCH ]
 then
      if (( $(echo "$(echo $VERSION) >= 5.5"|bc -l) ))
@@ -37,8 +35,8 @@ then
      fi
 fi
 
-
-sed  -i "s/$installedwinever/$VERSION/g" /usr/bin/exawine
-
+touch ~/.config/exawineconf
+[[ -z $(awk 'FNR==1' ~/.config/exawineconf) ]] && echo "" > ~/.config/exawineconf
+sed -i "1s/^.*$/$VERSION/" ~/.config/exawineconf
 rm -rf ~/*.tar.xz && rm -rf ~/*.tar.gz
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-
-VERSION=6.0
-ARCH=x86
+WINEDLLOVERRIDES="$(cat ~/.config/wineconf | awk 'NR==3')"
+VERSION="$(cat ~/.config/wineconf | awk 'NR==1')"
+ARCH="$(cat ~/.config/wineconf | awk 'NR==2')"
 PREFIXARCH=""
 DATE=$(date -u +%F@%T)
 TERMINAL_LOGFILE=~/box86_logs/terminal_log@$DATE.txt
@@ -39,6 +39,9 @@ do
    then
         winetricks_func 
         exit
+   elif [ "$var" == "-nodxvk" ]
+   then
+        WINEDLLOVERRIDES=""
    else
         argslist[$index]=$var
    fi

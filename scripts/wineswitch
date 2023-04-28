@@ -26,11 +26,6 @@ then
      exit
 fi
 
-installedwinever=$(cat /usr/bin/wine | awk -F '='  '/VERSION/{print $2}' | head -n1)
-installedwine64ver=$(cat /usr/bin/wine64 | awk -F '='  '/VERSION/{print $2}' | head -n1)
-installedwinearch=$(cat /usr/bin/wine | awk -F '='  '/ARCH/{print $2}' | head -n1)
-
-
 if [ "$ARCH" == "uni" ]
 then
      ARCH=amd64
@@ -57,21 +52,29 @@ then
      fi 
 fi
 
+touch ~/.config/wine64conf
+touch ~/.config/wineconf
 
 case $ARCH in
 amd64)
       if [ "$REALARCH" == "uni" ]
       then
-           sed  -i "s/$installedwine64ver/$VERSION/g" /usr/bin/wine64
-           sed  -i "s/$installedwinever/$VERSION/g" /usr/bin/wine
-           sed  -i -z "s/$installedwinearch/$ARCH/1" /usr/bin/wine 
+           [[ -z $(awk 'FNR==1' ~/.config/wine64conf) ]] && echo "" > ~/.config/wine64conf
+           [[ -z $(awk 'FNR==1' ~/.config/wineconf) ]] && echo "" > ~/.config/wineconf
+           [[ -z $(awk 'FNR==2' ~/.config/wineconf) ]] && echo "" >> ~/.config/wineconf
+           sed -i "1s/^.*$/$VERSION/"  ~/.config/wine64conf
+           sed -i "1s/^.*$/$VERSION/"   ~/.config/wineconf
+           sed -i "2s/^.*$/$ARCH/"     ~/.config/wineconf
       else
-           sed  -i "s/$installedwine64ver/$VERSION/g" /usr/bin/wine64
+           [[ -z $(awk 'FNR==1' ~/.config/wine64conf) ]] && echo "" > ~/.config/wine64conf
+           sed -i "1s/^.*$/$VERSION/"  ~/.config/wine64conf
       fi
       ;;
 x86)
-      sed  -i "s/$installedwinever/$VERSION/g" /usr/bin/wine
-      sed  -i -z "s/$installedwinearch/$ARCH/1" /usr/bin/wine
+      [[ -z $(awk 'FNR==1' ~/.config/wineconf) ]] && echo "" > ~/.config/wineconf
+      [[ -z $(awk 'FNR==2' ~/.config/wineconf) ]] && echo "" >> ~/.config/wineconf
+      sed -i "1s/^.*$/$VERSION/" ~/.config/wineconf
+      sed -i "2s/^.*$/$ARCH/"  ~/.config/wineconf
       ;;
 esac
 

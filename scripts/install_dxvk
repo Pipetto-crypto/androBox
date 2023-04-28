@@ -1,9 +1,9 @@
 #!/bin/bash
 
 if [ "$SUDO_USER" != "" ];then HOME=/home/$SUDO_USER;fi
-WINEVERSION=$(BOX64_NOBANNER=1 wine64 --version | awk -F "-" '{print $2}')
-WINEVERSION32=$(BOX86_NOBANNER=1 wine --version | awk -F "-" '{print $2}')
-EXAWINEVERSION=$(exawine --version | awk -F "-" '{print $2}')
+WINEVERSION="$(cat ~/.config/wine64conf | awk 'NR==1')"
+WINEVERSION32="$(cat ~/.config/wineconf | awk 'NR==1')"
+EXAWINEVERSION="$(cat ~/.config/exawineconf | awk 'NR==1')"
 WINEPREFIX=$HOME/.local/wineprefix64/wine-$WINEVERSION
 WINEPREFIX32=$HOME/.local/wineprefix/wine-$WINEVERSION32
 EXAWINEPREFIX=$HOME/.local/wineprefix/wine-$EXAWINEVERSION
@@ -14,54 +14,84 @@ then
      exit
 fi
 
-[[ ! -z $(awk 'FNR==3' /usr/bin/wine64) ]] && sed -i '3d' /usr/bin/wine64
-[[ ! -z $(awk 'FNR==3' /usr/bin/wine) ]] && sed -i '3d' /usr/bin/wine
-[[ ! -z $(awk 'FNR==3' /usr/bin/winege) ]] && sed -i '3d' /usr/bin/winege
-wget https://github.com/doitsujin/dxvk/releases/download/v2.1/dxvk-2.1.tar.gz
-tar -xzf dxvk-2.1.tar.gz
-wget https://github.com/doitsujin/dxvk/releases/download/v1.10.3/dxvk-1.10.3.tar.gz
-tar -xzf dxvk-1.10.3.tar.gz
+choices=()
+read -p "Select a version of DXVK to install:" DXVKVER
+echo -e "\nSelect where to install: "
+echo -e "1.Wine"
+echo -e "2.Exawine"
+echo -e "3.Wine64"
+echo -e "4.WineGE"
+
+while [ True ]
+do
+   read -p "Your choice, press q to break and enter to confirm: " CHOICE
+   if [ "$CHOICE" == "q" ];then break;fi
+   choices+=($CHOICE)
+done
 
 
-if (( $(echo "$(echo $WINEVERSION) >= 7.1" | bc -l) ))
+wget https://github.com/doitsujin/dxvk/releases/download/v$DXVKVER/dxvk-$DXVKVER.tar.gz
+tar -xzf dxvk-$DXVKVER.tar.gz
+
+
+if [[ "${choices[*]}" =~ "3" ]]
 then
-     cp dxvk-2.1/x64/* $WINEPREFIX/drive_c/windows/system32
-     cp dxvk-2.1/x32/* $WINEPREFIX/drive_c/windows/syswow64
-     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d9,d3d10core=n,b"' /usr/bin/wine64
-elif (( $(echo "$(echo $WINEVERSION) <  7.1" | bc -l) ))
+     if (( $(echo "$(echo $WINEVERSION) < 7.1" | bc -l) )) && (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
+     then
+          echo -e "You are trying to install a dxvk version not compatible with your wine64 installation. Skipping"
+     else
+          cp dxvk-$DXVKVER/x64/* $WINEPREFIX/drive_c/windows/system32
+          cp dxvk-$DXVKVER/x32/* $WINEPREFIX/drive_c/windows/syswow64
+          [[ -z $(awk 'FNR==2' ~/.config/wine64conf) ]] && echo "" >> ~/.config/wine64conf
+          if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
+          then
+              sed -i "2s/^.*$/dxgi,d3d11,d3d9,d3d10core=n,b/" ~/.config/wine64conf
+          else
+              sed -i "2s/^.*$/dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b/" ~/.config/wine64conf
+          fi
+     fi
+
+elif [[ "${choices[*]}" =~ "1" ]]
 then
-     cp dxvk-1.10.3/x64/* $WINEPREFIX/drive_c/windows/system32
-     cp dxvk-1.10.3/x32/* $WINEPREFIX/drive_c/windows/syswow64
-     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b"' /usr/bin/wine64
+     if (( $(echo "$(echo $WINEVERSION32) < 7.1" | bc -l) )) && (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
+     then
+          echo -e "You are trying to install a dxvk version not compatible with your wine installation. Skipping"
+     else
+          cp dxvk-$DXVKVER/x32/* $WINEPREFIX32/drive_c/windows/system32
+          [[ -z $(awk 'FNR==3' ~/.config/wineconf) ]] && echo "" >> ~/.config/wineconf
+          if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
+          then
+              sed -i "3s/^.*$/dxgi,d3d11,d3d9,d3d10core=n,b/" ~/.config/wineconf
+          else
+              sed -i "3s/^.*$/dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b/" ~/.config/wineconf
+          fi
+     fi
+
+elif [[ "${choices[*]}" =~ "2" ]]
+then
+     if (( $(echo "$(echo $EXAWINEVERSION) < 7.1" | bc -l) )) && (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
+     then
+          echo -e "You are trying to install a dxvk version not compatible with your Exawine installation. Skipping"
+     else
+          cp dxvk-$DXVKVER/x32/* $WINEPREFIX32/drive_c/windows/system32
+          [[ -z $(awk 'FNR==2' ~/.config/exawineconf) ]] && echo "" >> ~/.config/exawineconf
+          if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
+          then
+              sed -i "2s/^.*$/dxgi,d3d11,d3d9,d3d10core=n,b/" ~/.config/exawineconf
+          else
+              sed -i "2s/^.*$/dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b/" ~/.config/exawineconf
+          fi
+     fi
+
+else
+     if [ -d $HOME/.local/wineprefix64/lutris-GE-Proton7-42 ]
+     then 
+          touch ~/.config/winegeconf
+          [[ -z $(awk 'FNR==1' ~/.config/winegeconf) ]] && echo "" >> ~/.config/winegeconf
+          sed -i "1s/^.*$/dxgi,d3d11,d3d9,d3d10core=n,b/" ~/.config/winegeconf
+     else 
+          echo -e "WineGE is not installed, please install it with install_winege"
+     fi
 fi
 
-if (( $(echo "$(echo $WINEVERSION32) >= 7.1" | bc -l) ))
-then
-     cp dxvk-2.1/x32/* $WINEPREFIX32/drive_c/windows/system32
-     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d9,d3d10core=n,b"' /usr/bin/wine
-elif (( $(echo "$(echo $WINEVERSION32) < 7.1" | bc -l) ))
-then    
-     cp dxvk-1.10.3/x32/* $WINEPREFIX32/drive_c/windows/system32
-     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b"' /usr/bin/wine
-fi
-
-if (( $(echo "$(echo $EXAWINEVERSION) >= 7.1" | bc -l) ))
-then
-     cp dxvk-2.1/x32/* $EXAWINEPREFIX/drive_c/windows/system32
-     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d9,d3d10core=n,b"' /usr/bin/exawine
-elif (( $(echo "$(echo $EXAWINEVERSION) < 7.1" | bc -l) ))
-then
-     cp dxvk-1.10.3/x32/* $EXAWINEPREFIX/drive_c/windows/system32
-     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b"' /usr/bin/exawine
-fi
-
-
-if [ -d $HOME/.local/wineprefix64/lutris-GE-Proton7-42 ]
-then
-     cp dxvk-2.1/x64/* $HOME/.local/wineprefix64/lutris-GE-Proton7-42/drive_c/windows/system32
-     cp dxvk-2.1/x86/* $HOME/.local/wineprefix64/lutris-GE-Proton7-42/drive_c/windows/syswow64
-     sed -i '3iWINEDLLOVERRIDES="dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b"' /usr/bin/winege
-fi
-
-rm -rf dxvk-2.1 dxvk-1.10.3 dxvk-2.1.tar.gz dxvk-1.10.3.tar.gz
-
+rm -rf dxvk-$DXVKVER dxvk-$DXVKVER.tar.gz

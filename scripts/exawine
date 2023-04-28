@@ -1,6 +1,8 @@
 #!/bin/bash
 
-
+VERSION="$(cat ~/.config/exawineconf | awk 'NR==1')"
+WINEDLLOVERRIDES="$(cat ~/.config/exawineconf | awk 'NR==2')"
+ARCH=x86
 
 index=1
 for var in "$@"
@@ -9,14 +11,15 @@ do
    then
         absfile=$(realpath -e $var)
         argslist[$index]="$absfile"
+   elif [ "$var" == "-nodxvk" ]
+   then
+        WINEDLLOVERRIDES=""
    else
         argslist[$index]=$var
    fi
    index=$((index+1))
 done
 
-VERSION=7.1
-ARCH=x86
 env WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix/wine-$VERSION} \
 WINEDLLOVERRIDES=$WINEDLLOVERRIDES \
 exagear -- $HOME/wine-$VERSION-$ARCH/bin/wine "${argslist[@]}"
