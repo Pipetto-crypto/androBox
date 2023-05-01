@@ -2,6 +2,7 @@
 
 echo -e "\nInstalling required dependencies"
 
+termux-change-repo
 pkg update && pkg upgrade
 pkg install x11-repo -y
 pkg install pulseaudio virglrenderer-android mesa xorg-server-xvfb xwayland wget proot-distro -y
