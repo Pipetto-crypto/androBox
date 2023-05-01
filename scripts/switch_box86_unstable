@@ -1,6 +1,7 @@
 #!/bin/bash
 
-apt-mark unhold box86-android:armhf
-apt remove --purge box86-android:armhf
-apt install box86-android:armhf
-echo -e "Whenever you want to update box86 now, you can just do it alongside ubuntu with apt update && apt upgrade command"
+apt-mark hold box86:armhf
+apt remove --purge box86:armhf -y
+apt install box86-android:armhf -y
+echo -e "Exit and re-enter to make changes effective. Whenever you want to update box86 now, you can just do it alongside ubuntu with apt update && apt upgrade command"
+
