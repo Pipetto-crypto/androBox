@@ -9,6 +9,7 @@ zink)
         export GALLIUM_DRIVER=zink
         export MESA_LOADER_DRIVER_OVERRIDE=zink
         export ZINK_DESCRIPTORS=lazy
+        unset LIBGL_ALWAYS_SOFTWARE
         ;;
 virgl)
         unset MESA_LOADER_DRIVER_OVERRIDE

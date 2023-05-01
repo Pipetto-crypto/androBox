@@ -52,6 +52,7 @@ then
      fi 
 fi
 
+mkdir -p ~/.config
 touch ~/.config/wine64conf
 touch ~/.config/wineconf
 

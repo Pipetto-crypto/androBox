@@ -7,9 +7,9 @@ ARCH=x86
 index=1
 for var in "$@"
 do
-   if [ -f $var ]
+   if [ -f "$var" ]
    then
-        absfile=$(realpath -e $var)
+        absfile=$(realpath -e "$var")
         argslist[$index]="$absfile"
    elif [ "$var" == "-nodxvk" ]
    then
@@ -22,5 +22,6 @@ done
 
 env WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix/wine-$VERSION} \
 WINEDLLOVERRIDES=$WINEDLLOVERRIDES \
+WINEDEBUG=${WINEDEBUG:=-all} \
 exagear -- $HOME/wine-$VERSION-$ARCH/bin/wine "${argslist[@]}"
 

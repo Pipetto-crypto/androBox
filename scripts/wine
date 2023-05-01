@@ -10,10 +10,13 @@ TERMINAL_LOGFILE=~/box86_logs/terminal_log@$DATE.txt
 if [ "$ARCH" == "amd64" ];then PREFIXARCH="64";fi
 
 log(){
+
+WINEDEBUG=+all
 echo -e "This wine session will be logged in $TERMINAL_LOGFILE"
 exec 3>&1 4>&2
 trap 'exec 2>&4 1>&3' 0 1 2 3
 exec 1>$TERMINAL_LOGFILE 2>&1
+
 }
 
 winetricks_func(){
@@ -28,9 +31,9 @@ box86 winetricks
 index=1
 for var in "$@"
 do
-   if [ -f $var ]
+   if [ -f "$var" ]
    then
-        absfile=$(realpath -e $var)
+        absfile=$(realpath -e "$var")
         argslist[$index]="$absfile"
    elif [ "$var" == "-log" ]
    then 
@@ -60,5 +63,5 @@ BOX86_PATH=~/wine-$VERSION-$ARCH/bin \
 WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix$PREFIXARCH/wine-$VERSION} \
 BOX86_DYNAREC_BIGBLOCK=${BOX86_DYNAREC_BIGBLOCK:-0} \
 WINEDLLOVERRIDES=$WINEDLLOVERRIDES \
+WINEDEBUG=${WINEDEBUG:=-all} \
 box86 wine "${argslist[@]}"
-

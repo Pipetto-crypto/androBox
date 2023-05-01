@@ -8,6 +8,7 @@ ARCH=x86_64
 
 log(){
 
+WINEDEBUG=+all
 echo -e "This wine session will be logged in $TERMINAL_LOGFILE"
 exec 3>&1 4>&2
 trap 'exec 2>&4 1>&3' 0 1 2 3
@@ -18,9 +19,9 @@ exec 1>$TERMINAL_LOGFILE 2>&1
 index=1
 for var in "$@"
 do
-   if [ -f $var ]
+   if [ -f "$var" ]
    then
-        absfile=$(realpath -e $var)
+        absfile=$(realpath -e "$var")
         argslist[$index]="$absfile"
    elif [ "$var" == "-log" ]
    then
@@ -47,5 +48,6 @@ WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix64/lutris-GE-Proton$VERSION} \
 BOX64_LOG=${BOX64_LOG:-0} \
 BOX86_DYNAREC_BIGBLOCK=${BOX86_DYNAREC_BIGBLOCK:-0} \
 WINEDLLOVERRIDES=$WINEDLLOVERRIDES \
+WINEDEBUG=${WINEDEBUG:=-all} \
 box64 wine64 "${argslist[@]}"
 
