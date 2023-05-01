@@ -13,9 +13,9 @@ help(){
 
 echo -e "Usage: ubuntu [-x|-va|help]"
 echo -e "\nOptions: "
-echo -e "-x          Start the Termux:X11 connection"
+echo -e "-x          Start the proot with Termux:X11 connection"
+echo -e "-vnc        Start the proot with VNC connection"
 echo -e "-va         Start virglrenderer android vtest server"
-echo -e "-cores      Pin all processes to selected cores, default 4-7" 
 echo -e "help        Print this help message"
  
 
@@ -50,6 +50,16 @@ mv ubuntu $PATH
 
 }
 
+update-all(){
+
+proot-distro login ubuntu --shared-tmp --no-sysvipc -- update-bins 
+proot-distro login ubuntu --shared-tmp --no-sysvipc -- update
+wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu
+chmod +x ubuntu
+mv ubuntu $PATH
+
+}
+
 coresin=$(get_index_if_match "-cores" "${argslist[*]}")
 if [ "$coresin" == "" ];then cores="4-7";else cores=${argslist[$((coresin+1))]};fi
 taskset -a -pc $cores $thispid >/dev/null 2>&1
@@ -66,11 +76,12 @@ do
           update
           exit
           ;;
+     update-all)
+          update-all
+          exit
+          ;;
      -x) 
-          echo -e "\nStart the X server"
-          pkill openbox
-          pkill Xvfb
-          kill $(pidof app_process) >/dev/null 2>&1
+          echo -e "\nStarting the X server"
 	  DISPLAY=:0 termux-x11 --no-xwayland-start >/dev/null 2>&1 &
 	  sleep 3
 	  DISPLAY=:0 Xvfb :0 -ac -screen 0 4096x4096x24 -noreset &
@@ -79,14 +90,20 @@ do
           proot-distro login ubuntu --shared-tmp --no-sysvipc -- openbox-session >/dev/null 2>&1 &
           ;;
      -va)
-          kill $(pidof virgl_test_server_android) >/dev/null 2>&1
-          kill $(pidof virgl_test_server) >/dev/null 2>&1
-          MESA_NO_ERROR=1 virgl_test_server_android --use-egl-surfaceless &
+          hasgles=$(get_index_if_match "--use-gles" "${argslist[*]}")
+          if [ "$hasgles" != "" ]; then VIRGL_ARGS="--use-gles";fi
+          MESA_NO_ERROR=1 virgl_test_server_android $VIRGL_ARGS &
           ;;
-      -vm)
-          kill $(pidof virgl_test_server) >/dev/null 2>&1
-          kill $(pidof virgl_test_server_android) >/dev/null 2>&1
-          MESA_NO_ERROR=1 GALLIUM_DRIVER=zink ZINK_DESCRIPTORS=lazy MESA_GL_VERSION_OVERRIDE=4.3COMPAT virgl_test_server --use-egl-surfaceless &
+     -vnc)
+          PROOT_HOME=$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root
+          echo -e "\nStarting the VNC server"
+          read -p "Select the sceeen size: " SCREENSIZE
+          sleep 3
+          proot-distro login ubuntu --shared-tmp --no-sysvipc -- Xvnc :0 -rfbport 5900 -rfbauth $PROOT_HOME/.vnc/passwd -geometry $SCREENSIZE -noreset >/dev/null 2>&1 &
+          proot-distro login ubuntu --shared-tmp --no-sysvipc -- openbox-session >/dev/null 2>&1 & 
+          ;;
+     -vm)
+          MESA_NO_ERROR=1 GALLIUM_DRIVER=zink ZINK_DESCRIPTORS=lazy MESA_GL_VERSION_OVERRIDE=4.0 virgl_test_server --use-egl-surfaceless &
           ;;
       esac
 done
@@ -99,3 +116,10 @@ echo -e "\nStarting the audio server"
 echo -e "\nEntering the proot"
 
 proot-distro login ubuntu --bind /sdcard:/sdcard --bind /data/data/com.termux/files/home:/termux-home --bind $TMPDIR:/tmp --isolated --no-sysvipc
+pkill openbox
+pkill pulseaudio
+pkill Xvnc
+pkill Xvfb
+kill $(pidof app_process) >/dev/null 2>&1
+kill $(pidof virgl_test_server_android) >/dev/null 2>&1
+kill $(pidof virgl_test_server) >/dev/null 2>&1
