@@ -6,6 +6,7 @@ TERMINAL_LOGFILE=~/box64_logs/terminal_log@$DATE.txt
 VERSION="$(cat ~/.config/wine64conf | awk 'NR==1')"
 ARCH=amd64
 
+
 log(){
 
 WINEDEBUG=+all
@@ -29,6 +30,9 @@ do
    elif [ "$var" == "-nodxvk" ]
    then
         WINEDLLOVERRIDES=""
+   elif [ "$var" == "-winedbg" ]
+   then
+        WINEDEBUG="default"
    else
         argslist[$index]=$var
    fi

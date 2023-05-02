@@ -52,6 +52,14 @@ wine64 - Run a Windows x86_64 program through box64
 
 wine - Run a Windows x86 program through box86, use -w option to run winetricks
 
+switch_box86_stable - Switch, install and update to self compiled box86 stable builds
+
+switch_box86_unstable - Switch and install latest box86 builds
+
+switch_box64_stable - Switch, install and update to self compiled box64 builds
+
+switch_box64_unstable - Switch and install latest box64 builds
+
 More to come in the nearby future
 
 # Links and Credits
@@ -70,7 +78,9 @@ Alexvorxx Turnip+Zink: https://github.com/alexvorxx/mesa-zink-11.06.22
 
 Ubuntu ROOTFS: https://drive.google.com/file/d/168psM15CwXZY6Vp8TPBt3OijtrIE9Vg1/view?usp=drivesdk
 
+Box86 Builds: https://github.com/ryanfortner/box86-debs
 
+Box64 Builds: https://github.com/ryanfortner/box64-debs
 
 
 

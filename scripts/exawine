@@ -14,6 +14,9 @@ do
    elif [ "$var" == "-nodxvk" ]
    then
         WINEDLLOVERRIDES=""
+   elif [ "$var" == "-winedbg" ]
+   then
+        WINEDEBUG="default"
    else
         argslist[$index]=$var
    fi

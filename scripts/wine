@@ -19,6 +19,7 @@ exec 1>$TERMINAL_LOGFILE 2>&1
 
 }
 
+
 winetricks_func(){
 
 if [ ! -f /usr/bin/cabextract ];then apt install cabextract;fi
@@ -45,6 +46,9 @@ do
    elif [ "$var" == "-nodxvk" ]
    then
         WINEDLLOVERRIDES=""
+   elif [ "$var" == "-winedbg" ]
+   then
+        WINEDEBUG="default"
    else
         argslist[$index]=$var
    fi
