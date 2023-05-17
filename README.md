@@ -1,4 +1,5 @@
 # 3in1ProotX86Emus
+
 Exagear, box64 and box86 in the same proot rootfs. Already configured and ready to use. Pretty much a WIP, expect bugs and some broken features
 
 # Requirments
@@ -11,19 +12,56 @@ Download the rootfs from link sections and move it to the root of your Internal 
 
 curl -L https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/setup.sh -o setup.sh && bash setup.sh
 
-Once installation is completed, to access the proot you can type this command:
+Once installation is completed, it is highly recommended to update all the scripts in the proot with command:
 
-ubuntu or ubuntu -x in case you want to start Termux:X11 server alongside it
+ubuntu update-all
 
-For non Adreno users that want to have GPU acceleration, they need to append the -va flag at the end of the second command.
+# Instructions
 
-To update the proot launcher script, it's possible to use the update argument:
+First you have to init the proot with:
 
-ubuntu update
+ubuntu init
 
-# Tips
+This will prompt you to install a wine version and eventually it will install InputBridge in the newly created prefix.
 
-After you login, the first thing I recommend to do is to update all the scripts with update-bins and update command. Then if you plan to run Windows apps you are going to need to download wine. This can be done with wineswitch command. Optionally, you can install InputBridge with install_ib and DXVK if your phone has a Turnip compatible GPU with install_dxvk. Eventually, if you would rather use GPU acceleration instead of software, you need to switch GPU renderer with gpuswitch zink or gpuswitch virgl based on your SoC. If you see a black screen when you start Termux:X11 the first time, don't panic as this is totally normal because this program doesn't have any GUI option yet. You need to run every program from command line unless you know how to install a DE. I have already prepared helper scripts to get Wine Desktop or install a DE, when they drop in you can just use update command to download them in the proot.
+Additionally, you can install DXVK if you have a Turnip compatible Adreno GPU:
+
+ubuntu install_dxvk
+
+While it is not recommended to use this, you can optionally install Proton for Lutris:
+
+ubuntu install_winege
+
+When you want to launch an app, you can do it with the command:
+
+ubuntu -x wine app.exe (for x86 apps)
+ubuntu -x wine64 app.exe (for x64 and x86 apps)
+ubuntu -x winege app.exe (for x64 and x86 apps with Proton for Lutris)
+
+Eventually, you can launch a GUI that allows you to double click on the exe with one of the following:
+
+ubuntu -x winedesktop
+ubuntu -x winedesktop64
+ubuntu -x winedesktopge
+
+Using the script without any command allows to log directly inside the proot:
+
+ubuntu
+
+When you first use the ubuntu script, it creates a configuration file in the 3in1ProotX86Emus folder on your Internal Storage. You can modify it to change the behaviour of the command above:
+
+For example by setting winedesktop to yes and autostart to x11, everytime you type ubuntu in command line it will automatically start WineDesktop and X11 server.
+
+This config file can also be modified to change the default GPU renderer, although it is better you do it with ubuntu set-renderer command.
+
+There are a lot more stuffs you can do with the ubuntu command, you can check all available commands and options with:
+
+ubuntu help
+
+# Known Issues
+
+
+There is an issue that's strictly proot related where it is required to kill services.exe to allow wine64 to start. This is done automatically by the launch scripts but this will break some type of applications like a bunch of installers. This is the reason why I would rather keep three different type of wine instead of defaulting to only one. 
 
 
 # Useful Proot commands
@@ -59,6 +97,12 @@ switch_box86_unstable - Switch and install latest box86 builds
 switch_box64_stable - Switch, install and update to self compiled box64 builds
 
 switch_box64_unstable - Switch and install latest box64 builds
+
+winedesktop - Launch Wine Desktop for 32bit apps
+
+winedesktop64 - Launch Wine Desktop for 32 and 64bit apps
+
+winedesktopge - Launch Wine Desktop for Proton for Lutris
 
 More to come in the nearby future
 

@@ -1,5 +1,33 @@
- #!/bin/bash
+#!/bin/bash
 
+configfile=/sdcard/3in1ProotX86Emus/proot.conf
+if [ ! -f $configfile ]
+then
+    mkdir -p /sdcard/3in1ProotX86Emus
+    wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/proot.conf -P /sdcard/3in1ProotX86Emus
+fi
+    
+
+iswinedesktop="$(cat $configfile | awk -F '=' '/winedesktop/{print $2}' | tr -d "\n")" 
+if [ "$iswinedesktop" == "yes" ];then winedesktoptype="$(cat $configfile | awk -F '=' '/desktoptype/{print $2}' | tr -d "\n")";fi
+gpurenderer="$(cat $configfile | awk -F '=' '/renderer/{print $2}' | tr -d "\n")"
+autostartservice="$(cat $configfile | awk -F '=' '/autostart/{print $2}' | tr -d "\n")"
+case $gpurenderer in
+llvmpipe)
+          rendererargs=""
+          ;;
+zink)
+          rendererargs="env GALLIUM_DRIVER=zink MESA_LOADER_DRIVER_OVERRIDE=zink"
+          ;;
+virgl)
+          rendererargs="env GALLIUM_DRIVER=virpipe LIBGL_ALWAYS_SOFTWARE=1"
+          virglenabled="true"
+          ;;
+*)
+          echo -e "\nThis is not a valid renderer, change your config file appropriately. Defaulting to llvmpipe"
+          rendererargs=""
+          ;;
+esac
 
 thispid=$$
 index=1
@@ -11,13 +39,16 @@ done
 
 help(){
 
-echo -e "Usage: ubuntu [-x|-va|help]"
+echo -e "Usage: ubuntu [options] [commands]"
 echo -e "\nOptions: "
-echo -e "-x          Start the proot with Termux:X11 connection"
-echo -e "-vnc        Start the proot with VNC connection"
-echo -e "-va         Start virglrenderer android vtest server"
-echo -e "help        Print this help message"
- 
+echo -e "-x             Start the proot with Termux:X11 connection"
+echo -e "-vnc           Start the proot with VNC connection"
+echo -e "-c             Set core affinity, default to high performance cores"
+echo -e "-va            Start virglrenderer android vtest server, can provide --use-gles to start use GL4ES."
+echo -e "update         Update this script"
+echo -e "update-all     Update this script and all the scripts inside the proot"
+echo -e "help           Print this help message"
+echo -e "set-renderer   Set default renderer, default llvmpipe"
 
 }
 
@@ -42,6 +73,83 @@ if [ "$hasfound" == "true" ];then echo $position;fi
 
 }
 
+exit_proot(){
+
+pkill -P $thispid
+kill_processes
+exit 0
+
+}
+
+
+kill_processes(){
+
+pkill pulseaudio
+pkill Xvnc
+pkill Xvfb
+kill $(pidof app_process) >/dev/null 2>&1
+kill $(pidof virgl_test_server_android) >/dev/null 2>&1
+
+}
+
+
+xserver(){
+
+echo -e "\nStarting the X server"
+DISPLAY=:0 termux-x11 --no-xwayland-start >/dev/null 2>&1 &
+sleep 3
+DISPLAY=:0 Xvfb :0 -ac -screen 0 4096x4096x24 -noreset &
+sleep 3
+
+
+}
+
+virgl_server(){
+
+echo -e "\nStarting virgl vtest server"
+hasgles=$(get_index_if_match "--use-gles" "${argslist[*]}")
+if [ "$hasgles" != "" ]; then VIRGL_ARGS="--use-gles";fi
+MESA_NO_ERROR=1 virgl_test_server_android $VIRGL_ARGS &
+
+}
+
+vnc_server(){
+
+PROOT_HOME=$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root
+echo -e "\nStarting the VNC server"
+read -p "Select the sceeen size: " SCREENSIZE
+sleep 3
+proot-distro login ubuntu --shared-tmp --no-sysvipc -- Xvnc :0 -rfbport 5900 -rfbauth $PROOT_HOME/.vnc/passwd -geometry $SCREENSIZE -noreset >/dev/null 2>&1 &
+
+}
+
+set_renderer(){
+
+rendererin=coresin=$(get_index_if_match "set-renderer" "${argslist[*]}")
+sed -i "4s/=.*/=${argslist[$((rendererin+1))]}/g" $configfile
+
+
+}
+
+pulse_server(){
+
+echo -e "\nStarting the PulseAudio server"
+pulseaudio --start --exit-idle-time=-1
+pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
+
+
+}
+
+proot_login(){
+
+bindargs=("--bind /sdcard:/sdcard" "--bind /data/data/com.termux/files/home:/termux-home" "--bind /storage/emulated/0" "--bind $TMPDIR:/tmp")
+proot_args=("--isolated" "--no-sysvipc")
+proot-distro login ubuntu ${bindargs[@]} ${proot_args[@]} -- $1
+
+
+}
+
+
 update(){
 
 wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu
@@ -56,7 +164,7 @@ proot-distro login ubuntu --shared-tmp --no-sysvipc -- update-bins
 proot-distro login ubuntu --shared-tmp --no-sysvipc -- update
 wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu
 chmod +x ubuntu
-mv ubuntu $PATH
+lmv ubuntu $PATH
 
 }
 
@@ -64,6 +172,11 @@ coresin=$(get_index_if_match "-cores" "${argslist[*]}")
 if [ "$coresin" == "" ];then cores="4-7";else cores=${argslist[$((coresin+1))]};fi
 taskset -a -pc $cores $thispid >/dev/null 2>&1
 
+x11_pid=$(pgrep Xvfb)
+virgl_pid=$(pidof virgl_test_server_android)
+pulse_pid=$(pidof pulseaudio)
+vnc_pid=$(pgrep Xvnc)
+commindex=1
 
 for i in ${argslist[@]}
 do
@@ -80,46 +193,55 @@ do
           update-all
           exit
           ;;
-     -x) 
-          echo -e "\nStarting the X server"
-	  DISPLAY=:0 termux-x11 --no-xwayland-start >/dev/null 2>&1 &
-	  sleep 3
-	  DISPLAY=:0 Xvfb :0 -ac -screen 0 4096x4096x24 -noreset &
-          sleep 3
-          echo -e "\nStart Openbox Session Manager"
-          proot-distro login ubuntu --shared-tmp --no-sysvipc -- openbox-session >/dev/null 2>&1 &
+     init) 
+          proot_login wineswitch
+          proot_login install_ib
+          exit_proot
           ;;
-     -va)
-          hasgles=$(get_index_if_match "--use-gles" "${argslist[*]}")
-          if [ "$hasgles" != "" ]; then VIRGL_ARGS="--use-gles";fi
-          MESA_NO_ERROR=1 virgl_test_server_android $VIRGL_ARGS &
+     set-renderer)
+          set_renderer
+          exit_proot
+          ;;
+     -x) 
+	  if [ "$x11_pid" == "" ];then xserver;fi
+          #echo -e "\nStart Openbox Session Manager"
+          #proot-distro login ubuntu --shared-tmp --no-sysvipc -- openbox-session >/dev/null 2>&1 &
+          ;;
+     -va | --use-gles)
+          if [ "$virgl_pid" == "" ];then virgl_server;fi
           ;;
      -vnc)
-          PROOT_HOME=$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root
-          echo -e "\nStarting the VNC server"
-          read -p "Select the sceeen size: " SCREENSIZE
-          sleep 3
-          proot-distro login ubuntu --shared-tmp --no-sysvipc -- Xvnc :0 -rfbport 5900 -rfbauth $PROOT_HOME/.vnc/passwd -geometry $SCREENSIZE -noreset >/dev/null 2>&1 &
-          proot-distro login ubuntu --shared-tmp --no-sysvipc -- openbox-session >/dev/null 2>&1 & 
+          if [ "$vnc_pid" == "" ];then vnc_server;fi
+          #proot-distro login ubuntu --shared-tmp --no-sysvipc -- openbox-session >/dev/null 2>&1 & 
           ;;
      -vm)
           MESA_NO_ERROR=1 GALLIUM_DRIVER=zink ZINK_DESCRIPTORS=lazy MESA_GL_VERSION_OVERRIDE=4.0 virgl_test_server --use-egl-surfaceless &
           ;;
+     stop)
+          kill_processes
+          exit 0
+          ;;
+     *)
+          if [ -f "$i" ]
+          then
+                absfile=$(realpath -e "$i")
+                commslist[$commindex]="$absfile"
+          else
+                commslist[$commindex]=$i
+                commindex=$((commindex+1))
+          fi
+          ;;
       esac
 done
 
-echo -e "\nStarting the audio server"
 
-        pulseaudio --start --exit-idle-time=-1
-        pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
 
-echo -e "\nEntering the proot"
+if [ "$gpurenderer" == "virgl" ] && [ "$virgl_pid" == "" ];then virgl_server;fi
+if [ "$autostartservice" == "x11" ] && [ "$x11_pid" == "" ];then xserver;fi
+if [ "$autostartservice" == "vnc" ] && [ "$vnc_pid" == "" ];then vnc_server;fi
+if [ "$iswinedesktop" == "yes" ] && [ "$(pgrep winedesktop)" == "" ] && [ "$x11_pid" != "" ] ||  [ "$vnc_pid" != "" ];then extracommslist="winedesktop$winedesktoptype";fi
+if [ "${commslist[*]}" == "" ] && [ "$extracommslist" == "" ];then commslist=("bash");fi
+if [ "$pulse_pid" == "" ]; then pulse_server;fi
 
-proot-distro login ubuntu --bind /sdcard:/sdcard --bind /data/data/com.termux/files/home:/termux-home --bind $TMPDIR:/tmp --isolated --no-sysvipc
-pkill openbox
-pkill pulseaudio
-pkill Xvnc
-pkill Xvfb
-kill $(pidof app_process) >/dev/null 2>&1
-kill $(pidof virgl_test_server_android) >/dev/null 2>&1
-kill $(pidof virgl_test_server) >/dev/null 2>&1
+
+proot_login "$rendererargs ${commslist[*]} $extracommslist"

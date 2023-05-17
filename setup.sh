@@ -12,9 +12,14 @@ then
      echo -e "\nGranting internal storage permissions"
 fi
 
-echo -e "\nInstalling the rootfs"
-
 mkdir -p $PREFIX/var/lib/proot-distro && mkdir -p $PREFIX/var/lib/proot-distro/installed-rootfs
-proot-distro restore /sdcard/ubuntu.tar.gz
+if [ -f /sdcard/ubuntu.tar.gz ]
+then
+     echo -e "\nInstalling Ubuntu rootfs" 
+     proot-distro restore /sdcard/ubuntu.tar.gz
+else 
+     echo -e "\nNo rootfs detected, leaving"
+     exit
+fi
 wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu
 chmod +x ubuntu && mv ubuntu $PREFIX/bin
