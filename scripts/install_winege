@@ -4,6 +4,7 @@ GEVERSION=8-5
 
 
 wget https://github.com/GloriousEggroll/wine-ge-custom/releases/download/GE-Proton$GEVERSION/wine-lutris-GE-Proton$GEVERSION-x86_64.tar.xz  -P ~
+winege winecfg
 tar -xf wine-lutris-GE-Proton$GEVERSION-x86_64.tar.xz -C ~
 rm -rf ~/wine-lutris-GE-Proton$GEVERSION-x86_64.tar.xz
 

@@ -66,9 +66,11 @@ amd64)
            sed -i "1s/^.*$/$VERSION/"  ~/.config/wine64conf
            sed -i "1s/^.*$/$VERSION/"   ~/.config/wineconf
            sed -i "2s/^.*$/$ARCH/"     ~/.config/wineconf
+           wine64 winecfg
       else
            [[ -z $(awk 'FNR==1' ~/.config/wine64conf) ]] && echo "" > ~/.config/wine64conf
            sed -i "1s/^.*$/$VERSION/"  ~/.config/wine64conf
+           wine64 winecfg
       fi
       ;;
 x86)
@@ -76,6 +78,7 @@ x86)
       [[ -z $(awk 'FNR==2' ~/.config/wineconf) ]] && echo "" >> ~/.config/wineconf
       sed -i "1s/^.*$/$VERSION/" ~/.config/wineconf
       sed -i "2s/^.*$/$ARCH/"  ~/.config/wineconf
+      wine winecfg
       ;;
 esac
 
