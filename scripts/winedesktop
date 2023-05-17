@@ -1,0 +1,16 @@
+#!/bin/bash
+
+for wineprefix in $HOME/.local/wineprefix/*
+do
+   if [ ! -f $wineprefix/drive_c/windows/system32/TFM.exe ]
+   then
+        if [ ! -f ~/TFM.exe ]; then wget https://github.com/radzikpwnz/tfm/releases/download/v1.0.1/TFM.exe -P ~;fi
+        cp ~/TFM.exe $wineprefix/drive_c/windows/system32/TFM.exe
+   fi
+done
+        
+if [ ! -f /usr/bin/xrandr ]; then apt install x11-xserver-utils;fi
+screenres=$(xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
+ARGS="/desktop=shell,$screenres TFM.exe"
+
+wine explorer $ARGS
