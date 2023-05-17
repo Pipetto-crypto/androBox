@@ -2,7 +2,7 @@
 
 apt remove --purge box64-android -y
 read -p "Select a stable release, just type the month[e.g. March]: "  MONTH
-wget https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box64debs/box64_0.2.0_$MONTH_arm64.deb
+wget https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box64debs/box64_0.2.0_"$MONTH"_arm64.deb
 dpkg -i *.deb
 rm -rf *.deb
 apt-mark hold box64
