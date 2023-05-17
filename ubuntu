@@ -49,6 +49,7 @@ echo -e "update         Update this script"
 echo -e "update-all     Update this script and all the scripts inside the proot"
 echo -e "help           Print this help message"
 echo -e "set-renderer   Set default renderer, default llvmpipe"
+echo -e "stop           Kill all running processes"
 
 }
 
