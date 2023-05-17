@@ -60,9 +60,9 @@ ubuntu help
 
 # Known Issues
 
+Some installers are broken in wine64 and winege for now but may be fixed in a future version
 
-There is an issue that's strictly proot related where it is required to kill services.exe to allow wine64 to start. This is done automatically by the launch scripts but this will break some type of applications like a bunch of installers. This is the reason why I would rather keep three different type of wine instead of defaulting to only one. 
-
+Unity apps or games will much likely not work because of the lack of udev
 
 # Useful Proot commands
 
