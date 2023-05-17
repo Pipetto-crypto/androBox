@@ -84,7 +84,7 @@ then
      fi
 
 else
-     if [ -d $HOME/.local/wineprefix64/lutris-GE-Proton7-42 ]
+     if [ -d $HOME/.local/wineprefix64/lutris-GE-Proton8-5 ]
      then 
           touch ~/.config/winegeconf
           [[ -z $(awk 'FNR==1' ~/.config/winegeconf) ]] && echo "" >> ~/.config/winegeconf

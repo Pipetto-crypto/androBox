@@ -3,7 +3,7 @@
 WINEDLLOVERRIDES="$(cat ~/.config/winegeconf | awk '{NR==1}')"
 DATE=$(date -u +%F@%T)
 TERMINAL_LOGFILE=~/box64_logs/terminal_log@$DATE.txt
-VERSION=7-42
+VERSION=8-5
 ARCH=x86_64
 
 log(){
@@ -52,5 +52,8 @@ BOX64_LOG=${BOX64_LOG:-0} \
 BOX86_DYNAREC_BIGBLOCK=${BOX86_DYNAREC_BIGBLOCK:-0} \
 WINEDLLOVERRIDES=$WINEDLLOVERRIDES \
 WINEDEBUG=${WINEDEBUG:=-all} \
-box64 wine64 "${argslist[@]}"
-
+BOX86_DYNAREC_FORWARD=${BOX86_DYNAREC_FORWARD:=0} \
+BOX64_DYNAREC_FORWARD=${BOX64_DYNAREC_FORWARD:=0} \
+box64 wine64 "${argslist[@]}" &
+sleep 5
+pkill services.exe
