@@ -1,13 +1,11 @@
 #!/bin/bash
 
-for wineprefix in $HOME/.local/wineprefix/*
-do
-   if [ ! -f $wineprefix/drive_c/windows/system32/TFM.exe ]
-   then
-        if [ ! -f ~/TFM.exe ]; then wget https://github.com/radzikpwnz/tfm/releases/download/v1.0.1/TFM.exe -P ~;fi
-        cp ~/TFM.exe $wineprefix/drive_c/windows/system32/TFM.exe
-   fi
-done
+VERSION="$(cat ~/.config/wineconf | awk 'NR==1')"
+ARCH="$(cat ~/.config/wineconf | awk 'NR==2')"
+PREFIXARCH=""
+if [ "$ARCH" == "amd64" ];then PREFIXARCH="64";fi
+WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix$PREFIXARCH/wine-$VERSION}
+cp /usr/bin/TFM.exe $WINEPREFIX/drive_c/windows/system32
         
 if [ ! -f /usr/bin/xrandr ]; then apt install x11-xserver-utils;fi
 screenres=$(xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
