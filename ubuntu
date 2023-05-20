@@ -48,6 +48,7 @@ echo -e "-va            Start virglrenderer android vtest server, can provide --
 echo -e "update         Update this script"
 echo -e "update-all     Update this script and all the scripts inside the proot"
 echo -e "help           Print this help message"
+echo -e "enter          Enter the proot for maintainance and troubleshooting"
 echo -e "set-renderer   Set default renderer, default llvmpipe"
 echo -e "stop           Kill all running processes"
 
@@ -173,7 +174,7 @@ coresin=$(get_index_if_match "-cores" "${argslist[*]}")
 if [ "$coresin" == "" ];then cores="4-7";else cores=${argslist[$((coresin+1))]};fi
 taskset -a -pc $cores $thispid >/dev/null 2>&1
 
-x11_pid=$(pgrep Xvfb)
+x11_pid=$(pidof Xvfb)
 virgl_pid=$(pidof virgl_test_server_android)
 pulse_pid=$(pidof pulseaudio)
 vnc_pid=$(pgrep Xvnc)
@@ -222,6 +223,10 @@ do
           kill_processes
           exit 0
           ;;
+     enter)
+          oldwinedesktop=$iswinedesktop
+          if [ $oldwinedesktop == "yes" ] && [ "$i" != wine ]; then iswinedesktop="no";fi
+          ;;
      *)
           if [ -f "$i" ]
           then
@@ -230,19 +235,38 @@ do
           else
                 commslist[$commindex]=$i
                 commindex=$((commindex+1))
+		oldwinedesktop=$iswinedesktop
+                if [ $oldwinedesktop == "yes" ] && [ "$i" != wine ]; then iswinedesktop="no";fi
           fi
           ;;
       esac
 done
 
+#Update the pids after parsing command line options
+
+x11_pid=$(pidof Xvfb)
+virgl_pid=$(pidof virgl_test_server_android)
+vnc_pid=$(pgrep Xvnc)
 
 
 if [ "$gpurenderer" == "virgl" ] && [ "$virgl_pid" == "" ];then virgl_server;fi
 if [ "$autostartservice" == "x11" ] && [ "$x11_pid" == "" ];then xserver;fi
 if [ "$autostartservice" == "vnc" ] && [ "$vnc_pid" == "" ];then vnc_server;fi
-if [ "$iswinedesktop" == "yes" ] && [ "$(pgrep winedesktop)" == "" ] && [ "$x11_pid" != "" ] ||  [ "$vnc_pid" != "" ];then extracommslist="winedesktop$winedesktoptype";fi
-if [ "${commslist[*]}" == "" ] && [ "$extracommslist" == "" ];then commslist=("bash");fi
+
+#update the pids after executing the autostart commands
+
+x11_pid=$(pidof Xvfb)
+vnc_pid=$(pgrep Xvnc)
+
 if [ "$pulse_pid" == "" ]; then pulse_server;fi
 
+if [ "$iswinedesktop" == "yes" ] && [ "$(pgrep winedesktop)" == "" ] && [ "$x11_pid" != "" ] ||  [ "$vnc_pid" != "" ]
+then 
+     proot_login "winedesktop$winedesktoptype" &
+     exit
+fi
 
-proot_login "$rendererargs ${commslist[*]} $extracommslist"
+if [ "${commslist[*]}" == "" ] && [ "$extracommslist" == "" ];then commslist=("bash");fi
+
+
+proot_login "$rendererargs ${commslist[*]}"
