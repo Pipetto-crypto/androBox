@@ -8,3 +8,4 @@ fi
  
 wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/scripts/update-bins
 sudo bash update-bins && rm -rf update-bins
+apt update && apt upgrade -y

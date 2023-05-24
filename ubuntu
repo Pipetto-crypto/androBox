@@ -6,7 +6,13 @@ then
     mkdir -p /sdcard/3in1ProotX86Emus
     wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/proot.conf -P /sdcard/3in1ProotX86Emus
 fi
-    
+
+if [ ! -f $PATH/termux-x11 ]
+then
+     echo -e "You haven't installed Termux:X11 deb but it is required by this script, leaving..."
+     exit
+fi
+
 
 iswinedesktop="$(cat $configfile | awk -F '=' '/winedesktop/{print $2}' | tr -d "\n")" 
 if [ "$iswinedesktop" == "yes" ];then winedesktoptype="$(cat $configfile | awk -F '=' '/desktoptype/{print $2}' | tr -d "\n")";fi
@@ -236,7 +242,7 @@ do
                 commslist[$commindex]=$i
                 commindex=$((commindex+1))
 		oldwinedesktop=$iswinedesktop
-                if [ $oldwinedesktop == "yes" ] && [ "$i" != wine ]; then iswinedesktop="no";fi
+                if [ $oldwinedesktop == "yes" ] && [ "$i" != wine ] || [ "$i" != wine64 ] || [ "$i" != winege ]; then iswinedesktop="no";fi
           fi
           ;;
       esac
@@ -262,7 +268,7 @@ if [ "$pulse_pid" == "" ]; then pulse_server;fi
 
 if [ "$iswinedesktop" == "yes" ] && [ "$(pgrep winedesktop)" == "" ] && [ "$x11_pid" != "" ] ||  [ "$vnc_pid" != "" ]
 then 
-     proot_login "winedesktop$winedesktoptype" &
+     proot_login "$rendererargs winedesktop$winedesktoptype" &
      exit
 fi
 
