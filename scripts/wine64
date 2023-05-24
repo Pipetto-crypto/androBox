@@ -54,6 +54,4 @@ WINEDLLOVERRIDES=$WINEDLLOVERRIDES \
 WINEDEBUG=${WINEDEBUG:=-all} \
 BOX86_DYNAREC_FORWARD=${BOX86_DYNAREC_FORWARD:=0} \
 BOX64_DYNAREC_FORWARD=${BOX64_DYNAREC_FORWARD:=0} \
-box64 wine64 "${argslist[@]}" &
-sleep 5
-pkill services.exe
+box64 wine64 "${argslist[@]}"
