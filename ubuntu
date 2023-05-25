@@ -149,7 +149,7 @@ proot_login(){
 
 bindargs=("--bind /sdcard:/sdcard" "--bind /data/data/com.termux/files/home:/termux-home" "--bind /storage/emulated/0" "--bind $TMPDIR:/tmp")
 proot_args=("--isolated" "--no-sysvipc")
-proot-distro login ubuntu ${bindargs[@]} ${proot_args[@]} -- $1
+proot-distro login ubuntu ${bindargs[@]} ${proot_args[@]} -- $@
 
 
 }
@@ -180,7 +180,7 @@ taskset -a -pc $cores $thispid >/dev/null 2>&1
 app_pid=$(pidof app_process)
 virgl_pid=$(pidof virgl_test_server_android)
 pulse_pid=$(pidof pulseaudio)
-vnc_pid=$(pgrep Xvnc)
+vnc_pid=$(proot_login "pgrep Xvnc")
 commindex=1
 
 for i in ${argslist[@]}
@@ -250,7 +250,7 @@ done
 
 app_pid=$(pidof app_process)
 virgl_pid=$(pidof virgl_test_server_android)
-vnc_pid=$(pgrep Xvnc)
+vnc_pid=$(proot_login "pgrep Xvnc")
 
 
 if [ "$gpurenderer" == "virgl" ] && [ "$virgl_pid" == "" ];then virgl_server;fi
@@ -260,14 +260,17 @@ if [ "$autostartservice" == "vnc" ] && [ "$vnc_pid" == "" ];then vnc_server;fi
 #update the pids after executing the autostart commands
 
 app_pid=$(pidof app_process)
-vnc_pid=$(pgrep Xvnc)
+vnc_pid=$(proot_login "pgrep Xvnc")
 
 if [ "$pulse_pid" == "" ]; then pulse_server;fi
 
-if [ "$iswinedesktop" == "yes" ] && [ "$(pgrep winedesktop)" == "" ] && [ "$app_pid" != "" ] ||  [ "$vnc_pid" != "" ]
+if [ "$iswinedesktop" == "yes" ] && [ "$(pgrep winedesktop)" == "" ]
 then 
-     proot_login "winedesktop$winedesktoptype" &
-     exit
+     if [ "$app_pid" != "" ] || [ "$vnc_pid" != "" ]
+     then
+          proot_login "winedesktop$winedesktoptype" &
+          exit
+     fi
 fi
 
 if [ "${commslist[*]}" == "" ] && [ "$extracommslist" == "" ];then commslist=("bash");fi
