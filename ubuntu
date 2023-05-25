@@ -94,7 +94,6 @@ kill_processes(){
 
 pkill pulseaudio
 pkill Xvnc
-pkill Xvfb
 kill $(pidof app_process) >/dev/null 2>&1
 kill $(pidof virgl_test_server_android) >/dev/null 2>&1
 
@@ -104,9 +103,7 @@ kill $(pidof virgl_test_server_android) >/dev/null 2>&1
 xserver(){
 
 echo -e "\nStarting the X server"
-DISPLAY=:0 termux-x11 --no-xwayland-start >/dev/null 2>&1 &
-sleep 3
-DISPLAY=:0 Xvfb :0 -ac -screen 0 4096x4096x24 -noreset &
+DISPLAY=:0 termux-x11 >/dev/null 2>&1 &
 sleep 3
 
 
@@ -172,7 +169,7 @@ proot-distro login ubuntu --shared-tmp --no-sysvipc -- update-bins
 proot-distro login ubuntu --shared-tmp --no-sysvipc -- update
 wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu
 chmod +x ubuntu
-mv ubuntu $PATH
+lmv ubuntu $PATH
 
 }
 
@@ -180,7 +177,7 @@ coresin=$(get_index_if_match "-cores" "${argslist[*]}")
 if [ "$coresin" == "" ];then cores="4-7";else cores=${argslist[$((coresin+1))]};fi
 taskset -a -pc $cores $thispid >/dev/null 2>&1
 
-x11_pid=$(pidof Xvfb)
+app_pid=$(pidof app_process)
 virgl_pid=$(pidof virgl_test_server_android)
 pulse_pid=$(pidof pulseaudio)
 vnc_pid=$(pgrep Xvnc)
@@ -202,6 +199,7 @@ do
           exit
           ;;
      init) 
+          xserver
           proot_login wineswitch
           proot_login install_ib
           exit_proot
@@ -211,7 +209,7 @@ do
           exit_proot
           ;;
      -x) 
-	  if [ "$x11_pid" == "" ];then xserver;fi
+	  if [ "$app_pid" == "" ];then xserver;fi
           #echo -e "\nStart Openbox Session Manager"
           #proot-distro login ubuntu --shared-tmp --no-sysvipc -- openbox-session >/dev/null 2>&1 &
           ;;
@@ -250,25 +248,25 @@ done
 
 #Update the pids after parsing command line options
 
-x11_pid=$(pidof Xvfb)
+app_pid=$(pidof app_process)
 virgl_pid=$(pidof virgl_test_server_android)
 vnc_pid=$(pgrep Xvnc)
 
 
 if [ "$gpurenderer" == "virgl" ] && [ "$virgl_pid" == "" ];then virgl_server;fi
-if [ "$autostartservice" == "x11" ] && [ "$x11_pid" == "" ];then xserver;fi
+if [ "$autostartservice" == "x11" ] && [ "$app_pid" == "" ];then xserver;fi
 if [ "$autostartservice" == "vnc" ] && [ "$vnc_pid" == "" ];then vnc_server;fi
 
 #update the pids after executing the autostart commands
 
-x11_pid=$(pidof Xvfb)
+app_pid=$(pidof app_process)
 vnc_pid=$(pgrep Xvnc)
 
 if [ "$pulse_pid" == "" ]; then pulse_server;fi
 
-if [ "$iswinedesktop" == "yes" ] && [ "$(pgrep winedesktop)" == "" ] && [ "$x11_pid" != "" ] ||  [ "$vnc_pid" != "" ]
+if [ "$iswinedesktop" == "yes" ] && [ "$(pgrep winedesktop)" == "" ] && [ "$app_pid" != "" ] ||  [ "$vnc_pid" != "" ]
 then 
-     proot_login "$rendererargs winedesktop$winedesktoptype" &
+     proot_login "winedesktop$winedesktoptype" &
      exit
 fi
 
