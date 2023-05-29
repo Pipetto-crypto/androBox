@@ -169,7 +169,14 @@ proot-distro login ubuntu --shared-tmp --no-sysvipc -- update-bins
 proot-distro login ubuntu --shared-tmp --no-sysvipc -- update
 wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu
 chmod +x ubuntu
-lmv ubuntu $PATH
+mv ubuntu $PATH
+
+}
+
+update-proot(){
+
+proot-distro login ubuntu --shared-tmp --no-sysvipc -- apt update
+proot-distro login ubuntu --shared-tmp --no-sysvipc -- apt upgrade
 
 }
 
@@ -198,6 +205,10 @@ do
           update-all
           exit
           ;;
+     update-proot)
+          update-proot
+          exit
+          ;;
      init) 
           xserver
           proot_login wineswitch
@@ -210,16 +221,15 @@ do
           ;;
      -x) 
 	  if [ "$app_pid" == "" ];then xserver;fi
-          #echo -e "\nStart Openbox Session Manager"
-          #proot-distro login ubuntu --shared-tmp --no-sysvipc -- openbox-session >/dev/null 2>&1 &
           ;;
      -va | --use-gles)
           if [ "$virgl_pid" == "" ];then virgl_server;fi
           ;;
      -vnc)
           if [ "$vnc_pid" == "" ];then vnc_server;fi
-          #proot-distro login ubuntu --shared-tmp --no-sysvipc -- openbox-session >/dev/null 2>&1 & 
           ;;
+     --with-wm)
+          iswm="true"
      -vm)
           MESA_NO_ERROR=1 GALLIUM_DRIVER=zink ZINK_DESCRIPTORS=lazy MESA_GL_VERSION_OVERRIDE=4.0 virgl_test_server --use-egl-surfaceless &
           ;;
@@ -228,20 +238,17 @@ do
           exit 0
           ;;
      enter)
-          oldwinedesktop=$iswinedesktop
-          if [ $oldwinedesktop == "yes" ] && [ "$i" != wine ]; then iswinedesktop="no";fi
+          commslist="bash"
           ;;
      *)
           if [ -f "$i" ]
           then
-                absfile=$(realpath -e "$i")
-                commslist[$commindex]="$absfile"
+                absfile=$(realpath -e $i)
           else
+                if [ "$i" == "wine64" ] || [ "$i" == "winege" ]; then iswine64bit="yes";fi
                 commslist[$commindex]=$i
-                commindex=$((commindex+1))
-		oldwinedesktop=$iswinedesktop
-                if [ $oldwinedesktop == "yes" ] && [ "$i" != wine ] || [ "$i" != wine64 ] || [ "$i" != winege ]; then iswinedesktop="no";fi
           fi
+          commindex=$((commindex+1))
           ;;
       esac
 done
@@ -262,18 +269,34 @@ if [ "$autostartservice" == "vnc" ] && [ "$vnc_pid" == "" ];then vnc_server;fi
 app_pid=$(pidof app_process)
 vnc_pid=$(proot_login "pgrep Xvnc")
 
+if [ "$iswm" == "true" ]
+then
+     #proot-distro login ubuntu --shared-tmp --no-sysvipc -- openbox-session >/dev/null 2>&1 &
+fi
+
 if [ "$pulse_pid" == "" ]; then pulse_server;fi
+
+if [ "${commslist[*]}" != "" ]
+then
+    iswinedesktop="no"
+fi
 
 if [ "$iswinedesktop" == "yes" ] && [ "$(pgrep winedesktop)" == "" ]
 then 
      if [ "$app_pid" != "" ] || [ "$vnc_pid" != "" ]
      then
           proot_login "winedesktop$winedesktoptype" &
+          sleep 5
+          if [ "$winedesktoptype" != "" ];then pkill services.exe;fi
           exit
      fi
 fi
 
-if [ "${commslist[*]}" == "" ] && [ "$extracommslist" == "" ];then commslist=("bash");fi
-
-
-proot_login "$rendererargs ${commslist[*]}"
+if [ "$iswine64bit" == "yes" ]
+then
+     proot_login $rendererargs ${commslist[*]} "$absfile" &
+     sleep 5
+     pkill services.exe
+else
+     proot_login $rendererargs ${commslist[*]} "$absfile" 
+fi
