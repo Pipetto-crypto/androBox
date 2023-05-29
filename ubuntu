@@ -230,6 +230,7 @@ do
           ;;
      --with-wm)
           iswm="true"
+          ;;
      -vm)
           MESA_NO_ERROR=1 GALLIUM_DRIVER=zink ZINK_DESCRIPTORS=lazy MESA_GL_VERSION_OVERRIDE=4.0 virgl_test_server --use-egl-surfaceless &
           ;;
