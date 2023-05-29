@@ -272,7 +272,7 @@ vnc_pid=$(proot_login "pgrep Xvnc")
 
 if [ "$iswm" == "true" ]
 then
-     #proot-distro login ubuntu --shared-tmp --no-sysvipc -- openbox-session >/dev/null 2>&1 &
+     proot-distro login ubuntu --shared-tmp --no-sysvipc -- openbox-session >/dev/null 2>&1 &
 fi
 
 if [ "$pulse_pid" == "" ]; then pulse_server;fi
