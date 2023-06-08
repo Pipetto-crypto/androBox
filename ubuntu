@@ -1,11 +1,70 @@
-#!/bin/bash
+#!/bin/bash  
 
 configfile=/sdcard/3in1ProotX86Emus/proot.conf
-if [ ! -f $configfile ]
+rootfspath=$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu
+
+
+checkiftoreplace(){
+
+wget -q https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/proot.conf -P ~
+if [ ! -f /sdcard/3in1ProotX86Emus/proot.conf ]
 then
-    mkdir -p /sdcard/3in1ProotX86Emus
-    wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/proot.conf -P /sdcard/3in1ProotX86Emus
+     cp ~/proot.conf /sdcard/3in1ProotX86Emus/
+elif [ "$(diff ~/proot.conf /sdcard/3in1ProotX86Emus/proot.conf)" != "" ]
+then
+     file1="/sdcard/3in1ProotX86Emus/proot.conf"
+     file2="$HOME/proot.conf"
+     if [ -f ~/tmpfile ];then rm -rf ~/tmpfile;fi
+     arr1=()
+     arr2=()
+     index1=1
+     index2=1
+     while read line1
+     do
+        arr1[$index1]="$line1"
+        index1=$((index1+1))
+     done < $file1
+     while read line2
+     do
+        arr2[$index2]="$line2"
+        index2=$((index2+1))
+     done < $file2
+
+
+     index=1
+     for x in "${arr1[@]}"
+     do
+        if [ "$x" == "${arr2[$index]}" ]
+        then
+             echo "$x" >> ~/tmpfile
+        elif echo "${arr2[$index]}" | grep -q "#"
+        then
+             echo "${arr2[$index]}" >> ~/tmpfile
+        else
+             echo "$x" >> ~/tmpfile
+        fi
+        index=$((index+1))
+     done
+
+     for((newindex=index;newindex<="${#arr2[@]}";newindex++))
+     do
+        echo "${arr2[$newindex]}" >> ~/tmpfile
+     done
+     mv ~/tmpfile /sdcard/3in1ProotX86Emus/proot.conf
+     rm -rf ~/proot.conf
 fi
+
+}
+
+
+
+
+mkdir -p /sdcard/3in1ProotX86Emus
+mkdir -p /sdcard/3in1ProotX86Emus/box86_logs
+mkdir -p /sdcard/3in1ProotX86Emus/box64_logs
+checkiftoreplace
+if [ ! -f /sdcard/3in1ProotX86Emus/box86opts ];then https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/box86opts -P /sdcard/3in1ProotX86Emus;fi
+if [ ! -f /sdcard/3in1ProotX86Emus/box64opts ];then https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/box86opts -P /sdcard/3in1ProotX86Emus;fi
 
 if [ ! -f $PATH/termux-x11 ]
 then
@@ -157,19 +216,15 @@ proot-distro login ubuntu ${bindargs[@]} ${proot_args[@]} -- $@
 
 update(){
 
-wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu
-chmod +x ubuntu
-mv ubuntu $PATH
+wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu -P $PATH
+chmod +x $PATH/ubuntu
 
 }
 
 update-all(){
 
-proot-distro login ubuntu --shared-tmp --no-sysvipc -- update-bins 
 proot-distro login ubuntu --shared-tmp --no-sysvipc -- update
-wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu
-chmod +x ubuntu
-mv ubuntu $PATH
+update
 
 }
 
@@ -246,7 +301,6 @@ do
           then
                 absfile=$(realpath -e $i)
           else
-                if [ "$i" == "wine64" ] || [ "$i" == "winege" ]; then iswine64bit="yes";fi
                 commslist[$commindex]=$i
           fi
           commindex=$((commindex+1))
@@ -286,18 +340,13 @@ if [ "$iswinedesktop" == "yes" ] && [ "$(pgrep winedesktop)" == "" ]
 then 
      if [ "$app_pid" != "" ] || [ "$vnc_pid" != "" ]
      then
-          proot_login "winedesktop$winedesktoptype" &
-          sleep 5
-          if [ "$winedesktoptype" != "" ];then pkill services.exe;fi
-          exit
+          echo "winedesktop$winedesktoptype" >> $rootfspath/etc/profile
+          commslist="bash"
      fi
 fi
 
-if [ "$iswine64bit" == "yes" ]
-then
-     proot_login $rendererargs ${commslist[*]} "$absfile" &
-     sleep 5
-     pkill services.exe
-else
-     proot_login $rendererargs ${commslist[*]} "$absfile" 
-fi
+proot_login $rendererargs ${commslist[*]} "$absfile" 
+sed -i "s/winedesktopge//g" $rootfspath/etc/profile
+sed -i "s/winedesktop64//g" $rootfspath/etc/profile
+sed -i "s/winedesktop//g" $rootfspath/etc/profile
+reset -I -Q
