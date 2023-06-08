@@ -63,8 +63,8 @@ mkdir -p /sdcard/3in1ProotX86Emus
 mkdir -p /sdcard/3in1ProotX86Emus/box86_logs
 mkdir -p /sdcard/3in1ProotX86Emus/box64_logs
 checkiftoreplace
-if [ ! -f /sdcard/3in1ProotX86Emus/box86opts ];then https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/box86opts -P /sdcard/3in1ProotX86Emus;fi
-if [ ! -f /sdcard/3in1ProotX86Emus/box64opts ];then https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/box86opts -P /sdcard/3in1ProotX86Emus;fi
+if [ ! -f /sdcard/3in1ProotX86Emus/box86opts ];then wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/box86opts -P /sdcard/3in1ProotX86Emus;fi
+if [ ! -f /sdcard/3in1ProotX86Emus/box64opts ];then wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/box86opts -P /sdcard/3in1ProotX86Emus;fi
 
 if [ ! -f $PATH/termux-x11 ]
 then
@@ -216,7 +216,9 @@ proot-distro login ubuntu ${bindargs[@]} ${proot_args[@]} -- $@
 
 update(){
 
-wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu -P $PATH
+rm -rf ~/ubuntu
+wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu -P ~
+mv ~/ubuntu $PATH
 chmod +x $PATH/ubuntu
 
 }
