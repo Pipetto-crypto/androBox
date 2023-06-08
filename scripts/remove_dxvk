@@ -1,19 +1,97 @@
 #!/bin/bash
 
-if [ "$SUDO_USER" != "" ];then HOME=/home/$SUDO_USER;fi
-if [ ! "$(id -u)" = "0" ]
-then
-     echo -e "\nThis program needs to be ran with sudo"
-     exit
+removedlloverride(){
+
+input="$1/user.reg"
+linenumber=1
+while IFS= read -r line 
+do
+  if [[ "$line" =~ "$2" ]]
+  then
+      sed -i "$linenumber""d" $input
+  fi
+  linenumber=$((linenumber+1))
+done < $input
+
+}
+
+copydll(){
+
+local winarch=$(awk -F "=" /arch/'{print $2}' $WINEPREFIX/user.reg | head -n1)
+
+case $winarch in
+win32)
+      arch=x86
+      ;;
+win64)
+      arch=amd64
+      ;;
+esac
+
+local wineins="$(basename $WINEPREFIX)"
+local dlltocopy=("dxgi" "d3d8" "d3d9" "d3d10core" "d3d10" "d3d10_1" "d3d11")
+local winedir=$HOME/$wineins-$arch
+if [ -d $winedir/lib/wine/fakedlls ] || [ -d $winedir/lib64/wine/fakedlls ]
+then                                                                                                                       for dll in "${dlltocopy[@]}"
+     do
+        if [ "$winarch" == "win32" ]
+        then
+             cp $winedir/lib/wine/fakedlls/$dll.dll $WINEPREFIX/drive_c/windows/system32
+        else
+             cp $winedir/lib/wine/fakedlls/$dll.dll $WINEPREFIX/drive_c/windows/syswow64
+             cp $winedir/lib64/wine/fakedlls/$dll.dll $WINEPREFIX/drive_c/windows/system32
+        fi
+     done
+else
+     for dll in "${dlltocopy[@]}"
+     do
+        if [ "$winarch" == "win32" ]
+        then
+             cp $winedir/lib/wine/i386-windows/$dll.dll $WINEPREFIX/drive_c/windows/system32
+        else
+             cp $winedir/lib/wine/i386-windows/$dll.dll $WINEPREFIX/drive_c/windows/syswow64
+             cp $winedir/lib/wine/x86_64-windows/$dll.dll $WINEPREFIX/drive_c/windows/system32
+        fi
+     done
 fi
 
-[[ ! -z $(awk 'FNR==3' ~/.config/wineconf) ]] && sed -i '3d' ~/.config/wineconf
-[[ ! -z $(awk 'FNR==2' ~/.config/wine64conf) ]] && sed -i '2d' ~/.config/wine64conf
-[[ ! -z $(awk 'FNR==1' ~/.config/winegeconf) ]] && sed -i '1d' ~/.config/winegeconf
-[[ ! -z $(awk 'FNR==2' ~/.config/exawineconf) ]] && sed -i '2d' ~/.config/exawineconf
-if [ "$1" == "--full-remove" ]
-then
-     wine64 wineboot -u
-     wine wineboot -u
-     winege wineboot -u
+
+}
+
+updateprefix(){
+
+local winarch=$(awk -F "=" /arch/'{print $2}' $WINEPREFIX/user.reg | head -n1)
+local wineins="$(basename $WINEPREFIX)"
+
+copydll
+case $winarch in
+win32)
+      arch=x86
+      #BOX86_PATH=$HOME/$wineins-$arch/bin WINEPREFIX=$WINEPREFIX box86 wineboot -u
+      wine -k
+      sleep 3
+      winedesktop
+      ;;
+win64)
+      if [[ "$WINEPREFIX" =~ "lutris" ]]
+      then
+           arch=x86_64
+           desktopfx=ge
+      else
+           arch=amd64
+           desktopfx=64
+      fi
+      #BOX64_PATH=$HOME/$wineins-$arch/bin WINEPREFIX=$WINEPREFIX box64 wineboot -u
+      wine64 -k
+      sleep 3
+      winedesktop$desktopfx
+      ;;
+esac
+
+
+}
+
+if [ "$WINEPREFIX" != "" ]
+then 
+     copydll
 fi

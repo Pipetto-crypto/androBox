@@ -1,7 +1,14 @@
 #!/bin/bash
 
 
-if [ "$SUDO_USER" != "" ];then HOME=/home/$SUDO_USER;fi
+if [ "$SUDO_USER" != "" ]
+then 
+     HOME=/home/$SUDO_USER
+     USERNAME=$SUDO_USER
+else
+     USERNAME=root
+fi
+
 if [ "$1" == "help" ]
 then
      echo -e "Usage: wineswitch version arch"
@@ -71,7 +78,13 @@ amd64)
            [[ -z $(awk 'FNR==1' ~/.config/wine64conf) ]] && echo "" > ~/.config/wine64conf
            sed -i "1s/^.*$/$VERSION/"  ~/.config/wine64conf
       fi
-      if [ ! -d ~/.local/wineprefix64/wine-$VERSION ];then wine64 -winedbg winecfg;fi
+      if [ ! -d ~/.local/wineprefix64/wine-$VERSION ] && [ "$REALARCH" != "uni" ]
+      then 
+           wine64 -winedbg winecfg
+      elif [ ! -d ~/.local/wineprefix/wine-$VERSION ] && [ "$REALARCH" == "uni" ]
+      then
+           WINEARCH=win32 wine -winedbg winecfg
+      fi
       ;;
 x86)
       [[ -z $(awk 'FNR==1' ~/.config/wineconf) ]] && echo "" > ~/.config/wineconf
@@ -82,4 +95,5 @@ x86)
       ;;
 esac
 
+pfxupdate
 rm -rf ~/*.tar.xz && rm -rf ~/*.tar.gz

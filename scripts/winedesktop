@@ -9,6 +9,6 @@ cp /usr/bin/TFM.exe $WINEPREFIX/drive_c/windows/system32
         
 if [ ! -f /usr/bin/xrandr ]; then apt install x11-xserver-utils;fi
 screenres=$(xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
-ARGS="/desktop=shell,$screenres TFM.exe"
+ARGS="/desktop=shell,$screenres TFM.exe E:"
 
-wine explorer $ARGS
+env --chdir=$HOME wine $@ explorer $ARGS

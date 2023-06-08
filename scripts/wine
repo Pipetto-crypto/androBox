@@ -1,17 +1,16 @@
 #!/bin/bash
 
-WINEDLLOVERRIDES="$(cat ~/.config/wineconf | awk 'NR==3')"
 VERSION="$(cat ~/.config/wineconf | awk 'NR==1')"
 ARCH="$(cat ~/.config/wineconf | awk 'NR==2')"
 PREFIXARCH=""
-DATE=$(date -u +%F@%T)
-TERMINAL_LOGFILE=~/box86_logs/terminal_log@$DATE.txt
+DATE=$(date -u +%F@%H-%M-%S)
+TERMINAL_LOGFILE=/sdcard/3in1ProotX86Emus/box86_logs/terminal_log@$DATE.txt
 
 if [ "$ARCH" == "amd64" ];then PREFIXARCH="64";fi
 
 log(){
 
-WINEDEBUG=+all
+WINEDEBUG=
 echo -e "This wine session will be logged in $TERMINAL_LOGFILE"
 exec 3>&1 4>&2
 trap 'exec 2>&4 1>&3' 0 1 2 3
@@ -25,7 +24,15 @@ winetricks_func(){
 if [ ! -f /usr/bin/cabextract ];then apt install cabextract;fi
 env PATH=$PATH:~/wine-$VERSION-$ARCH/bin \
 WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix$PREFIXARCH/wine-$VERSION} \
-box86 winetricks
+box86 winetricks $@
+
+}
+
+killwine_func(){
+
+BOX86_PATH=~/wine-$VERSION-x86/bin WINEPREFIX=$HOME/.local/wineprefix$PREFIXARCH/wine-$VERSION box86 wineboot -f
+BOX86_PATH=~/wine-$VERSION-x86/bin WINEPREFIX=$HOME/.local/wineprefix$PREFIXARCH/wine-$VERSION box86 wineserver -k9
+pkill -9 -f exe
 
 }
 
@@ -49,6 +56,10 @@ do
    elif [ "$var" == "-winedbg" ]
    then
         WINEDEBUG="default"
+   elif [ "$var" == "-k" ]
+   then
+        killwine_func
+        exit
    else
         argslist[$index]=$var
    fi
@@ -62,7 +73,19 @@ then
      exit
 fi
 
-env BOX86_LD_LIBRARY_PATH=~/wine-$VERSION-$ARCH/lib/wine/i386-unix/:~/wine-$VERSION-$ARCH/lib:~/wine-$VERSION-$ARCH/lib/wine:/lib/i386-linux-gnu:/lib/aarch64-linux-gnu/ \
+for line in "$(cat /sdcard/3in1ProotX86Emus/box86opts)"
+do
+   box86params+=($line)
+done
+
+WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix$PREFIXARCH/wine-$VERSION}
+
+if [ -f $WINEPREFIX/islog ] && [ "$(cat $WINEPREFIX/islog)" == "Enabled" ]
+then
+     log
+fi
+
+env ${box86params[@]} BOX86_LD_LIBRARY_PATH=~/wine-$VERSION-$ARCH/lib/wine/i386-unix/:~/wine-$VERSION-$ARCH/lib:~/wine-$VERSION-$ARCH/lib/wine:/lib/i386-linux-gnu:/lib/aarch64-linux-gnu/ \
 BOX86_PATH=~/wine-$VERSION-$ARCH/bin \
 WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix$PREFIXARCH/wine-$VERSION} \
 BOX86_DYNAREC_BIGBLOCK=${BOX86_DYNAREC_BIGBLOCK:-0} \
@@ -70,4 +93,5 @@ WINEDLLOVERRIDES=$WINEDLLOVERRIDES \
 WINEDEBUG=${WINEDEBUG:=-all} \
 BOX86_DYNAREC_FORWARD=${BOX86_DYNAREC_FORWARD:=0} \
 BOX86_RCFILE=${BOX86_RCFILE:=/sdcard/3in1ProotX86Emus/box86rc} \
+VK_ICD_FILENAMES="/root/mesa64/freedreno_icd.aarch64.json:/root/mesa32/freedreno_icd.armhf.json" \
 box86 wine "${argslist[@]}"

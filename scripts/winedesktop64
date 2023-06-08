@@ -4,9 +4,9 @@ VERSION="$(cat ~/.config/wine64conf | awk 'NR==1')"
 ARCH=amd64
 WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix64/wine-$VERSION}
 
-        
+if [ ! -f $WINEPREFIX/drive_c/windows/syswow64/TFM.exe ];then cp /usr/bin/TFM.exe  $WINEPREFIX/drive_c/windows/system32;fi
 if [ ! -f /usr/bin/xrandr ]; then apt install x11-xserver-utils;fi
 screenres=$(xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
-ARGS="/desktop=shell,$screenres explorer.exe"
+ARGS="/desktop=shell,$screenres TFM.exe E:"
 
-wine64 explorer $ARGS
+env --chdir=$HOME wine64 $@ explorer $ARGS

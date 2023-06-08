@@ -1,0 +1,92 @@
+#!/bin/bash
+
+WINEVERSION="$(cat ~/.config/wine64conf | awk 'NR==1')"
+WINEVERSION32="$(cat ~/.config/wineconf | awk 'NR==1')"
+EXAWINEVERSION="$(cat ~/.config/exawineconf | awk 'NR==1')"
+WINEPREFIX64=$HOME/.local/wineprefix64/wine-$WINEVERSION
+WINEPREFIX32=$HOME/.local/wineprefix/wine-$WINEVERSION32
+EXAWINEPREFIX=$HOME/.local/wineprefix/wine-$EXAWINEVERSION
+GEPREFIX=$HOME/.local/wineprefix64/lutris-GE-Proton8-5
+
+dlloverride(){
+
+input="$1/user.reg"
+dlltoverride="$2"
+type="$3"
+echo "" >> $input
+echo "[Software\\\Wine\\\DllOverrides]" >> $input
+echo "" >> $input
+echo "\"$dlltoverride"\""=""\"$type"\" >> $input
+
+}
+
+restart(){
+
+local winarch=$(awk -F "=" /arch/'{print $2}' $WINEPREFIX/user.reg | head -n1)
+local wineins="$(basename $WINEPREFIX)"
+case "$winarch" in
+win32)
+      wine -k
+      sleep 3
+      winedesktop
+      ;;
+win64)
+      if [[ "$WINEPREFIX" =~ "lutris" ]]
+      then
+           winege -k
+           desktopfx=ge
+      else
+           wine64 -k
+           desktopfx=64
+      fi
+      sleep 3
+      winedesktop$desktopfx
+      ;;
+esac
+
+
+}
+
+wget https://github.com/crosire/d3d8to9/releases/download/v1.11.1/d3d8.dll -P ~
+
+choices=()
+if [ "$1" != "" ]
+then
+     choices+=$1
+else
+     echo -e "\nSelect where to install: "
+     echo -e "1.Wine"
+     echo -e "2.Exawine"
+     echo -e "3.Wine64"
+     echo -e "4.WineGE"
+
+     while [ True ]
+     do
+        read -p "Your choice, press q to break and enter to confirm: " CHOICE
+        if [ "$CHOICE" == "q" ];then break;fi
+        choices+=($CHOICE)
+     done
+fi
+
+
+if [[ "${choices[*]}" =~ "3" ]]
+then
+     cp -r ~/d3d8.dll $WINEPREFIX64/drive_c/windows/syswow64
+     if [ "$2" == "-partial" ];then rm -rf ~/d3d8.dll && exit;fi
+     dlloverride $WINEPREFIX64 d3d8 native,builtin
+
+elif [[ "${choices[*]}" =~ "1" ]]
+then
+     cp -r ~/d3d8.dll $WINEPREFIX32/drive_c/windows/system32
+         if [ "$2" == "-partial" ];then rm -rf ~/d3d8.dll && exit;fi
+     dlloverride $WINEPREFIX32 d3d8 native,builtin
+else
+     cp -r ~/d3d8.dll $GEPREFIX/drive_c/windows/syswow64
+     if [ "$2" == "-partial" ];then rm -rf ~/d3d8.dll && exit;fi
+     dlloverride $GEPREFIX d3d8 native,builtin
+fi
+
+
+
+rm -rf ~/d3d8.dll
+if [ "$WINEPREFIX" != "" ];then restart;fi

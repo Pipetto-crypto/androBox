@@ -1,12 +1,53 @@
 #!/bin/bash
 
+
 if [ "$SUDO_USER" != "" ];then HOME=/home/$SUDO_USER;fi
 WINEVERSION="$(cat ~/.config/wine64conf | awk 'NR==1')"
 WINEVERSION32="$(cat ~/.config/wineconf | awk 'NR==1')"
 EXAWINEVERSION="$(cat ~/.config/exawineconf | awk 'NR==1')"
-WINEPREFIX=$HOME/.local/wineprefix64/wine-$WINEVERSION
+WINEPREFIX64=$HOME/.local/wineprefix64/wine-$WINEVERSION
 WINEPREFIX32=$HOME/.local/wineprefix/wine-$WINEVERSION32
 EXAWINEPREFIX=$HOME/.local/wineprefix/wine-$EXAWINEVERSION
+GEPREFIX=$HOME/.local/wineprefix64/lutris-GE-Proton8-5
+
+dlloverride(){
+
+input="$1/user.reg"
+dlltoverride="$2"
+type="$3"
+echo "" >> $input
+echo "[Software\\\Wine\\\DllOverrides]" >> $input
+echo "" >> $input
+echo "\"$dlltoverride"\""=""\"$type"\" >> $input
+
+}
+
+restart(){
+
+local winarch=$(awk -F "=" /arch/'{print $2}' $WINEPREFIX/user.reg | head -n1)
+local wineins="$(basename $WINEPREFIX)"
+case "$winarch" in
+win32)
+      wine -k
+      sleep 3
+      winedesktop
+      ;;
+win64)
+      if [[ "$WINEPREFIX" =~ "lutris" ]]
+      then
+           winege -k
+           desktopfx=ge
+      else
+           wine64 -k
+           desktopfx=64
+      fi
+      sleep 3
+      winedesktop$desktopfx
+      ;;
+esac     
+
+
+}
 
 if [ ! "$(id -u)" = "0" ] 
 then
@@ -15,19 +56,30 @@ then
 fi
 
 choices=()
-read -p "Select a version of DXVK to install:" DXVKVER
-echo -e "\nSelect where to install: "
-echo -e "1.Wine"
-echo -e "2.Exawine"
-echo -e "3.Wine64"
-echo -e "4.WineGE"
+if [ "$1" != "" ]
+then
+     DXVKVER=$1
+else
+     read -p "Select a version of DXVK to install:" DXVKVER
+fi
 
-while [ True ]
-do
-   read -p "Your choice, press q to break and enter to confirm: " CHOICE
-   if [ "$CHOICE" == "q" ];then break;fi
-   choices+=($CHOICE)
-done
+if [ "$2" != "" ]
+then
+     choices+=$2
+else
+     echo -e "\nSelect where to install: "
+     echo -e "1.Wine"
+     echo -e "2.Exawine"
+     echo -e "3.Wine64"
+     echo -e "4.WineGE"
+
+     while [ True ]
+     do
+        read -p "Your choice, press q to break and enter to confirm: " CHOICE
+        if [ "$CHOICE" == "q" ];then break;fi
+        choices+=($CHOICE)
+     done
+fi
 
 
 wget https://github.com/doitsujin/dxvk/releases/download/v$DXVKVER/dxvk-$DXVKVER.tar.gz
@@ -42,12 +94,19 @@ then
      else
           cp dxvk-$DXVKVER/x64/* $WINEPREFIX/drive_c/windows/system32
           cp dxvk-$DXVKVER/x32/* $WINEPREFIX/drive_c/windows/syswow64
-          [[ -z $(awk 'FNR==2' ~/.config/wine64conf) ]] && echo "" >> ~/.config/wine64conf
+          if [ "$3" == "-partial" ];then rm -rf dxvk-$DXVKVER dxvk-$DXVKVER.tar.gz && exit;fi
           if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
           then
-              sed -i "2s/^.*$/dxgi,d3d11,d3d9,d3d10core=n,b/" ~/.config/wine64conf
+              dlloverride $WINEPREFIX64 dxgi native,builtin
+              dlloverride $WINEPREFIX64 d3d9 native,builtin
+              dlloverride $WINEPREFIX64 d3d11 native,builtin
+              dlloverride $WINEPREFIX64 d3d10core native,builtin
           else
-              sed -i "2s/^.*$/dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b/" ~/.config/wine64conf
+              dlloverride $WINEPREFIX64 dxgi native,builtin
+              dlloverride $WINEPREFIX64 d3d9 native,builtin
+              dlloverride $WINEPREFIX64 d3d11 native,builtin
+              dlloverride $WINEPREFIX64 d3d10 native,builtin
+              dlloverride $WINEPREFIX64 d3d10_1 native,builtin
           fi
      fi
 
@@ -58,12 +117,19 @@ then
           echo -e "You are trying to install a dxvk version not compatible with your wine installation. Skipping"
      else
           cp dxvk-$DXVKVER/x32/* $WINEPREFIX32/drive_c/windows/system32
-          [[ -z $(awk 'FNR==3' ~/.config/wineconf) ]] && echo "" >> ~/.config/wineconf
+          if [ "$3" == "-partial" ];then rm -rf dxvk-$DXVKVER dxvk-$DXVKVER.tar.gz && exit;fi
           if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
           then
-              sed -i "3s/^.*$/dxgi,d3d11,d3d9,d3d10core=n,b/" ~/.config/wineconf
+              dlloverride $WINEPREFIX32 dxgi native,builtin
+              dlloverride $WINEPREFIX32 d3d9 native,builtin
+              dlloverride $WINEPREFIX32 d3d11 native,builtin
+              dlloverride $WINEPREFIX32 d3d10core native,builtin
           else
-              sed -i "3s/^.*$/dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b/" ~/.config/wineconf
+              dlloverride $WINEPREFIX32 dxgi native,builtin
+              dlloverride $WINEPREFIX32 d3d9 native,builtin
+              dlloverride $WINEPREFIX32 d3d11 native,builtin
+              dlloverride $WINEPREFIX32 d3d10 native,builtin
+              dlloverride $WINEPREFIX32 d3d10_1 native,builtin
           fi
      fi
 
@@ -84,14 +150,28 @@ then
      fi
 
 else
-     if [ -d $HOME/.local/wineprefix64/lutris-GE-Proton8-5 ]
+     if [ -d $GEPREFIX ]
      then 
-          touch ~/.config/winegeconf
-          [[ -z $(awk 'FNR==1' ~/.config/winegeconf) ]] && echo "" >> ~/.config/winegeconf
-          sed -i "1s/^.*$/dxgi,d3d11,d3d9,d3d10core=n,b/" ~/.config/winegeconf
+          cp dxvk-$DXVKVER/x32/* $GEPREFIX/drive_c/windows/syswow64
+          if [ "$3" == "-partial" ];then rm -rf dxvk-$DXVKVER dxvk-$DXVKVER.tar.gz && exit;fi
+          if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
+          then
+               dlloverride $GEPRRFIX dxgi native,builtin
+               dlloverride $GEPREFIX d3d9 native,builtin
+               dlloverride $GEPREFIX d3d11 native,builtin
+               dlloverride $GEPREFIX d3d10core native,builtin
+          else
+               dlloverride $GEPREFIX dxgi native,builtin
+               dlloverride $GEPREFIX d3d9 native,builtin
+               dlloverride $GEPREFIX d3d11 native,builtin
+               dlloverride $GEPREFIX d3d10 native,builtin
+               dlloverride $GEPREFIX d3d10_1 native,builtin
+          fi
      else 
           echo -e "WineGE is not installed, please install it with install_winege"
      fi
 fi
 
 rm -rf dxvk-$DXVKVER dxvk-$DXVKVER.tar.gz
+if [ "$WINEPREFIX" != "" ];then restart;fi
+

@@ -1,0 +1,44 @@
+#!/bin/bash
+
+cleanmenu(){
+
+path=$(dirname -- "$1")
+cp -r "$1" $path/tmp
+rm -rf "$1"
+mkdir -p "$1"
+mv $path/tmp/Programs "$1"
+rm -rf $path/tmp
+
+}
+
+for pfx in $HOME/.local/wineprefix/*
+do
+   if [ -d "$pfx/drive_c/users/$USER/Start Menu" ]
+   then
+           cleanmenu "$pfx/drive_c/users/$USER/Start Menu" 
+           cp -r /opt/WinStartMenu/* "$pfx/drive_c/users/$USER/Start Menu"
+   else
+           cleanmenu "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+           cp -r /opt/WinStartMenu/* "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+   fi
+   if [ ! -L "$pfx/dosdevices/e:" ];then ln -sf /sdcard "$pfx/dosdevices/e:";fi
+done
+
+for pfx in $HOME/.local/wineprefix64/*
+do
+   if [[ "$pfx" =~ "lutris" ]]
+   then
+        cleanmenu "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu" 
+        cp -r /opt/WinGEStartMenu/* "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+   else
+       if [ -d "$pfx/drive_c/users/$USER/Start Menu" ]
+       then
+            cleanmenu "$pfx/drive_c/users/$USER/Start Menu" 
+            cp -r /opt/Win64StartMenu/* "$pfx/drive_c/users/$USER/Start Menu"
+       else
+            cleanmenu "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+            cp -r /opt/Win64StartMenu/* "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+       fi
+   fi
+   if [ ! -L "$pfx/dosdevices/e:" ];then ln -sf /sdcard "$pfx/dosdevices/e:";fi
+done
