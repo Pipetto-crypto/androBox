@@ -8,14 +8,14 @@ then
      wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa32-$type-$mesaver.xz -P ~
      wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa64-$type-$mesaver.xz -P ~
      tar -xvf ~/mesa64-$type-$mesaver.xz -C ~
-     tar -xvf ~/mesa64-$type-$mesaver.xz -C ~
+     tar -xvf ~/mesa32-$type-$mesaver.xz -C ~
 else
      wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa64-$type-$mesaver-$adrenover.tar.xz -P ~
-     wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa33-$type-$mesaver-$adrenover.tar.xz -P ~
+     wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa32-$type-$mesaver-$adrenover.tar.xz -P ~
      mkdir -p ~/mesa64
      mkdir -p ~/mesa32
      tar -xvf ~/mesa64-$type-$mesaver-$adrenover.tar.xz -C ~/mesa64
-     tar -xvf ~/mesa32-$type--$mesaver-$adrenover.tar.xz -C ~/mesa32
+     tar -xvf ~/mesa32-$type-$mesaver-$adrenover.tar.xz -C ~/mesa32
 fi
 
 rm -rf ~/*.xz
