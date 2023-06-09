@@ -1,0 +1,8 @@
+#!/bin/bash
+
+mesaver=$1
+wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa32-turnip-zink-virgl-$mesaver.tar.xz -P ~
+wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa64-turnip-zink-virgl-$mesaver.tar.xz -P ~
+tar -xvf ~/mesa64-turnip-zink-virgl-$mesaver.tar.xz -C ~
+tar -xvf ~/mesa32-turnip-zink-virgl-$mesaver.tar.xz -C ~
+rm -rf ~/mesa32-turnip-zink-virgl-$mesaver.tar.xz ~/mesa64-turnip-zink-virgl-$mesaver.tar.xz

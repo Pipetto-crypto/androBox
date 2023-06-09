@@ -11,34 +11,28 @@ rm -rf $path/tmp
 
 }
 
-for pfx in $HOME/.local/wineprefix/*
-do
-   if [ -d "$pfx/drive_c/users/$USER/Start Menu" ]
-   then
-           cleanmenu "$pfx/drive_c/users/$USER/Start Menu" 
-           cp -r /opt/WinStartMenu/* "$pfx/drive_c/users/$USER/Start Menu"
-   else
-           cleanmenu "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
-           cp -r /opt/WinStartMenu/* "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
-   fi
-   if [ ! -L "$pfx/dosdevices/e:" ];then ln -sf /sdcard "$pfx/dosdevices/e:";fi
-done
+if [ ! -z "$(ls -A $HOME/.local/wineprefix)" ]
+then
+     for pfx in $HOME/.local/wineprefix/*
+     do
+        cleanmenu "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+        cp -r /opt/WinStartMenu/* "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+        if [ ! -L "$pfx/dosdevices/e:" ];then ln -sf /sdcard "$pfx/dosdevices/e:";fi
+     done
+fi
 
-for pfx in $HOME/.local/wineprefix64/*
-do
-   if [[ "$pfx" =~ "lutris" ]]
-   then
-        cleanmenu "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu" 
-        cp -r /opt/WinGEStartMenu/* "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
-   else
-       if [ -d "$pfx/drive_c/users/$USER/Start Menu" ]
-       then
-            cleanmenu "$pfx/drive_c/users/$USER/Start Menu" 
-            cp -r /opt/Win64StartMenu/* "$pfx/drive_c/users/$USER/Start Menu"
-       else
-            cleanmenu "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
-            cp -r /opt/Win64StartMenu/* "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
-       fi
-   fi
-   if [ ! -L "$pfx/dosdevices/e:" ];then ln -sf /sdcard "$pfx/dosdevices/e:";fi
-done
+if [ ! -z "$(ls -A $HOME/.local/wineprefix64)" ]
+then
+     for pfx64 in $HOME/.local/wineprefix64/*
+     do
+        if [[ "$pfx64" =~ "lutris" ]]
+        then
+             cleanmenu "$pfx64/drive_c/ProgramData/Microsoft/Windows/Start Menu" 
+             cp -r /opt/WinGEStartMenu/* "$pfx64/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+        else
+             cleanmenu "$pfx64/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+             cp -r /opt/Win64StartMenu/* "$pfx64/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+        fi
+        if [ ! -L "$pfx64/dosdevices/e:" ];then ln -sf /sdcard "$pfx64/dosdevices/e:";fi
+     done
+fi
