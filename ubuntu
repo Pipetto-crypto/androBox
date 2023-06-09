@@ -267,8 +267,25 @@ do
           exit
           ;;
      init) 
-          xserver
-          proot_login wineswitch
+          if [ "$app_pid" == "" ];then xserver;fi
+          rm -rf $rootfspath/root/.local/wineprefix/wine-3.14
+          rm -rf $rootfspath/root/.local/wineprefix64/wine-7.1
+          rm -rf $rootfspath/root/.local/wineprefix64/lutris-GE-Proton8-5
+          echo "wineswitch 3.14 x86" >> $rootfspath/etc/profile
+          echo "exit" >> $rootfspath/etc/profile
+          proot_login
+          sed -i "s/wineswitch 3.14 x86//g" $rootfspath/etc/profile
+          sed -i "s/exit//g" $rootfspath/etc/profile
+          echo "wineswitch 7.1 amd64" >> $rootfspath/etc/profile
+          echo "exit" >> $rootfspath/etc/profile
+          proot_login  
+          sed -i "s/wineswitch 7.1 amd64//g" $rootfspath/etc/profile
+          sed -i "s/exit//g" $rootfspath/etc/profile
+          echo "install_winege" >> $rootfspath/etc/profile
+          echo "exit" >> $rootfspath/etc/profile
+          proot_login
+          sed -i "s/install_winege//g" $rootfspath/etc/profile
+          sed -i "s/exit//g" $rootfspath/etc/profile
           proot_login install_ib
           exit_proot
           ;;
