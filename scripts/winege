@@ -8,7 +8,7 @@ ARCH=x86_64
 
 log(){
 
-WINEDEBUG="default"
+WINEDEBUG="+err"
 echo -e "This wine session will be logged in $TERMINAL_LOGFILE"
 exec 3>&1 4>&2
 trap 'exec 2>&4 1>&3' 0 1 2 3
@@ -50,7 +50,7 @@ do
         WINEDLLOVERRIDES=""
    elif [ "$var" == "-winedbg" ]
    then
-        WINEDEBUG="default"
+        WINEDEBUG="+err"
    elif [ "$var" == "-k" ]
    then
         killwine_func
