@@ -10,7 +10,7 @@ wget -q https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master
 if [ ! -f /sdcard/3in1ProotX86Emus/proot.conf ]
 then
      mv ~/proot.conf /sdcard/3in1ProotX86Emus/
-elif [ "$(diff ~/proot.conf /sdcard/3in1ProotX86Emus/proot.conf)" != "" ]
+elif  [ "$1" == "update" ] || [ "$1" == "update-all" ]
 then
      file1="/sdcard/3in1ProotX86Emus/proot.conf"
      file2="$HOME/proot.conf"
@@ -51,8 +51,9 @@ then
         echo "${arr2[$newindex]}" >> ~/tmpfile
      done
      mv ~/tmpfile /sdcard/3in1ProotX86Emus/proot.conf
-     rm -rf ~/proot.conf
 fi
+
+rm -rf ~/proot.conf
 
 }
 
@@ -70,7 +71,7 @@ then
      mv ~/box64opts /sdcard/3in1ProotX86Emus
 fi
 
-if [ "$(diff ~/box86opts /sdcard/3in1ProotX86Emus/box86opts)" != "" ]
+if [ "$1" == "update" ] || [ "$1" == "update-all" ]
 then
      file1="/sdcard/3in1ProotX86Emus/box86opts"
      tempfile="$HOME/tmpfile"
@@ -98,10 +99,9 @@ then
         linecount=$((linecount+1))
      done     
      mv $tempfile /sdcard/3in1ProotX86Emus/box86opts
-     rm -rf ~/box86opts
 fi
 
-if [ "$(diff ~/box64opts /sdcard/3in1ProotX86Emus/box64opts)" != "" ]
+if  [ "$1" == "update" ] || [ "$1" == "update-all" ]
 then
      file1="/sdcard/3in1ProotX86Emus/box64opts"
      tempfile="$HOME/tmpfile"
@@ -135,9 +135,9 @@ then
         linecount=$((linecount+1))
      done
      mv $tempfile /sdcard/3in1ProotX86Emus/box64opts
-     rm -rf ~/box64opts
 fi
 
+rm -rf ~/box86opts ~/box64opts
 
 }
 
@@ -145,11 +145,8 @@ fi
 mkdir -p /sdcard/3in1ProotX86Emus
 mkdir -p /sdcard/3in1ProotX86Emus/box86_logs
 mkdir -p /sdcard/3in1ProotX86Emus/box64_logs
-if ping -c 1 google.com 2>&1 >/dev/null
-then
-     checkiftoreplaceprootconf
-     checkiftoreplaceboxopts
-fi
+checkiftoreplaceprootconf
+checkiftoreplaceboxopts
 
 if [ ! -f $PATH/termux-x11 ]
 then
