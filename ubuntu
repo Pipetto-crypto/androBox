@@ -4,12 +4,12 @@ configfile=/sdcard/3in1ProotX86Emus/proot.conf
 rootfspath=$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu
 
 
-checkiftoreplace(){
+checkiftoreplaceprootconf(){
 
 wget -q https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/proot.conf -P ~
 if [ ! -f /sdcard/3in1ProotX86Emus/proot.conf ]
 then
-     cp ~/proot.conf /sdcard/3in1ProotX86Emus/
+     mv ~/proot.conf /sdcard/3in1ProotX86Emus/
 elif [ "$(diff ~/proot.conf /sdcard/3in1ProotX86Emus/proot.conf)" != "" ]
 then
      file1="/sdcard/3in1ProotX86Emus/proot.conf"
@@ -56,15 +56,100 @@ fi
 
 }
 
+checkiftoreplaceboxopts(){
 
+wget -q https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/box64opts -P ~
+wget -q https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/box86opts -P ~
+if [ ! -f /sdcard/3in1ProotX86Emus/box86opts ]
+then
+     mv  ~/box86opts /sdcard/3in1ProotX86Emus
+fi
+
+if [ ! -f /sdcard/3in1ProotX86Emus/box64opts ]
+then
+     mv ~/box64opts /sdcard/3in1ProotX86Emus
+fi
+
+if [ "$(diff ~/box86opts /sdcard/3in1ProotX86Emus/box86opts)" != "" ]
+then
+     file1="/sdcard/3in1ProotX86Emus/box86opts"
+     tempfile="$HOME/tmpfile"
+     linecount=1
+     arr1=()
+
+     while read line
+     do
+        arr1+=("$line")
+     done < $file1
+
+     for x in "${arr1[@]}"
+     do
+        if (( $linecount <= 10 )) || (( $linecount > 11 ))
+        then
+             echo "$x" >> $tempfile
+
+        elif [[ "$x" =~ "BIGBLOCK" ]]
+        then
+             echo "$x" >> $tempfile
+
+        else
+             echo "BOX86_DYNAREC_BIGBLOCK=1" >> $tempfile
+        fi
+        linecount=$((linecount+1))
+     done     
+     mv $tempfile /sdcard/3in1ProotX86Emus/box86opts
+     rm -rf ~/box86opts
+fi
+
+if [ "$(diff ~/box64opts /sdcard/3in1ProotX86Emus/box64opts)" != "" ]
+then
+     file1="/sdcard/3in1ProotX86Emus/box64opts"
+     tempfile="$HOME/tmpfile"
+     rm -rf $tempfile
+     linecount=1
+     arr1=()
+
+     while read line
+     do
+        arr1+=("$line")
+     done < $file1
+
+     while read line2
+     do
+        arr2+=("$line2")
+     done < $file2
+
+     for x in "${arr1[@]}"
+     do
+        if (( $linecount <= 10 )) || (( $linecount > 11 ))
+        then
+             echo "$x" >> $tempfile
+
+        elif [[ "$x" =~ "BIGBLOCK" ]]
+        then
+             echo "$x" >> $tempfile
+
+        else
+             echo "BOX64_DYNAREC_BIGBLOCK=1" >> $tempfile
+        fi
+        linecount=$((linecount+1))
+     done
+     mv $tempfile /sdcard/3in1ProotX86Emus/box64opts
+     rm -rf ~/box64opts
+fi
+
+
+}
 
 
 mkdir -p /sdcard/3in1ProotX86Emus
 mkdir -p /sdcard/3in1ProotX86Emus/box86_logs
 mkdir -p /sdcard/3in1ProotX86Emus/box64_logs
-checkiftoreplace
-if [ ! -f /sdcard/3in1ProotX86Emus/box86opts ];then wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/box86opts -P /sdcard/3in1ProotX86Emus;fi
-if [ ! -f /sdcard/3in1ProotX86Emus/box64opts ];then wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/box64opts -P /sdcard/3in1ProotX86Emus;fi
+if ping -c 1 google.com 2>&1 >/dev/null
+then
+     checkiftoreplaceprootconf
+     checkiftoreplaceboxopts
+fi
 
 if [ ! -f $PATH/termux-x11 ]
 then
