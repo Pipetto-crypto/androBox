@@ -89,11 +89,8 @@ env ${box86params[@]} ${box64params[@]} BOX64_LD_LIBRARY_PATH=~/wine-$VERSION-$A
 BOX64_PATH=~/wine-$VERSION-$ARCH/bin \
 WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix64/wine-$VERSION} \
 BOX64_LOG=${BOX64_LOG:-0} \
-BOX86_DYNAREC_BIGBLOCK=${BOX86_DYNAREC_BIGBLOCK:-0} \
 WINEDLLOVERRIDES=$WINEDLLOVERRIDES \
 WINEDEBUG=${WINEDEBUG:=-all} \
-BOX86_DYNAREC_FORWARD=${BOX86_DYNAREC_FORWARD:=0} \
-BOX64_DYNAREC_FORWARD=${BOX64_DYNAREC_FORWARD:=0} \
 BOX64_RCFILE=${BOX64_RCFILE:=/sdcard/3in1ProotX86Emus/box64rc} \
 VK_ICD_FILENAMES="/root/mesa64/freedreno_icd.aarch64.json:/root/mesa32/freedreno_icd.armhf.json" \
 box64 wine64 "${argslist[@]}"

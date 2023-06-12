@@ -88,10 +88,8 @@ fi
 env ${box86params[@]} BOX86_LD_LIBRARY_PATH=~/wine-$VERSION-$ARCH/lib/wine/i386-unix/:~/wine-$VERSION-$ARCH/lib:~/wine-$VERSION-$ARCH/lib/wine:/lib/i386-linux-gnu:/lib/aarch64-linux-gnu/ \
 BOX86_PATH=~/wine-$VERSION-$ARCH/bin \
 WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix$PREFIXARCH/wine-$VERSION} \
-BOX86_DYNAREC_BIGBLOCK=${BOX86_DYNAREC_BIGBLOCK:-0} \
 WINEDLLOVERRIDES=$WINEDLLOVERRIDES \
 WINEDEBUG=${WINEDEBUG:=-all} \
-BOX86_DYNAREC_FORWARD=${BOX86_DYNAREC_FORWARD:=0} \
 BOX86_RCFILE=${BOX86_RCFILE:=/sdcard/3in1ProotX86Emus/box86rc} \
 VK_ICD_FILENAMES="/root/mesa64/freedreno_icd.aarch64.json:/root/mesa32/freedreno_icd.armhf.json" \
 box86 wine "${argslist[@]}"
