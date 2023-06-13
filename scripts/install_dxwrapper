@@ -49,6 +49,8 @@ esac
 
 wget https://github.com/elishacloud/dxwrapper/releases/download/v1.0.6542.21/dxwrapper.zip -P ~
 unzip -d ~/dxwrapper ~/dxwrapper.zip
+linenumber="$(awk '/Dd7to9/{print NR}' ~/dxwrapper/dxwrapper.ini | head -n 1)"
+sed -i $linenumbers"s/=.*/=1/g" /sdcard/3in1ProotX86Emus/box86opts
 
 choices=()
 if [ "$1" != "" ]
