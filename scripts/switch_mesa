@@ -6,10 +6,10 @@ type=$3
 if [ "$type" == "zink" ]
 then
                
-          wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa32-$type-$mesaver.tar.xz -P ~
-          wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa64-$type-$mesaver.tar.xz -P ~
-          tar -xvf ~/mesa64-$type-$mesaver.tar.xz -C ~
-          tar -xvf ~/mesa32-$type-$mesaver.tar.xz -C ~      
+     wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa32-$type-$mesaver.tar.xz -P ~
+     wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa64-$type-$mesaver.tar.xz -P ~
+     tar -xvf ~/mesa64-$type-$mesaver.tar.xz -C ~
+     tar -xvf ~/mesa32-$type-$mesaver.tar.xz -C ~     
 
 else
      wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa64-$type-$mesaver-$adrenover.tar.xz -P ~
