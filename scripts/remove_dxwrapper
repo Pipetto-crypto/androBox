@@ -31,22 +31,27 @@ esac
 local wineins="$(basename $WINEPREFIX)"
 local dlltocopy="ddraw"
 local winedir=$HOME/$wineins-$arch
+local protondir=$HOME/$wineins-x86_64
 if [ -d $winedir/lib/wine/fakedlls ]
 then
      if [ "$winarch" == "win32" ]
      then
-          cp $winedir/lib/wine/fakedlls/$dlltocopy.dll $WINEPREFIX/drive_c/windows/system32
+          cp $winedir/lib/wine/$dlltocopy.dll $WINEPREFIX/drive_c/windows/system32
      else
-          cp $winedir/lib/wine/fakedlls/$dlltocopy.dll $WINEPREFIX/drive_c/windows/syswow64
+          cp $winedir/lib/wine/$dlltocopy.dll $WINEPREFIX/drive_c/windows/syswow64
      fi
 else
      if [ "$winarch" == "win32" ]
      then
           cp $winedir/lib/wine/i386-windows/$dlltocopy.dll $WINEPREFIX/drive_c/windows/system32
      else
-          cp $winedir/lib/wine/i386-windows/$dlltocopy.dll $WINEPREFIX/drive_c/windows/syswow64
+          if [[ "$wineins" =~ "lutris" ]]
+          then
+               cp $protondir/lib/wine/i386-windows/$dlltocopy.dll $WINEPREFIX/drive_c/windows/syswow64
+          else
+               cp $winedir/lib/wine/i386-windows/$dlltocopy.dll $WINEPREFIX/drive_c/windows/syswow64
+          fi
      fi
-     done
 fi
 
 

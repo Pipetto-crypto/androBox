@@ -33,6 +33,7 @@ esac
 local wineins="$(basename $WINEPREFIX)"
 local dlltocopy=("dxgi" "d3d8" "d3d9" "d3d10core" "d3d10" "d3d10_1" "d3d11")
 local winedir=$HOME/$wineins-$arch
+local protondir=$HOME/$wineis-x86_64
 if [ -d $winedir/lib/wine/fakedlls ]
 then
      for dll in "${dlltocopy[@]}"
@@ -51,7 +52,12 @@ else
         then
              cp $winedir/lib/wine/i386-windows/$dll.dll $WINEPREFIX/drive_c/windows/system32
         else
-             cp $winedir/lib/wine/i386-windows/$dll.dll $WINEPREFIX/drive_c/windows/syswow64
+             if [[ "$wineins" =~ "lutris" ]]
+             then
+                  cp $protondir/lib/wine/i386-windows/$dll.dll $WINEPREFIX/drive_c/windows/syswow64
+             else
+                  cp $winedir/lib/wine/i386-windows/$dll.dll $WINEPREFIX/drive_c/windows/syswow64
+             fi
         fi
      done     
 fi
