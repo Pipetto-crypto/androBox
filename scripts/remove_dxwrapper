@@ -1,0 +1,91 @@
+#!/bin/bash
+
+removedlloverride(){
+
+input="$1/user.reg"
+linenumber=1
+while IFS= read -r line
+do
+  if [[ "$line" =~ "$2" ]]
+  then
+      sed -i "$linenumber""d" $input
+  fi
+  linenumber=$((linenumber+1))
+done < $input
+
+}
+
+copydll(){
+
+local winarch=$(awk -F "=" /arch/'{print $2}' $WINEPREFIX/user.reg | head -n1)
+
+case $winarch in
+win32)
+      arch=x86
+      ;;
+win64)
+      arch=amd64
+      ;;
+esac
+
+local wineins="$(basename $WINEPREFIX)"
+local dlltocopy="ddraw"
+local winedir=$HOME/$wineins-$arch
+if [ -d $winedir/lib/wine/fakedlls ]
+then
+     if [ "$winarch" == "win32" ]
+     then
+          cp $winedir/lib/wine/fakedlls/$dlltocopy.dll $WINEPREFIX/drive_c/windows/system32
+     else
+          cp $winedir/lib/wine/fakedlls/$dlltocopy.dll $WINEPREFIX/drive_c/windows/syswow64
+     fi
+else
+     if [ "$winarch" == "win32" ]
+     then
+          cp $winedir/lib/wine/i386-windows/$dlltocopy.dll $WINEPREFIX/drive_c/windows/system32
+     else
+          cp $winedir/lib/wine/i386-windows/$dlltocopy.dll $WINEPREFIX/drive_c/windows/syswow64
+     fi
+     done
+fi
+
+
+}
+
+updateprefix(){
+
+local winarch=$(awk -F "=" /arch/'{print $2}' $WINEPREFIX/user.reg | head -n1)
+local wineins="$(basename $WINEPREFIX)"
+
+copydll
+case $winarch in
+win32)
+      arch=x86
+      #BOX86_PATH=$HOME/$wineins-$arch/bin WINEPREFIX=$WINEPREFIX box86 wineboot -u
+      wine -k
+      sleep 3
+      winedesktop
+      ;;
+win64)
+      if [[ "$WINEPREFIX" =~ "lutris" ]]
+      then
+           arch=x86_64
+           desktopfx=ge
+      else
+           arch=amd64
+           desktopfx=64
+      fi
+      #BOX64_PATH=$HOME/$wineins-$arch/bin WINEPREFIX=$WINEPREFIX box64 wineboot -u
+      wine64 -k
+      sleep 3
+      winedesktop$desktopfx
+      ;;
+esac
+
+
+}
+
+if [ "$WINEPREFIX" != "" ]
+then
+     copydll
+fi
