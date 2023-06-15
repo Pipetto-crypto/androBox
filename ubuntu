@@ -289,7 +289,7 @@ pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
 proot_login(){
 
 bindargs=("--bind /sdcard:/sdcard" "--bind /data/data/com.termux/files/home:/termux-home" "--bind /storage/emulated/0" "--bind $TMPDIR:/tmp")
-proot_args=("--isolated" "--no-sysvipc")
+proot_args=("--isolated")
 proot-distro login ubuntu ${bindargs[@]} ${proot_args[@]} -- $@
 
 
@@ -350,24 +350,12 @@ do
           ;;
      init) 
           if [ "$app_pid" == "" ];then xserver;fi
-          rm -rf $rootfspath/root/.local/wineprefix/wine-3.14
+          rm -rf $rootfspath/root/.local/wineprefix/wine-7.1
           rm -rf $rootfspath/root/.local/wineprefix64/wine-7.1
           rm -rf $rootfspath/root/.local/wineprefix64/lutris-GE-Proton8-5
-          echo "wineswitch 3.14 x86" >> $rootfspath/etc/profile
-          echo "exit" >> $rootfspath/etc/profile
-          proot_login
-          sed -i "s/wineswitch 3.14 x86//g" $rootfspath/etc/profile
-          sed -i "s/exit//g" $rootfspath/etc/profile
-          echo "wineswitch 7.1 amd64" >> $rootfspath/etc/profile
-          echo "exit" >> $rootfspath/etc/profile
-          proot_login  
-          sed -i "s/wineswitch 7.1 amd64//g" $rootfspath/etc/profile
-          sed -i "s/exit//g" $rootfspath/etc/profile
-          echo "install_winege" >> $rootfspath/etc/profile
-          echo "exit" >> $rootfspath/etc/profile
-          proot_login
-          sed -i "s/install_winege//g" $rootfspath/etc/profile
-          sed -i "s/exit//g" $rootfspath/etc/profile
+          proot_login wineswitch 7.1 x86
+          proot_login wineswitch 7.1 amd64
+          proot_login install_winege
           proot_login install_ib
           exit_proot
           ;;
@@ -441,13 +429,13 @@ if [ "$iswinedesktop" == "yes" ] && [ "$(pgrep winedesktop)" == "" ]
 then 
      if [ "$app_pid" != "" ] || [ "$vnc_pid" != "" ]
      then
-          echo "winedesktop$winedesktoptype" >> $rootfspath/etc/profile
+          am start --user 0 -n com.termux.x11/com.termux.x11.MainActivity
+          echo "env $rendererargs winedesktop$winedesktoptype" >> $rootfspath/etc/profile
           commslist="bash"
      fi
 fi
 
 proot_login $rendererargs ${commslist[*]} "$absfile" 
-sed -i "s/winedesktopge//g" $rootfspath/etc/profile
-sed -i "s/winedesktop64//g" $rootfspath/etc/profile
-sed -i "s/winedesktop//g" $rootfspath/etc/profile
+linenumber="$(awk '/winedesktop/{print NR}' $rootfspath/etc/profile)"
+sed -i "$linenumber""d" $rootfspath/etc/profile
 reset -I -Q
