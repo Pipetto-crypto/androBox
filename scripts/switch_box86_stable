@@ -1,14 +1,24 @@
 #!/bin/bash
 
+cachedir="$HOME/.local/cache"
+mkdir -p $cachedir
+
 apt remove --purge box86-android:armhf -y
 read -p "Select a stable release, just type the month[e.g. March]: "  MONTH
 if [ "$MONTH" == "March" ]
 then
-     wget https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box86debs/box86_0.2.8_${MONTH}_armhf.deb
+     if [ ! -f $cachedir/box86_0.2.8_${MONTH}_armhf.deb ]
+     then
+          wget https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box86debs/box86_0.2.8_${MONTH}_armhf.deb -P $cachedir
+     fi
+     dpkg -i $cachedir/box86_0.2.8_${MONTH}_armhf.deb
 else
-     wget https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box86debs/box86_0.3.1_${MONTH}_armhf.deb
+     if [ ! -f $cachedir/box86_0.3.1_${MONTH}_armhf.deb ]
+     then
+          wget https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box86debs/box86_0.3.1_${MONTH}_armhf.deb -P $cachedir
+     fi
+     dpkg -i $cachedir/box86_0.3.1_${MONTH}_armhf.deb
 fi
-dpkg -i *.deb
-rm -rf *.deb
+
 apt-mark hold box86:armhf
 echo -e "Exit and re-enter to make changes effective"

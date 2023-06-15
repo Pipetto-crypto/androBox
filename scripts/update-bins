@@ -4,8 +4,8 @@ echo -e "\nI am going to overwrite all the existing scripts, if you have done lo
 read -p "Do you want to continue?"
 git clone https://github.com/Pipetto-crypto/3in1ProotX86Emus.git ~/3in1ProotX86Emus
 chmod +x ~/3in1ProotX86Emus/scripts/*
-cp -r ~/3in1ProotX86Emus/scripts/WinScripts ~/3in1ProotX86Emus/scripts/Win64Scripts ~/3in1ProotX86Emus/scripts/WinGEScripts ~/3in1ProotX86Emus/scripts/WinStartMenu ~/3in1ProotX86Emus/scripts/Win64StartMenu ~/3in1ProotX86Emus/scripts/WinGEStartMenu /opt
-rm -rf ~/3in1ProotX86Emus/scripts/WinScripts ~/3in1ProotX86Emus/scripts/Win64Scripts ~/3in1ProotX86Emus/scripts/WinGEScripts ~/3in1ProotX86Emus/scripts/WinStartMenu ~/3in1ProotX86Emus/scripts/Win64StartMenu ~/3in1ProotX86Emus/scripts/WinGEStartMenu
+rm -rf /opt/WinScripts /opt/Win64Scripts /opt/WinGEScripts /opt/WinStartMenu /opt/Win64StartMenu /opt/WinGEStartMenu
+mv ~/3in1ProotX86Emus/scripts/WinScripts ~/3in1ProotX86Emus/scripts/Win64Scripts ~/3in1ProotX86Emus/scripts/WinGEScruipts ~/3in1ProotX86Emus/scripts/WinStartMenu ~/3in1ProotX86Emus/scripts/Win64StartMenu ~/3in1ProotX86Emus/scripts/WinGEStartMenu /opt
 mv ~/3in1ProotX86Emus/scripts/* /usr/bin
 mv /usr/bin/profile /etc && chmod 644 /etc/profile
 rm -rf ~/3in1ProotX86Emus

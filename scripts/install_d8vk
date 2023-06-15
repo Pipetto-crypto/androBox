@@ -20,36 +20,15 @@ echo "\"$dlltoverride"\""=""\"$type"\" >> "$input"
 
 }
 
-restart(){
+cachedir="$HOME/.local/cache"
+mkdir -p $cachedir
 
-local winarch=$(awk -F "=" /arch/'{print $2}' $WINEPREFIX/user.reg | head -n1)
-local wineins="$(basename $WINEPREFIX)"
-case "$winarch" in
-win32)
-      wine -k
-      sleep 3
-      winedesktop
-      ;;
-win64)
-      if [[ "$WINEPREFIX" =~ "lutris" ]]
-      then
-           winege -k
-           desktopfx=ge
-      else
-           wine64 -k
-           desktopfx=64
-      fi
-      sleep 3
-      winedesktop$desktopfx
-      ;;
-esac
-
-
-}
-
-wget https://github.com/AlpyneDreams/d8vk/releases/download/d8vk-v1.0/d8vk-v1.0.tar.gz
+if [ ! -f $cachedir/d8vk-v1.0.tar.gz ]
+then
+     wget https://github.com/AlpyneDreams/d8vk/releases/download/d8vk-v1.0/d8vk-v1.0.tar.gz -P $cachedir
+fi
 mkdir -p ~/d8vk
-tar -xzf d8vk-v1.0.tar.gz -C ~/d8vk
+tar -xzf $cachedir/d8vk-v1.0.tar.gz -C ~/d8vk
 
 choices=()
 if [ "$1" != "" ]
@@ -74,21 +53,20 @@ fi
 if [[ "${choices[*]}" =~ "3" ]]
 then
      cp -r ~/d8vk/x32/* $WINEPREFIX64/drive_c/windows/syswow64
-     if [ "$2" == "-partial" ];then rm -rf ~/d8vk d8vk-v1.0.tar.gz && exit;fi
+     if [ "$2" == "-partial" ];then rm -rf ~/d8vk && exit;fi
      dlloverride $WINEPREFIX64 d3d8 native,builtin
      
 elif [[ "${choices[*]}" =~ "1" ]]
 then
      cp -r ~/d8vk/x32/* $WINEPREFIX32/drive_c/windows/system32
-     if [ "$2" == "-partial" ];then rm -rf ~/d8vk d8vk-v1.0.tar.gz && exit;fi
+     if [ "$2" == "-partial" ];then rm -rf ~/d8vk && exit;fi
      dlloverride $WINEPREFIX32 d3d8 native,builtin
 else
      cp -r ~/d8vk/x32/* $GEPREFIX/drive_c/windows/syswow64
-     if [ "$2" == "-partial" ];then rm -rf ~/d8vk d8vk-v1.0.tar.gz && exit;fi
+     if [ "$2" == "-partial" ];then rm -rf ~/d8vk && exit;fi
      dlloverride $GEPREFIX d3d8 native,builtin
 fi
 
 
 
-rm -rf ~/d8vk d8vk-v1.0.tar.gz
-if [ "$WINEPREFIX" != "" ];then restart;fi
+rm -rf ~/d8vk 

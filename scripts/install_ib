@@ -1,11 +1,4 @@
 #!/bin/bash
 
-if [ "$SUDO_USER" != "" ];then HOME=/home/$SUDO_USER;fi
-if [ ! "$(id -u)" = "0" ]
-then
-     echo -e "\nThis program needs to be ran with sudo"
-     exit
-fi
-
 [[ -n "$(ls -A ~/.local/wineprefix)" ]] && for i in ~/.local/wineprefix/*;do cp /usr/bin/user32.dll /usr/bin/ib.exe $i/drive_c/windows/system32;done
 [[ -n "$(ls -A ~/.local/wineprefix64)" ]] && for i in ~/.local/wineprefix64/*;do cp /usr/bin/user32.dll /usr/bin/ib.exe $i/drive_c/windows/syswow64 && cp /usr/bin/ib.exe $i/drive_c/windows/system32;done

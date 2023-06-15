@@ -54,10 +54,15 @@ else
      read -p "Select a version of WINED3D to install:" wined3dver
 fi
 
+cachedir="$HOME/.local/cache"
+mkdir -p $cachedir
 
-wget https://downloads.fdossena.com/Projects/WineD3D/Builds/WineD3DForWindows_$wined3dver.zip -P ~
+if [ ! -f $cachedir/WineD3DForWindows_$wined3dver.zip ]
+then
+     wget https://downloads.fdossena.com/Projects/WineD3D/Builds/WineD3DForWindows_$wined3dver.zip -P $cachedir
+fi
 mkdir -p ~/wined3d
-unzip ~/WineD3DForWindows_$wined3dver.zip -d ~/wined3d
+unzip $cachedir/WineD3DForWindows_$wined3dver.zip -d ~/wined3d
 rm -rf ~/wined3d/ddraw.dll ~/wined3d/libwine.dll ~/wined3d/*.txt ~/wined3d/wined3d.dll
 
 choices=()
@@ -84,7 +89,7 @@ fi
 if [[ "${choices[*]}" =~ "3" ]]
 then
      cp -r ~/wined3d/* $WINEPREFIX64/drive_c/windows/syswow64
-     if [ "$3" == "-partial" ];then rm -rf ~/wined3d ~/WineD3DForWindows_$wined3dver.zip && exit;fi
+     if [ "$3" == "-partial" ];then rm -rf ~/wined3d && exit;fi
      dlloverride $WINEPREFIX64 d3d8 native,builtin
      dlloverride $WINEPREFIX64 d3d9 native,builtin
      dlloverride $WINEPREFIX64 d3d10core native,builtin
@@ -96,7 +101,7 @@ then
 elif [[ "${choices[*]}" =~ "1" ]]
 then
      cp -r ~/wined3d/* $WINEPREFIX32/drive_c/windows/system32
-     if [ "$3" == "-partial" ];then rm -rf ~/wined3d ~/WineD3DForWindows_$wined3dver.zip && exit;fi
+     if [ "$3" == "-partial" ];then rm -rf ~/wined3d && exit;fi
      dlloverride $WINEPREFIX32 d3d8 native,builtin
      dlloverride $WINEPREFIX32 d3d9 native,builtin
      dlloverride $WINEPREFIX32 d3d10core native,builtin
@@ -106,7 +111,7 @@ then
      dlloverride $WINEPREFIX32 dxgi native,builtin
 else
      cp -r ~/wined3d/* $GEPREFIX/drive_c/windows/syswow64
-     if [ "$3" == "-partial" ];then rm -rf ~/wined3d ~/WineD3DForWindows_$wined3dver.zip && exit;fi
+     if [ "$3" == "-partial" ];then rm -rf ~/wined3d && exit;fi
      dlloverride $GEPREFIX d3d8 native,builtin
      dlloverride $GEPREFIX d3d9 native,builtin
      dlloverride $GEPREFIX d3d10core native,builtin
@@ -118,7 +123,5 @@ fi
 
 
 
-rm -rf ~/wined3d ~/WineD3DForWindows_$wined3dver.zip
-if [ "$WINEPREFIX" != "" ];then restart;fi
-
+rm -rf ~/wined3d 
  

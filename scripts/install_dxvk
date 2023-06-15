@@ -22,39 +22,6 @@ echo "\"$dlltoverride"\""=""\"$type"\" >> $input
 
 }
 
-restart(){
-
-local winarch=$(awk -F "=" /arch/'{print $2}' $WINEPREFIX/user.reg | head -n1)
-local wineins="$(basename $WINEPREFIX)"
-case "$winarch" in
-win32)
-      wine -k
-      sleep 3
-      winedesktop
-      ;;
-win64)
-      if [[ "$WINEPREFIX" =~ "lutris" ]]
-      then
-           winege -k
-           desktopfx=ge
-      else
-           wine64 -k
-           desktopfx=64
-      fi
-      sleep 3
-      winedesktop$desktopfx
-      ;;
-esac     
-
-
-}
-
-if [ ! "$(id -u)" = "0" ] 
-then
-     echo -e "\nThis program needs to be ran with sudo"
-     exit
-fi
-
 choices=()
 if [ "$1" != "" ]
 then
@@ -81,9 +48,14 @@ else
      done
 fi
 
+cachedir="$HOME/.local/cache"
+mkdir -p $cachedir
 
-wget https://github.com/doitsujin/dxvk/releases/download/v$DXVKVER/dxvk-$DXVKVER.tar.gz
-tar -xzf dxvk-$DXVKVER.tar.gz
+if [ ! -f $cachedir/dxvk-$DXVKVER.tar.gz ]
+then
+     wget https://github.com/doitsujin/dxvk/releases/download/v$DXVKVER/dxvk-$DXVKVER.tar.gz -P $cachedir
+fi
+tar -xzf $cachedir/dxvk-$DXVKVER.tar.gz -C ~
 
 
 if [[ "${choices[*]}" =~ "3" ]]
@@ -92,9 +64,9 @@ then
      then
           echo -e "You are trying to install a dxvk version not compatible with your wine64 installation. Skipping"
      else
-          cp dxvk-$DXVKVER/x64/* $WINEPREFIX/drive_c/windows/system32
-          cp dxvk-$DXVKVER/x32/* $WINEPREFIX/drive_c/windows/syswow64
-          if [ "$3" == "-partial" ];then rm -rf dxvk-$DXVKVER dxvk-$DXVKVER.tar.gz && exit;fi
+          cp ~/dxvk-$DXVKVER/x64/* $WINEPREFIX/drive_c/windows/system32
+          cp ~/dxvk-$DXVKVER/x32/* $WINEPREFIX/drive_c/windows/syswow64
+          if [ "$3" == "-partial" ];then rm -rf ~/dxvk-$DXVKVER && exit;fi
           if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
           then
               dlloverride $WINEPREFIX64 dxgi native,builtin
@@ -116,8 +88,8 @@ then
      then
           echo -e "You are trying to install a dxvk version not compatible with your wine installation. Skipping"
      else
-          cp dxvk-$DXVKVER/x32/* $WINEPREFIX32/drive_c/windows/system32
-          if [ "$3" == "-partial" ];then rm -rf dxvk-$DXVKVER dxvk-$DXVKVER.tar.gz && exit;fi
+          cp ~/dxvk-$DXVKVER/x32/* $WINEPREFIX32/drive_c/windows/system32
+          if [ "$3" == "-partial" ];then rm -rf ~/dxvk-$DXVKVER && exit;fi
           if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
           then
               dlloverride $WINEPREFIX32 dxgi native,builtin
@@ -139,7 +111,7 @@ then
      then
           echo -e "You are trying to install a dxvk version not compatible with your Exawine installation. Skipping"
      else
-          cp dxvk-$DXVKVER/x32/* $WINEPREFIX32/drive_c/windows/system32
+          cp ~/dxvk-$DXVKVER/x32/* $WINEPREFIX32/drive_c/windows/system32
           [[ -z $(awk 'FNR==2' ~/.config/exawineconf) ]] && echo "" >> ~/.config/exawineconf
           if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
           then
@@ -152,8 +124,8 @@ then
 else
      if [ -d $GEPREFIX ]
      then 
-          cp dxvk-$DXVKVER/x32/* $GEPREFIX/drive_c/windows/syswow64
-          if [ "$3" == "-partial" ];then rm -rf dxvk-$DXVKVER dxvk-$DXVKVER.tar.gz && exit;fi
+          cp ~/dxvk-$DXVKVER/x32/* $GEPREFIX/drive_c/windows/syswow64
+          if [ "$3" == "-partial" ];then rm -rf ~/dxvk-$DXVKVER && exit;fi
           if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
           then
                dlloverride $GEPRRFIX dxgi native,builtin
@@ -172,6 +144,5 @@ else
      fi
 fi
 
-rm -rf dxvk-$DXVKVER dxvk-$DXVKVER.tar.gz
-if [ "$WINEPREFIX" != "" ];then restart;fi
+rm -rf ~/dxvk-$DXVKVER 
 
