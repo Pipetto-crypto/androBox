@@ -2,7 +2,11 @@
 
 git clone https://github.com/Pipetto-crypto/androBox.git ~/androBox
 chmod +x ~/androBox/scripts/*
-mv ~/androBox/scripts/WinScripts ~/androBox/scripts/Programs ~/androBox/scripts/WinStartMenu ~/androBox/scripts/ProtonStartMenu /opt
+cp -r ~/androBox/scripts/WinScripts /opt && rm -rf ~/androBox/scripts/WinScripts
+cp -r ~/androBox/scripts/Programs /opt && rm -rf ~/androBox/scripts/Programs
+cp -r ~/androBox/scripts/WinStartMenu /opt && rm -rf ~/androBox/scripts/WinStartMenu
+cp -r ~/androBox/scripts/ProtonStartMenu /opt && rm -rf ~/androBox/scripts/ProtonStartMenu
 mv ~/androBox/scripts/* /usr/bin
 rm -rf ~/androBox
 
+ 

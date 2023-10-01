@@ -199,14 +199,15 @@ fi
 
 loadconfs(){
 
-wget -q https://github.com/Pipetto-crypto/androBox/blob/master/configs/configs.tar -P ~
-mkdir -p ~/tmp && tar -xvf ~/configs.tar -C ~/tmp
-for config in ~/tmp/*
+wget -q https://raw.githubusercontent.com/Pipetto-crypto/androBox/master/configs/configs.tar -P ~
+mkdir -p ~/tmpdir && tar -xvf ~/configs.tar -C ~/tmpdir
+for config in ~/tmpdir/*
 do
-   [[ ! -f /sdcard/androBox/$config ]] && mv ~/tmp/$config /sdcard/androBox
+   filename=$(basename $config)
+   [[ ! -f /sdcard/androBox/$filename ]] && mv ~/tmpdir/$filename /sdcard/androBox
 done
 
-rm -rf ~/tmp
+rm -rf ~/tmpdir
 
 }
 
@@ -397,16 +398,9 @@ proot -w / -S $rootfspath ${bindargs[@]} ${proot_args[@]} $@
 update(){
 
 rm -rf ~/ubuntu
-wget https://raw.githubusercontent.com/Pipetto-crypto/androBox/master/androBox -P ~
+wget -q https://raw.githubusercontent.com/Pipetto-crypto/androBox/master/androBox -P ~
 mv ~/androBox $PREFIX/bin
 chmod +x $PREFIX/bin/androBox
-
-}
-
-update-all(){
-
-proot_login /usr/bin/update
-update
 
 }
 
@@ -414,6 +408,15 @@ update-proot(){
 
 proot_login /usr/bin/apt update
 proot_login /usr/bin/apt upgrade
+wget -q https://raw.githubusercontent.com/Pipetto-crypto/androBox/master/scripts/update-bins -P $rootfspath/usr/bin
+proot_login /usr/bin/update-bins
+
+}
+
+update-all(){
+
+update
+update-proot
 
 }
 
