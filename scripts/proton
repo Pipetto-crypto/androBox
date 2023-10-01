@@ -1,0 +1,90 @@
+#!/bin/bash
+
+proton=$HOME/proton/proton
+steam=$HOME/.local/share/Steam
+pfx=$HOME/.local/proton-pfx
+cache=$HOME/.cache/dxvk-cache-pool
+appid=0
+
+killwine_func(){
+
+env BOX64_PATH=$HOME/proton/files/bin box64 wineserver -k
+pkill -9 -f exe
+
+}
+
+
+mkdir -p $pfx/$appid
+mkdir -p $cache
+
+export STEAM_COMPAT_CLIENT_INSTALL_PATH=$steam
+export STEAM_COMPAT_DATA_PATH=$pfx/$appid
+export DXVK_STATE_CACHE_PATH=$cache
+if ! [ "${SteamGameId}" -ge 0 ] 2>/dev/null && ! [ "${SteamAppId}" -ge 0 ] 2>/dev/null
+then
+     export SteamAppId=${appid}
+fi
+
+while IFS="" read -r line
+do
+   if [[ $line  =~ "#" ]]
+   then
+       continue
+   elif [ "$line" != "" ]
+   then
+       variable=$(echo $line | cut -d"=" -f1)
+       [[ ! -v $variable ]] && export "$line"
+   fi
+done < /sdcard/androBox/uservars
+
+
+while IFS="" read -r line
+do
+   if [[ $line  =~ "#" ]]
+   then
+       continue
+   elif [ "$line" != "" ]
+   then
+       variable=$(echo $line | cut -d"=" -f1)
+       [[ ! -v $variable ]] && export "$line"
+   fi
+done < /sdcard/androBox/box64opts
+
+while IFS="" read -r line
+do
+   if [[ $line  =~ "#" ]]
+   then
+       continue
+   elif [ "$line" != "" ]
+   then
+       variable=$(echo $line | cut -d"=" -f1)
+       [[ ! -v $variable ]] && export "$line"
+   fi
+done < /sdcard/androBox/box86opts
+
+index=1
+for var in "$@"
+do
+   if [ -f "$var" ]
+   then
+        absfile=$(realpath -e "$var")
+        argslist[$index]="$absfile"
+   elif [ "$var" == "-k" ]
+   then
+        killwine_func
+        exit
+   else
+        argslist[$index]=$var
+   fi
+   index=$((index+1))
+done
+
+
+echo "1" > /tmp/isProton
+
+env BOX64_PATH=$HOME/proton/files/bin \
+BOX64_LD_LIBRARY_PATH=$HOME/proton/files/lib:$HOME/proton/files/lib64:$HOME/proton/files/lib/wine/i386-unix:$HOME/proton/files/lib64/wine/x86_64-unix \
+PROTON_NO_ESYNC=1 \
+BOX64_RCFILE=/sdcard/androBox/box64.box64rc \
+BOX86_RCFILE=/sdcard/androBox/box86.box86rc \
+mangohud --dlsym box64 $proton run "${argslist[@]}"

@@ -1,7 +1,12 @@
 #!/bin/bash
 
-wine -k
-sed -i "4s/=.*/=zink/g" /sdcard/3in1ProotX86Emus/proot.conf
-sed -i "11s/=.*/=zink/g" /sdcard/3in1ProotX86Emus/box86opts
-sed -i "12s/=.*/=zink/g" /sdcard/3in1ProotX86Emus/box86opts
-env GALLIUM_DRIVER=zink MESA_LOADER_DRIVER_OVERRIDE=zink winedesktop
+sed -i "4s/=.*/=zink/g" /sdcard/androBox/proot.conf
+sed -i "/GALLIUM_DRIVER/d" /tmp/tmpvars.txt
+sed -i "/MESA_LOADER_DRIVER_OVERRIDE/d" /tmp/tmpvars.txt
+sed -i "/LIBGL_ALWAYS_SOFTWARE/d" /tmp/tmpvars.txt
+cat >> /tmp/tmpvars.txt <<- EOM
+GALLIUM_DRIVER=zink
+MESA_LOADER_DRIVER_OVERRIDE=zink
+LIBGL_ALWAYS_SOFTWARE=0
+EOM
+/opt/WinScripts/restart.sh

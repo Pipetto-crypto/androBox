@@ -1,12 +1,9 @@
 #!/bin/bash
 
-WINEVERSION="$(cat ~/.config/wine64conf | awk 'NR==1')"
-WINEVERSION32="$(cat ~/.config/wineconf | awk 'NR==1')"
-EXAWINEVERSION="$(cat ~/.config/exawineconf | awk 'NR==1')"
-WINEPREFIX64=$HOME/.local/wineprefix64/wine-$WINEVERSION
-WINEPREFIX32=$HOME/.local/wineprefix/wine-$WINEVERSION32
-EXAWINEPREFIX=$HOME/.local/wineprefix/wine-$EXAWINEVERSION
-GEPREFIX=$HOME/.local/wineprefix64/lutris-GE-Proton8-5
+WINEVERSION="$(cat ~/.config/wineconf | awk 'NR==1')"
+CURRARCH="$(cat ~/.config/wineconf | awk 'NR==2')"
+if [ "$CURRARCH" == "32" ];then CURRARCH="";fi
+PREFIX=$HOME/.local/wineprefix$CURRARCH/wine-$WINEVERSION
 
 dlloverride(){
 
@@ -31,43 +28,15 @@ unzip -d ~/dxwrapper $cachedir/dxwrapper.zip
 linenumber="$(awk '/Dd7to9/{print NR}' ~/dxwrapper/dxwrapper.ini | head -n 1)"
 sed -i "$linenumber""s/=.*/=1/g" ~/dxwrapper/dxwrapper.ini
 
-choices=()
-if [ "$1" != "" ]
+
+
+if [ "$CURRARCH" == "" ]
 then
-     choices+=$1
+     cp -r ~/dxwrapper/Stub/ddraw.dll ~/dxwrapper/dxwrapper.dll ~/dxwrapper/dxwrapper.ini $PREFIX/drive_c/windows/system32
 else
-     echo -e "\nSelect where to install: "
-     echo -e "1.Wine"
-     echo -e "2.Exawine"
-     echo -e "3.Wine64"
-     echo -e "4.WineGE"
+     cp -r ~/dxwrapper/Stub/ddraw.dll ~/dxwrapper/dxwrapper.dll ~/dxwrapper/dxwrapper.ini $PREFIX/drive_c/windows/syswow64
+fi     
+if [ "$1" == "-partial" ];then rm -rf ~/dxwrapper && exit;fi
+dlloverride $PREFIX ddraw native,builtin
 
-     while [ True ]
-     do
-        read -p "Your choice, press q to break and enter to confirm: " CHOICE
-        if [ "$CHOICE" == "q" ];then break;fi
-        choices+=($CHOICE)
-     done
-fi
-
-
-if [[ "${choices[*]}" =~ "3" ]]
-then
-     cp -r ~/dxwrapper/Stub/ddraw.dll ~/dxwrapper/dxwrapper.dll ~/dxwrapper/dxwrapper.ini $WINEPREFIX64/drive_c/windows/syswow64
-     if [ "$2" == "-partial" ];then rm -rf ~/dxwrapper && exit;fi
-     dlloverride $WINEPREFIX64 ddraw native,builtin
-
-elif [[ "${choices[*]}" =~ "1" ]]
-then
-     cp -r ~/dxwrapper/Stub/ddraw.dll ~/dxwrapper/dxwrapper.dll ~/dxwrapper/dxwrapper.ini $WINEPREFIX32/drive_c/windows/system32
-     if [ "$2" == "-partial" ];then rm -rf ~/dxwrapper && exit;fi
-     dlloverride $WINEPREFIX32 ddraw native,builtin
-else
-     cp -r ~/dxwrapper/Stub/ddraw.dll ~/dxwrapper/dxwrapper.dll ~/dxwrapper/dxwrapper.ini $GEPREFIX/drive_c/windows/syswow64
-     if [ "$2" == "-partial" ];then rm -rf ~/dxwrapper && exit;fi
-     dlloverride $GEPREFIX ddraw native,builtin
-fi
-
-
-
-rm -rf ~/dxwrapper 
+rm -rf ~/dxwrapper

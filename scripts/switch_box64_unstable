@@ -1,6 +1,0 @@
-#!/bin/bash
-
-apt-mark unhold box64
-apt remove --purge box64 -y
-apt install box64-android -y
-echo -e "Exit and re-enter to make changes effective. Whenever you want to update box64 now, you can just do it alongside ubuntu with apt update && apt upgrade command"

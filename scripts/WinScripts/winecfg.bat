@@ -1,1 +1,3 @@
-winecfg
+@echo off
+
+start /B winecfg

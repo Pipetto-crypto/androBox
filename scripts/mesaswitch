@@ -1,0 +1,13 @@
+#!/bin/bash
+
+mesaver=$1
+
+cachedir="$HOME/.local/cache"
+mkdir -p $cachedir
+
+[[ ! -f $cachedir/mesa32_$mesaver.deb ]] && wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa32_$mesaver.deb -P $cachedir
+[[ ! -f $cachedir/mesa64_$mesaver.deb ]] && wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa64_$mesaver.deb -P $cachedir
+dpkg -r mesa
+dpkg -r mesa:armhf
+dpkg -i --force-overwrite $cachedir/mesa64_$mesaver.deb
+dpkg -i --force-overwrite $cachedir/mesa32_$mesaver.deb

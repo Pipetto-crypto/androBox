@@ -1,7 +1,11 @@
 #!/bin/bash
 
-wine -k
-sed -i "4s/=.*/=llvmpipe/g" /sdcard/3in1ProotX86Emus/proot.conf
-sed -i "11s/=.*/=llvmpipe/g" /sdcard/3in1ProotX86Emus/box86opts
-sed -i "12s/=.*/=swrast/g" /sdcard/3in1ProotX86Emus/box86opts
-env GALLIUM_DRIVER=llvmpipe MESA_LOADER_DRIVER_OVERRIDE= winedesktop
+sed -i "4s/=.*/=llvmpipe/g" /sdcard/androBox/proot.conf
+sed -i "/GALLIUM_DRIVER/d" /tmp/tmpvars.txt
+sed -i "/MESA_LOADER_DRIVER_OVERRIDE/d" /tmp/tmpvars.txt
+sed -i "/LIBGL_ALWAYS_SOFTWARE/d" /tmp/tmpvars.txt
+cat >> /etc/profile.d/tmpvars.sh <<- EOM
+GALLIUM_DRIVER=llvmpipe
+MESA_LOADER_DRIVER_OVERRIDE=
+EOM
+/opt/WinScripts/restart.sh

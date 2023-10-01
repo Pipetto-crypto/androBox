@@ -1,14 +1,10 @@
 #!/bin/bash
 
 
-if [ "$SUDO_USER" != "" ];then HOME=/home/$SUDO_USER;fi
-WINEVERSION="$(cat ~/.config/wine64conf | awk 'NR==1')"
-WINEVERSION32="$(cat ~/.config/wineconf | awk 'NR==1')"
-EXAWINEVERSION="$(cat ~/.config/exawineconf | awk 'NR==1')"
-WINEPREFIX64=$HOME/.local/wineprefix64/wine-$WINEVERSION
-WINEPREFIX32=$HOME/.local/wineprefix/wine-$WINEVERSION32
-EXAWINEPREFIX=$HOME/.local/wineprefix/wine-$EXAWINEVERSION
-GEPREFIX=$HOME/.local/wineprefix64/lutris-GE-Proton8-5
+WINEVERSION="$(cat ~/.config/wineconf | awk 'NR==1')"
+CURRARCH="$(cat ~/.config/wineconf | awk 'NR==2')"
+if [ "$CURRARCH" == "32" ];then CURRARCH="";fi
+PREFIX=$HOME/.local/wineprefix$CURRARCH/wine-$WINEVERSION
 
 dlloverride(){
 
@@ -22,31 +18,13 @@ echo "\"$dlltoverride"\""=""\"$type"\" >> $input
 
 }
 
-choices=()
 if [ "$1" != "" ]
 then
-     DXVKVER=$1
+     DXVKVER="$1"
 else
-     read -p "Select a version of DXVK to install:" DXVKVER
+     read -p "Select a DXVK version to install:" DXVKVER
 fi
 
-if [ "$2" != "" ]
-then
-     choices+=$2
-else
-     echo -e "\nSelect where to install: "
-     echo -e "1.Wine"
-     echo -e "2.Exawine"
-     echo -e "3.Wine64"
-     echo -e "4.WineGE"
-
-     while [ True ]
-     do
-        read -p "Your choice, press q to break and enter to confirm: " CHOICE
-        if [ "$CHOICE" == "q" ];then break;fi
-        choices+=($CHOICE)
-     done
-fi
 
 cachedir="$HOME/.local/cache"
 mkdir -p $cachedir
@@ -57,92 +35,29 @@ then
 fi
 tar -xzf $cachedir/dxvk-$DXVKVER.tar.gz -C ~
 
+     
 
-if [[ "${choices[*]}" =~ "3" ]]
+if [ "$CURRARCH" == "" ]
 then
-     if (( $(echo "$(echo $WINEVERSION) < 7.1" | bc -l) )) && (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
-     then
-          echo -e "You are trying to install a dxvk version not compatible with your wine64 installation. Skipping"
-     else
-          cp ~/dxvk-$DXVKVER/x64/* $WINEPREFIX/drive_c/windows/system32
-          cp ~/dxvk-$DXVKVER/x32/* $WINEPREFIX/drive_c/windows/syswow64
-          if [ "$3" == "-partial" ];then rm -rf ~/dxvk-$DXVKVER && exit;fi
-          if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
-          then
-              dlloverride $WINEPREFIX64 dxgi native,builtin
-              dlloverride $WINEPREFIX64 d3d9 native,builtin
-              dlloverride $WINEPREFIX64 d3d11 native,builtin
-              dlloverride $WINEPREFIX64 d3d10core native,builtin
-          else
-              dlloverride $WINEPREFIX64 dxgi native,builtin
-              dlloverride $WINEPREFIX64 d3d9 native,builtin
-              dlloverride $WINEPREFIX64 d3d11 native,builtin
-              dlloverride $WINEPREFIX64 d3d10 native,builtin
-              dlloverride $WINEPREFIX64 d3d10_1 native,builtin
-          fi
-     fi
-
-elif [[ "${choices[*]}" =~ "1" ]]
-then
-     if (( $(echo "$(echo $WINEVERSION32) < 7.1" | bc -l) )) && (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
-     then
-          echo -e "You are trying to install a dxvk version not compatible with your wine installation. Skipping"
-     else
-          cp ~/dxvk-$DXVKVER/x32/* $WINEPREFIX32/drive_c/windows/system32
-          if [ "$3" == "-partial" ];then rm -rf ~/dxvk-$DXVKVER && exit;fi
-          if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
-          then
-              dlloverride $WINEPREFIX32 dxgi native,builtin
-              dlloverride $WINEPREFIX32 d3d9 native,builtin
-              dlloverride $WINEPREFIX32 d3d11 native,builtin
-              dlloverride $WINEPREFIX32 d3d10core native,builtin
-          else
-              dlloverride $WINEPREFIX32 dxgi native,builtin
-              dlloverride $WINEPREFIX32 d3d9 native,builtin
-              dlloverride $WINEPREFIX32 d3d11 native,builtin
-              dlloverride $WINEPREFIX32 d3d10 native,builtin
-              dlloverride $WINEPREFIX32 d3d10_1 native,builtin
-          fi
-     fi
-
-elif [[ "${choices[*]}" =~ "2" ]]
-then
-     if (( $(echo "$(echo $EXAWINEVERSION) < 7.1" | bc -l) )) && (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
-     then
-          echo -e "You are trying to install a dxvk version not compatible with your Exawine installation. Skipping"
-     else
-          cp ~/dxvk-$DXVKVER/x32/* $WINEPREFIX32/drive_c/windows/system32
-          [[ -z $(awk 'FNR==2' ~/.config/exawineconf) ]] && echo "" >> ~/.config/exawineconf
-          if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
-          then
-              sed -i "2s/^.*$/dxgi,d3d11,d3d9,d3d10core=n,b/" ~/.config/exawineconf
-          else
-              sed -i "2s/^.*$/dxgi,d3d11,d3d10,d3d10_1,d3d9,d3d10core=n,b/" ~/.config/exawineconf
-          fi
-     fi
-
+     cp ~/dxvk-$DXVKVER/x32/* $PREFIX/drive_c/windows/system32
 else
-     if [ -d $GEPREFIX ]
-     then 
-          cp ~/dxvk-$DXVKVER/x32/* $GEPREFIX/drive_c/windows/syswow64
-          if [ "$3" == "-partial" ];then rm -rf ~/dxvk-$DXVKVER && exit;fi
-          if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
-          then
-               dlloverride $GEPRRFIX dxgi native,builtin
-               dlloverride $GEPREFIX d3d9 native,builtin
-               dlloverride $GEPREFIX d3d11 native,builtin
-               dlloverride $GEPREFIX d3d10core native,builtin
-          else
-               dlloverride $GEPREFIX dxgi native,builtin
-               dlloverride $GEPREFIX d3d9 native,builtin
-               dlloverride $GEPREFIX d3d11 native,builtin
-               dlloverride $GEPREFIX d3d10 native,builtin
-               dlloverride $GEPREFIX d3d10_1 native,builtin
-          fi
-     else 
-          echo -e "WineGE is not installed, please install it with install_winege"
+     cp ~/dxvk-$DXVKVER/x32/* $PREFIX/drive_c/windows/syswow64
+     cp ~/dxvk-$DXVKVER/x64/* $PREFIX/drive_c/windows/system32
+fi
+if [ "$2" == "-partial" ];then rm -rf ~/dxvk-$DXVKVER && exit;fi
+   if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
+   then
+        dlloverride $PREFIX dxgi native,builtin
+        dlloverride $PREFIX d3d9 native,builtin
+        dlloverride $PREFIX d3d11 native,builtin
+        dlloverride $PREFIX d3d10core native,builtin
+    else
+        dlloverride $PREFIX dxgi native,builtin
+        dlloverride $PREFIX d3d9 native,builtin
+        dlloverride $PREFIX d3d11 native,builtin
+        dlloverride $PREFIX d3d10 native,builtin
+        dlloverride $PREFIX d3d10_1 native,builtin
      fi
 fi
 
 rm -rf ~/dxvk-$DXVKVER 
-

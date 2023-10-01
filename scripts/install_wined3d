@@ -1,12 +1,9 @@
 #!/bin/bash
 
-WINEVERSION="$(cat ~/.config/wine64conf | awk 'NR==1')"
-WINEVERSION32="$(cat ~/.config/wineconf | awk 'NR==1')"
-EXAWINEVERSION="$(cat ~/.config/exawineconf | awk 'NR==1')"
-WINEPREFIX64=$HOME/.local/wineprefix64/wine-$WINEVERSION
-WINEPREFIX32=$HOME/.local/wineprefix/wine-$WINEVERSION32
-EXAWINEPREFIX=$HOME/.local/wineprefix/wine-$EXAWINEVERSION
-GEPREFIX=$HOME/.local/wineprefix64/lutris-GE-Proton8-5
+WINEVERSION="$(cat ~/.config/wineconf | awk 'NR==1')"
+CURRARCH="$(cat ~/.config/wineconf | awk 'NR==2')"
+if [ "$CURRARCH" == "32" ];then CURRARCH="";fi
+PREFIX=$HOME/.local/wineprefix$CURRARCH/wine-$WINEVERSION
 
 dlloverride(){
 
@@ -20,32 +17,6 @@ echo "\"$dlltoverride"\""=""\"$type"\" >> $input
 
 }
 
-restart(){
-
-local winarch=$(awk -F "=" /arch/'{print $2}' $WINEPREFIX/user.reg | head -n1)
-local wineins="$(basename $WINEPREFIX)"
-case "$winarch" in
-win32)
-      wine -k
-      sleep 3
-      winedesktop
-      ;;
-win64)
-      if [[ "$WINEPREFIX" =~ "lutris" ]]
-      then
-           winege -k
-           desktopfx=ge
-      else
-           wine64 -k
-           desktopfx=64
-      fi
-      sleep 3
-      winedesktop$desktopfx
-      ;;
-esac
-
-
-}
 
 if [ "$1" != "" ]
 then
@@ -65,62 +36,20 @@ mkdir -p ~/wined3d
 unzip $cachedir/WineD3DForWindows_$wined3dver.zip -d ~/wined3d
 rm -rf ~/wined3d/ddraw.dll ~/wined3d/libwine.dll ~/wined3d/*.txt ~/wined3d/wined3d.dll
 
-choices=()
-
-if [ "$2" != "" ]
+if [ "$CURRARCH" == "" ]
 then
-     choices+=$2
+     cp -r ~/wined3d/* $PREFIX/drive_c/windows/system32
 else
-     echo -e "\nSelect where to install: "
-     echo -e "1.Wine"
-     echo -e "2.Exawine"
-     echo -e "3.Wine64"
-     echo -e "4.WineGE"
-
-     while [ True ]
-     do
-        read -p "Your choice, press q to break and enter to confirm: " CHOICE
-        if [ "$CHOICE" == "q" ];then break;fi
-        choices+=($CHOICE)
-     done
+     cp -r ~/wined3d/* $PREFIX/drive_c/windows/syswow64
 fi
-
-
-if [[ "${choices[*]}" =~ "3" ]]
-then
-     cp -r ~/wined3d/* $WINEPREFIX64/drive_c/windows/syswow64
-     if [ "$3" == "-partial" ];then rm -rf ~/wined3d && exit;fi
-     dlloverride $WINEPREFIX64 d3d8 native,builtin
-     dlloverride $WINEPREFIX64 d3d9 native,builtin
-     dlloverride $WINEPREFIX64 d3d10core native,builtin
-     dlloverride $WINEPREFIX64 d3d10 native,builtin
-     dlloverride $WINEPREFIX64 d3d10_1 native,builtin
-     dlloverride $WINEPREFIX64 d3d11 native,builtin
-     dlloverride $WINEPREFIX64 dxgi native,builtin
-
-elif [[ "${choices[*]}" =~ "1" ]]
-then
-     cp -r ~/wined3d/* $WINEPREFIX32/drive_c/windows/system32
-     if [ "$3" == "-partial" ];then rm -rf ~/wined3d && exit;fi
-     dlloverride $WINEPREFIX32 d3d8 native,builtin
-     dlloverride $WINEPREFIX32 d3d9 native,builtin
-     dlloverride $WINEPREFIX32 d3d10core native,builtin
-     dlloverride $WINEPREFIX32 d3d10 native,builtin
-     dlloverride $WINEPREFIX32 d3d10_1 native,builtin
-     dlloverride $WINEPREFIX32 d3d11 native,builtin
-     dlloverride $WINEPREFIX32 dxgi native,builtin
-else
-     cp -r ~/wined3d/* $GEPREFIX/drive_c/windows/syswow64
-     if [ "$3" == "-partial" ];then rm -rf ~/wined3d && exit;fi
-     dlloverride $GEPREFIX d3d8 native,builtin
-     dlloverride $GEPREFIX d3d9 native,builtin
-     dlloverride $GEPREFIX d3d10core native,builtin
-     dlloverride $GEPREFIX d3d10 native,builtin
-     dlloverride $GEPREFIX d3d10_1 native,builtin
-     dlloverride $GEPREFIX d3d11 native,builtin
-     dlloverride $GEPREFIX dxgi native,builtin
-fi
-
+if [ "$2" == "-partial" ];then rm -rf ~/wined3d && exit;fi
+dlloverride $PREFIX d3d8 native,builtin
+dlloverride $PREFIX d3d9 native,builtin
+dlloverride $PREFIX d3d10core native,builtin
+dlloverride $PREFIX d3d10 native,builtin
+dlloverride $PREFIX d3d10_1 native,builtin
+dlloverride $PREFIX d3d11 native,builtin
+dlloverride $PREFIX dxgi native,builtin
 
 
 rm -rf ~/wined3d 

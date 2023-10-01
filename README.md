@@ -18,45 +18,68 @@ ubuntu update-all
 
 # Instructions
 
-First you have to init the proot with:
+Init the proot with:
 
 ubuntu init
 
-This will prompt you to install a wine version and eventually it will install InputBridge in the newly created prefix.
+This will install a default Wine, Wine64 and WineGE version alongside InputBridge in each one.
 
-Additionally, you can install DXVK if you have a Turnip compatible Adreno GPU:
+Type ubuntu in terminal and this will launch a 32 bit desktop instance in Termux:X11 with zink.
 
-ubuntu install_dxvk
+Everything can now be customized by using the various Start Menu entries:
 
-While it is not recommended to use this, you can optionally install Proton for Lutris:
+## Graphics
 
-ubuntu install_winege
+### DXVK, D3D8to9, D8VK, WineD3D
 
-When you want to launch an app, you can do it with the command:
+Allow to install or remove DXVK, D8VK, WINED3D and D3D8to9. D8VK/D3D8to9 are complementary to DXVK and can be installed together, with D8VK and DXVK 2.1 and above only working on newer Wine versions. WineD3D instead replaces both of them.
 
-ubuntu -x wine app.exe (for x86 apps)
-ubuntu -x wine64 app.exe (for x64 and x86 apps)
-ubuntu -x winege app.exe (for x64 and x86 apps with Proton for Lutris)
+### Renderer
 
-Eventually, you can launch a GUI that allows you to double click on the exe with one of the following:
+Switch GPU renderer. Zink only works with Turnip compatible Adreno GPUs and Virgl is mostly recommended to Mali devices
 
-ubuntu -x winedesktop
-ubuntu -x winedesktop64
-ubuntu -x winedesktopge
+## Box
 
-Using the script without any command allows to log directly inside the proot:
+Change box86 and box64 settings. Need to restart to put settings in effect
 
-ubuntu
+## Logging
 
-When you first use the ubuntu script, it creates a configuration file in the 3in1ProotX86Emus folder on your Internal Storage. You can modify it to change the behaviour of the command above:
+Allow to enter or exit to/from a logging to file desktop session
 
-For example by setting winedesktop to yes and autostart to x11, everytime you type ubuntu in command line it will automatically start WineDesktop and X11 server.
+## IB
 
-This config file can also be modified to change the default GPU renderer, although it is better you do it with ubuntu set-renderer command.
+Permit to install and launch InputBridge
 
-There are a lot more stuffs you can do with the ubuntu command, you can check all available commands and options with:
+## Switch
 
-ubuntu help
+### Desktop
+
+Allow to switch between 32 bit, 64 bit and GE desktop session.
+
+### Wine
+
+Allow to switch between some recommended Wine versions
+
+## Menu
+
+Reload Start menu entries
+
+## Registry
+
+Allow to enable/disable csmt and change video memory size
+
+## Shutdown
+
+Allow to restart the current session or completely shut it off
+
+##  Launchers
+
+Contains shortcuts to some wine utilities
+
+Once you quit a session, you will be able to relaunch the desktop session by typing ubuntu in terminal.
+
+This se
+
 
 # Known Issues
 
@@ -64,15 +87,17 @@ Some installers are broken in wine64 and winege for now but may be fixed in a fu
 
 Unity apps or games will much likely not work because of the lack of udev
 
+Sometimes the GUI may be too big, close the file manager and relaunch the GUI by typing ubuntu in terminal
+
 # Useful Proot commands
 
 wineswitch - Allow to switch between different wine versions
 
 update - Update all the scripts inside the proot, you will need to re-execute wineswitch and install_dxvk every time you update. Replaces old update-bins and in case you don't have this command you need to execute update-bins then update.
 
-install_dxvk - Install DXVK in all available wineprefixes, only for Turnip compatible Adreno GPUs
+install_(dxvk|wined3d|d8vk|d3d8to9) - Install DXVK|WineD3D|D8VK|D3D8to9 in the default prefixes.
 
-remove_dxvk - Remove DXVK from all available wineprefixes
+remove_(dxvk|wined3d|d8vk) - Remove  DXVK|WineD3D|D8VK|D3D8to9 from a prefix, only meant to be used from a Desktop session
 
 install_ib - Install InputBridge in all available wineprefixes, for both 32 and 64 bit
 
@@ -103,6 +128,8 @@ winedesktop - Launch Wine Desktop for 32bit apps
 winedesktop64 - Launch Wine Desktop for 32 and 64bit apps
 
 winedesktopge - Launch Wine Desktop for Proton for Lutris
+
+pfxupdate - Update all existing prefixes Start Menu entries
 
 More to come in the nearby future
 

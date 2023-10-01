@@ -1,14 +1,13 @@
 #!/bin/bash
 
 VERSION="$(cat ~/.config/wineconf | awk 'NR==1')"
-ARCH="$(cat ~/.config/wineconf | awk 'NR==2')"
-PREFIXARCH=""
-if [ "$ARCH" == "amd64" ];then PREFIXARCH="64";fi
-WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix$PREFIXARCH/wine-$VERSION}
-cp /usr/bin/TFM.exe $WINEPREFIX/drive_c/windows/system32
-        
+CURRARCH="$(cat ~/.config/wineconf | awk 'NR==2')"
+if [ "$CURRARCH" == "32" ];then CURRARCH="";fi
+WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix$CURRARCH/wine-$VERSION}
+
+    
 if [ ! -f /usr/bin/xrandr ]; then apt install x11-xserver-utils;fi
 screenres=$(xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
-ARGS="/desktop=shell,$screenres TFM.exe E:"
+ARGS="/desktop=shell,$screenres /opt/Programs/7zip/7zFM.exe E:"
 
 env --chdir=$HOME wine $@ explorer $ARGS

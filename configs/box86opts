@@ -1,3 +1,5 @@
+#Box86 global variables, do not delete these ones. You can add your own global variables in this file.
+
 BOX86_LOG=0
 BOX86_TRACE=0
 BOX86_DYNAREC_LOG=0

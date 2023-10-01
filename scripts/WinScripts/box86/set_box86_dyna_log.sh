@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sed -i "3s/=.*/=$1/g" /sdcard/3in1ProotX86Emus/box86opts
+echo "BOX86_DYNAREC_LOG=1" >> /etc/profile.d/tempvars.sh

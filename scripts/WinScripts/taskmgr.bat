@@ -1,1 +1,3 @@
-taskmgr
+@echo off
+
+start /B taskmgr

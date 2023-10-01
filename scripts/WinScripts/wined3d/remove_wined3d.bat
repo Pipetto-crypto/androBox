@@ -1,3 +1,5 @@
+@echo off
+
 reg delete HKEY_CURRENT_USER\Software\Wine\DllOverrides /v dxgi /f
 reg delete HKEY_CURRENT_USER\Software\Wine\DllOverrides /v d3d10 /f
 reg delete HKEY_CURRENT_USER\Software\Wine\DllOverrides /v d3d11 /f

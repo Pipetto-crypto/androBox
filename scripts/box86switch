@@ -1,0 +1,12 @@
+#!/bin/bash
+
+version=$1
+month=$2
+cachedir="$HOME/.local/cache"
+mkdir -p $cachedir
+
+apt remove --purge box86-android:armhf -y 
+[[ ! -f $cachedir/box86_"$version"_"$month"_armhf.deb ]] && wget https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box86debs/box86_"$version"_"$month"_armhf.deb -P $cachedir
+yes | dpkg -i $cachedir/box86_"$version"_"$month"_armhf.deb
+
+apt-mark hold box86:armhf

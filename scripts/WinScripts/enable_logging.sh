@@ -1,6 +1,10 @@
 #!/bin/bash
 
 echo "Enabled" > $WINEPREFIX/islog
-/opt/WinScripts/box86/set_box86_log.sh 1
-/opt/WinScripts/box86/set_box86_dyna_log.sh 1
+cat >> /tmp/tmpvars.txt <<- EOM
+BOX86_LOG=1
+BOX64_LOG=1
+BOX86_DYNAREC_LOG=1
+BOX64_DYNAREC_LOG=1
+EOM
 /opt/WinScripts/restart.sh
