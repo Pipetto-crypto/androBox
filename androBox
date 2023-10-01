@@ -1,7 +1,7 @@
 #!/bin/bash  
 
 configfile=/sdcard/androBox/proot.conf
-rootfspath=$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu
+rootfspath=$PREFIX/var/lib/androBox/ubuntu
 
 
 set_fake_proc(){
@@ -45,14 +45,14 @@ fi
 
 if [ ! -f "$rootfspath/proc/.version" ]
 then
-     cat <<- EOF > "${INSTALLED_ROOTFS_DIR}/${distro_name}/proc/.version"
+     cat <<- EOF > "$rootfspath/proc/.version"
      Linux version 5.4.0-faked (termux@androidos) (gcc version 4.9.x (Faked /proc/version by Proot-Distro) ) #1 SMP PREEMPT Fri Jul 10 00:00:00 UTC 2020
      EOF
 fi
 
 if [ ! -f "$rootfspath/proc/.vmstat" ]
 then
-     cat <<- EOF > "${INSTALLED_ROOTFS_DIR}/${distro_name}/proc/.vmstat"
+     cat <<- EOF > "$rootfspath/proc/.vmstat"
 		nr_free_pages 146031
 		nr_zone_inactive_anon 196744
 		nr_zone_active_anon 301503
@@ -197,85 +197,27 @@ fi
 
 }
 
+loadconfs(){
 
-checkiftoreplaceprootconf(){
+wget -q https://github.com/Pipetto-crypto/androBox/blob/master/configs/configs.tar -P ~
+mkdir -p ~/tmp && tar -xvf ~/configs.tar -C ~/tmp
+for config in ~/tmp/*
+do
+   [[ ! -f /sdcard/androBox/$config ]] && mv ~/tmp/$config /sdcard/androBox
+done
 
-wget -q https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/proot.conf -P ~
-if [ ! -f /sdcard/3in1ProotX86Emus/proot.conf ]
-then
-     mv ~/proot.conf /sdcard/3in1ProotX86Emus/
-elif  [ "$1" == "update" ] || [ "$1" == "update-all" ]
-then
-     file1="/sdcard/3in1ProotX86Emus/proot.conf"
-     file2="$HOME/proot.conf"
-     if [ -f ~/tmpfile ];then rm -rf ~/tmpfile;fi
-     arr1=()
-     arr2=()
-     index1=1
-     index2=1
-     while read line1
-     do
-        arr1[$index1]="$line1"
-        index1=$((index1+1))
-     done < $file1
-     while read line2
-     do
-        arr2[$index2]="$line2"
-        index2=$((index2+1))
-     done < $file2
-
-
-     index=1
-     for x in "${arr1[@]}"
-     do
-        if [ "$x" == "${arr2[$index]}" ]
-        then
-             echo "$x" >> ~/tmpfile
-        elif echo "${arr2[$index]}" | grep -q "#"
-        then
-             echo "${arr2[$index]}" >> ~/tmpfile
-        else
-             echo "$x" >> ~/tmpfile
-        fi
-        index=$((index+1))
-     done
-
-     for((newindex=index;newindex<="${#arr2[@]}";newindex++))
-     do
-        echo "${arr2[$newindex]}" >> ~/tmpfile
-     done
-     mv ~/tmpfile /sdcard/3in1ProotX86Emus/proot.conf
-fi
-
-rm -rf ~/proot.conf
+rm -rf ~/tmp
 
 }
-
-checkiftoreplaceboxopts(){
-
-wget -q https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/box64opts -P ~
-wget -q https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/configs/box86opts -P ~
-if [ ! -f /sdcard/3in1ProotX86Emus/box86opts ]
-then
-     mv  ~/box86opts /sdcard/3in1ProotX86Emus
-fi
-
-if [ ! -f /sdcard/3in1ProotX86Emus/box64opts ]
-then
-     mv ~/box64opts /sdcard/3in1ProotX86Emus
-fi
-
-rm -rf ~/box86opts ~/box64opts
-
-}
-
 
 mkdir -p /sdcard/androBox
 mkdir -p /sdcard/androBox/wine
 mkdir -p /sdcard/androBox/proton
 mkdir -p /sdcard/androBox/box_logs
-checkiftoreplaceprootconf
-checkiftoreplaceboxopts
+if [ "$1" == "update" ] || [ "$1" == "update-all" ]
+do
+   loadconfs
+done
 
 if [ ! -f $PATH/termux-x11 ]
 then
@@ -405,6 +347,13 @@ pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
 temp_login_script(){
 
 
+cat <<- EOF > "$rootfspath/etc/profile.d/globalvars.sh"
+    #!/bin/bash
+    export BOX86_BASH=~/box_bash/bash_x86
+    export BOX64_BASH=~/box_bash/bash_x64
+    export DISPLAY=:0
+    export DXVK_LOG_LEVEL=none
+    EOF
 echo "#!/bin/bash" > $rootfspath/etc/profile.d/tempvars.sh
 echo -e "$rendererargs"  >> $rootfspath/etc/profile.d/tempvars.sh
 chmod +x $rootfspath/etc/profile.d/tempvars.sh
@@ -449,9 +398,9 @@ proot -w / -S $rootfspath ${bindargs[@]} ${proot_args[@]} $@
 update(){
 
 rm -rf ~/ubuntu
-wget https://raw.githubusercontent.com/Pipetto-crypto/3in1ProotX86Emus/master/ubuntu -P ~
-mv ~/ubuntu $PATH
-chmod +x $PATH/ubuntu
+wget https://raw.githubusercontent.com/Pipetto-crypto/androBox/master/androBox -P ~
+mv ~/androBox $PREFIX/bin
+chmod +x $PREFIX/bin/androBox
 
 }
 

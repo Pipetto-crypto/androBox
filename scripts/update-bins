@@ -1,10 +1,8 @@
 #!/bin/bash
 
-echo -e "\nI am going to overwrite all the existing scripts, if you have done local changes to them and you want to back them up, please interrupt this operation with CTRL+C\n"
-read -p "Do you want to continue?"
-git clone https://github.com/Pipetto-crypto/3in1ProotX86Emus.git ~/3in1ProotX86Emus
-chmod +x ~/3in1ProotX86Emus/scripts/*
-mv ~/3in1ProotX86Emus/scripts/WinScripts ~/3in1ProotX86Emus/scripts/Programs ~/3in1ProotX86Emus/scripts/WinStartMenu ~/3in1ProotX86Emus/scripts/ProtonStartMenu /opt
-mv ~/3in1ProotX86Emus/scripts/* /usr/bin
-rm -rf ~/3in1ProotX86Emus
+git clone https://github.com/Pipetto-crypto/androBox.git ~/androBox
+chmod +x ~/androBox/scripts/*
+mv ~/androBox/scripts/WinScripts ~/androBox/scripts/Programs ~/androBox/scripts/WinStartMenu ~/androBox/scripts/ProtonStartMenu /opt
+mv ~/androBox/scripts/* /usr/bin
+rm -rf ~/androBox
 
