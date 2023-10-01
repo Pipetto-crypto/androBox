@@ -215,9 +215,9 @@ mkdir -p /sdcard/androBox/wine
 mkdir -p /sdcard/androBox/proton
 mkdir -p /sdcard/androBox/box_logs
 if [ "$1" == "update" ] || [ "$1" == "update-all" ]
-do
+then
    loadconfs
-done
+fi
 
 if [ ! -f $PATH/termux-x11 ]
 then
@@ -346,14 +346,13 @@ pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
 
 temp_login_script(){
 
-
 cat <<- EOF > "$rootfspath/etc/profile.d/globalvars.sh"
-    #!/bin/bash
-    export BOX86_BASH=~/box_bash/bash_x86
-    export BOX64_BASH=~/box_bash/bash_x64
-    export DISPLAY=:0
-    export DXVK_LOG_LEVEL=none
-    EOF
+	#!/bin/bash	
+	export BOX86_BASH=~/box_bash/bash_x86
+	export BOX64_BASH=~/box_bash/bash_x64
+	export DISPLAY=:0
+	export DXVK_LOG_LEVEL=none
+	EOF
 echo "#!/bin/bash" > $rootfspath/etc/profile.d/tempvars.sh
 echo -e "$rendererargs"  >> $rootfspath/etc/profile.d/tempvars.sh
 chmod +x $rootfspath/etc/profile.d/tempvars.sh
