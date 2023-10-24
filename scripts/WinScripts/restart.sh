@@ -1,12 +1,8 @@
 #!/bin/bash
 
-proton -k
-sleep 2
-wine -k
-sleep 2
-if [ "$(cat /tmp/isProton)" == "0" ] || [ "$(cat /tmp/isProton)" == "" ]
-then
-     winedesktop $@
-else
-     protondesktop $@
-fi
+export PATH=/data/data/com.termux/files/usr/bin
+unset LD_LIBRARY_PATH
+
+kill -9 $(pgrep wine)
+kill -9 $(pgrep wine64)
+winedesktop $@

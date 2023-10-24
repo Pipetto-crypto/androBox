@@ -1,3 +1,3 @@
 @echo off
 
-start /unix /usr/bin/pfxupdate
+start /unix /data/data/com.termux/files/usr/bin/pfxupdate

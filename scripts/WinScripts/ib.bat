@@ -1,3 +1,3 @@
 @echo off
 
-start /B Z:\opt\Programs\IB\ib.exe
+start /B Z:\usr\glibc\opt\Programs\IB\ib.exe

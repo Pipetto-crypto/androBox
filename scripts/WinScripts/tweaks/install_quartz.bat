@@ -1,3 +1,3 @@
 @echo off
 
-start /W /unix /opt/WinScripts/install_quartz.sh
+start /W /unix /data/data/com.termux/files/usr/glibc/opt/WinScripts/tweaks/install_quartz.sh

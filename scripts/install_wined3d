@@ -1,9 +1,10 @@
 #!/bin/bash
 
-WINEVERSION="$(cat ~/.config/wineconf | awk 'NR==1')"
-CURRARCH="$(cat ~/.config/wineconf | awk 'NR==2')"
-if [ "$CURRARCH" == "32" ];then CURRARCH="";fi
-PREFIX=$HOME/.local/wineprefix$CURRARCH/wine-$WINEVERSION
+export PATH=/data/data/com.termux/files/usr/bin
+unset LD_LIBRARY_PATH
+ARCH=$(cat ~/.wine/system.reg | grep arch= | cut -f2- -d"=")
+PREFIX=$HOME/.wine
+
 
 dlloverride(){
 
@@ -36,7 +37,7 @@ mkdir -p ~/wined3d
 unzip $cachedir/WineD3DForWindows_$wined3dver.zip -d ~/wined3d
 rm -rf ~/wined3d/ddraw.dll ~/wined3d/libwine.dll ~/wined3d/*.txt ~/wined3d/wined3d.dll
 
-if [ "$CURRARCH" == "" ]
+if [ "$ARCH" == "win32" ]
 then
      cp -r ~/wined3d/* $PREFIX/drive_c/windows/system32
 else

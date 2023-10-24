@@ -1,14 +1,19 @@
-#!/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
 
+[[ -z $(pidof pulseaudio) ]] && pulseaudio --start --exit-idle-time=-1 && pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
+[[ -z $(pidof app_process) ]] && termux-x11 &
 
-VERSION="$(cat ~/.config/wineconf | awk 'NR==1')"
-ARCH="amd64"
-CURRARCH="$(cat ~/.config/wineconf | awk 'NR==2')"
-WINEARCH=win$CURRARCH
-if [ "$CURRARCH" == "32" ];then CURRARCH="";fi
-WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix$CURRARCH/wine-$VERSION}
 DATE=$(date -u +%F@%H-%M-%S)
 TERMINAL_LOGFILE=/sdcard/androBox/box_logs/terminal_log@$DATE.txt
+WINEPREFIX=${WINEPREFIX:-$HOME/.wine}
+
+prepare_prefix(){
+
+mkdir -p $WINEPREFIX && mkdir -p $WINEPREFIX/drive_c && mkdir -p $WINEPREFIX/dosdevices
+ln -s $WINEPREFIX/drive_c $WINEPREFIX/dosdevices/c:
+ln -s /data/data/com.termux/files $WINEPREFIX/dosdevices/z:
+
+}
 
 log(){
 
@@ -20,13 +25,21 @@ exec 1>$TERMINAL_LOGFILE 2>&1
 }
 
 
-killwine_func(){
-
-env BOX64_PATH=~/wine-$VERSION-$ARCH/bin box64 wineserver -k
-pkill -9 -f exe
-
-}
-
+unset LD_PRELOAD
+export GLIBC_PREFIX=/data/data/com.termux/files/usr/glibc
+export PATH=$GLIBC_PREFIX/bin:$PATH
+export BOX64_PATH=$GLIBC_PREFIX/opt/wine-8.14-amd64/bin
+export BOX86_ENV="LD_LIBRARY_PATH=$GLIBC_PREFIX/lib32"
+export BOX64_LD_LIBRARY_PATH=$GLIBC_PREFIX/opt/wine-8.14-amd64/lib/wine/i386-unix:$GLIBC_PREFIX/opt/wine-8.14-amd64/lib/wine/x86_64-unix:$GLIBC_PREFIX/lib/x86_64-linux-gnu
+export VK_ICD_FILENAMES=$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.aarch64.json:$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.armhf.json
+export LIBGL_DRIVERS_PATH=$GLIBC_PREFIX/lib/dri:$GLIBC_PREFIX/lib32/dri
+export DISPLAY=:0
+export MESA_LOADER_DRIVER_OVERRIDE=zink
+export PULSE_SERVER=127.0.0.1
+export BOX64_BASH=$HOME/box_bash/bash_x64
+export BOX64_RCFILE=/sdcard/androBox/box64.box64rc
+export BOX86_RCFILE=/sdcard/androBox/box86.box86rc
+export WINEDEBUG=${WINEDEBUG:=-all}
 
 while IFS="" read -r line
 do
@@ -52,7 +65,7 @@ do
    fi
 done < /sdcard/androBox/box86opts
 
-touch /tmp/tmpvars.txt
+touch $TMPDIR/tmpvars.txt
 
 while IFS="" read -r line
 do
@@ -75,54 +88,25 @@ do
    then
        export "$line"
    fi
-done < /tmp/tmpvars.txt
+done < $TMPDIR/tmpvars.txt
 
-
-index=1
 for var in "$@"
 do
-   if [ -f "$var" ]
-   then
-        absfile=$(realpath -e "$var")
-        argslist[$index]="$absfile"
-   elif [ "$var" == "-log" ]
+   if [ "$var" == "-log" ]
    then 
 	log 
-   elif [ "$var" == "-winedbg" ]
-   then
-        WINEDEBUG="+err"
-   elif [ "$var" == "-k" ]
-   then
-        killwine_func
-        exit
-   else
-        argslist[$index]=$var
    fi
-   index=$((index+1))
 done
 
-
-if [ ! -d ~/wine-$VERSION-$ARCH ]
-then
-     echo -e "Wine not found"
-     exit
-fi
-
+[[ ! -d $WINEPREFIX ]] && prepare_prefix
 
 if [ -f $WINEPREFIX/islog ] && [ "$(cat $WINEPREFIX/islog)" == "Enabled" ]
 then
      log
 fi
 
-echo "0" > /tmp/isProton
 
-exec env BOX64_LD_LIBRARY_PATH=~/wine-$VERSION-$ARCH/lib/wine/i386-unix/:~/wine-$VERSION-$ARCH/lib/wine/:~/wine-$VERSION-$ARCH/lib:~/wine-$VERSION-$ARCH/lib/wine/x86_64-unix/:/lib/i386-linux-gnu/:/lib/x86_64-linux-gnu:/lib/aarch64-linux-gnu:/usr/x86_64-linux-gnu/lib \
-BOX64_PATH=~/wine-$VERSION-$ARCH/bin \
-WINEPREFIX=$WINEPREFIX \
-WINEDLLOVERRIDES=$WINEDLLOVERRIDES \
-WINEDEBUG=${WINEDEBUG:=-all} \
-WINEARCH=$WINEARCH \
-BOX64_RCFILE=/sdcard/androBox/box64.box64rc \
-BOX86_RCFILE=/sdcard/androBox/box86.box86rc \
-mangohud --dlsym box64 wine$CURRARCH "${argslist[@]}"
+
+exec box64 wine "$@"
+
 

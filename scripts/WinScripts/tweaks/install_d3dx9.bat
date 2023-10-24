@@ -1,3 +1,3 @@
 @echo off
 
-start /W /unix /opt/WinScripts/tweaks/install_d3dx9.sh
+start /W /unix /data/data/com.termux/files/usr/glibc/opt/WinScripts/tweaks/install_d3dx9.sh

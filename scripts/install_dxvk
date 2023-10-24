@@ -1,10 +1,10 @@
 #!/bin/bash
 
+export PATH=/data/data/com.termux/files/usr/bin
+unset LD_LIBRARY_PATH
+ARCH=$(cat ~/.wine/system.reg | grep arch= | cut -f2- -d"=")
+PREFIX=$HOME/.wine
 
-WINEVERSION="$(cat ~/.config/wineconf | awk 'NR==1')"
-CURRARCH="$(cat ~/.config/wineconf | awk 'NR==2')"
-if [ "$CURRARCH" == "32" ];then CURRARCH="";fi
-PREFIX=$HOME/.local/wineprefix$CURRARCH/wine-$WINEVERSION
 
 dlloverride(){
 
@@ -37,7 +37,7 @@ tar -xzf $cachedir/dxvk-$DXVKVER.tar.gz -C ~
 
      
 
-if [ "$CURRARCH" == "" ]
+if [ "$ARCH" == "win32" ]
 then
      cp ~/dxvk-$DXVKVER/x32/* $PREFIX/drive_c/windows/system32
 else

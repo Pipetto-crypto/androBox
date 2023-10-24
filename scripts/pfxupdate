@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export PATH=/data/data/com.termux/files/usr/bin
+unset LD_LIBRARY_PATH
+
 cleanmenu(){
 
 path=$(dirname -- "$1")
@@ -11,42 +14,11 @@ rm -rf $path/tmp
 
 }
 
-if [ ! -z "$(ls -A $HOME/.local/wineprefix)" ]
-then
-     for pfx in $HOME/.local/wineprefix/*
-     do
-        cleanmenu "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
-        cp -r /opt/WinStartMenu/* "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
-        if [ ! -L "$pfx/dosdevices/e:" ];then ln -sf /sdcard "$pfx/dosdevices/e:";fi
-        if [ ! -L "$pfx/dosdevices/f:" ];then ln -sf /opt/Programs "$pfx/dosdevices/f:";fi
-        if [ ! -L "$pfx/dosdevices/t:" ];then ln -sf ~/.local/cache "$pfx/dosdevices/t:";fi
-     done
-fi
+pfx=$HOME/.wine
 
-if [ ! -z "$(ls -A $HOME/.local/wineprefix64)" ]
-then
-     for pfx in $HOME/.local/wineprefix64/*
-     do
-        cleanmenu "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
-        cp -r /opt/WinStartMenu/* "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
-        if [ ! -L "$pfx/dosdevices/e:" ];then ln -sf /sdcard "$pfx/dosdevices/e:";fi
-        if [ ! -L "$pfx/dosdevices/f:" ];then ln -sf /opt/Programs "$pfx/dosdevices/f:";fi
-        if [ ! -L "$pfx/dosdevices/t:" ];then ln -sf ~/.local/cache "$pfx/dosdevices/t:";fi
-     done
-fi
-
-if [ ! -z "$(ls -A $HOME/.local/proton-pfx)" ]
-then
-     for pfx in $HOME/.local/proton-pfx/*
-     do
-        cleanmenu "$pfx/pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
-        cp -r /opt/ProtonStartMenu/* "$pfx/pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
-        if [ ! -L "$pfx/pfx/dosdevices/e:" ];then ln -sf /sdcard "$pfx/pfx/dosdevices/e:";fi
-        if [ ! -L "$pfx/pfx/dosdevices/f:" ];then ln -sf /opt/Programs "$pfx/pfx/dosdevices/f:";fi
-        if [ ! -L "$pfx/pfx/dosdevices/a:" ];then ln -sf ~/.local/cache "$pfx/pfx/dosdevices/a:";fi
-     done
-fi
-
-if [ ! -L "$HOME/.local/cache/wineprefix" ];then ln -sf ~/.local/wineprefix ~/.local/cache/wineprefix;fi
-if [ ! -L "$HOME/.local/cache/wineprefix64" ];then ln -sf ~/.local/wineprefix64 ~/.local/cache/wineprefix64;fi
-if [ ! -L "$HOME/.local/cache/proton-pfx" ];then ln -sf ~/.local/proton-pfx ~/.local/cache/proton-pfx;fi
+cleanmenu "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+cp -r $PREFIX/glibc/opt/WinStartMenu/* "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+if [ ! -L "$pfx/dosdevices/e:" ];then ln -sf /sdcard "$pfx/dosdevices/e:";fi
+if [ ! -L "$pfx/dosdevices/f:" ];then ln -sf $PREFIX/glibc/opt/Programs "$pfx/dosdevices/f:";fi
+if [ ! -L "$pfx/dosdevices/t:" ];then ln -sf ~/.local/cache "$pfx/dosdevices/t:";fi
+   

@@ -1,11 +1,13 @@
 #!/bin/bash
 
-sed -i "4s/=.*/=llvmpipe/g" /sdcard/androBox/proot.conf
-sed -i "/GALLIUM_DRIVER/d" /tmp/tmpvars.txt
-sed -i "/MESA_LOADER_DRIVER_OVERRIDE/d" /tmp/tmpvars.txt
-sed -i "/LIBGL_ALWAYS_SOFTWARE/d" /tmp/tmpvars.txt
-cat >> /etc/profile.d/tmpvars.sh <<- EOM
+export PATH=/data/data/com.termux/files/usr/bin
+unset LD_LIBRARY_PATH
+
+sed -i "/GALLIUM_DRIVER/d" $TMPDIR/tmpvars.txt
+sed -i "/MESA_LOADER_DRIVER_OVERRIDE/d" $TMPDIR/tmpvars.txt
+sed -i "/LIBGL_ALWAYS_SOFTWARE/d" $TMPDIR/tmpvars.txt
+cat >> $TMPDIR/tmpvars.txt <<- EOM
 GALLIUM_DRIVER=llvmpipe
-MESA_LOADER_DRIVER_OVERRIDE=
+MESA_LOADER_DRIVER_OVERRIDE=swrast
 EOM
-/opt/WinScripts/restart.sh
+$PREFIX/glibc/opt/WinScripts/restart.sh

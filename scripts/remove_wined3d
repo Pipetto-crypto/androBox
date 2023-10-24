@@ -1,13 +1,15 @@
 #!/bin/bash
 
+export PATH=/data/data/com.termux/files/usr/bin
+unset LD_LIBRARY_PATH
+
 copydll(){
 
 local winarch=$(awk -F "=" /arch/'{print $2}' $WINEPREFIX/user.reg | head -n1) 
-
-
-local wineins="$(basename $WINEPREFIX)"
 local dlltocopy=("dxgi" "d3d8" "d3d9" "d3d10core" "d3d10" "d3d10_1" "d3d11")
-local winedir=$HOME/$wineins-amd64
+local glibc_prefix=$PREFIX/glibc
+local winever=$(wine --version | tail -n1 | cut -f2- -d"-")
+local winedir=$glibc_prefix/opt/wine-$winever-amd64
 
 if [ -d $winedir/lib/wine/fakedlls ]
 then

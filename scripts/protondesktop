@@ -1,7 +1,0 @@
-#!/bin/bash
-
-
-screenres=$(xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
-ARGS="/desktop=shell,$screenres /opt/Programs/7zip/7zFM.exe E:"
-
-env --chdir=$HOME proton explorer $ARGS

@@ -1,9 +1,10 @@
 #!/bin/bash
 
-WINEVERSION="$(cat ~/.config/wineconf | awk 'NR==1')"
-CURRARCH="$(cat ~/.config/wineconf | awk 'NR==2')"
-if [ "$CURRARCH" == "32" ];then CURRARCH="";fi
-PREFIX=$HOME/.local/wineprefix$CURRARCH/wine-$WINEVERSION
+export PATH=/data/data/com.termux/files/usr/bin
+unset LD_LIBRARY_PATH
+ARCH=$(cat ~/.wine/system.reg | grep arch= | cut -f2- -d"=")
+PREFIX=$HOME/.wine
+
 
 dlloverride(){
 
@@ -25,7 +26,7 @@ then
      wget https://github.com/crosire/d3d8to9/releases/download/v1.11.1/d3d8.dll -P $cachedir
 fi
 
-if [ "$CURRARCH" == "" ]
+if [ "$ARCH" == "win32" ]
 then
      cp -r $cachedir/d3d8.dll $PREFIX/drive_c/windows/system32
 else

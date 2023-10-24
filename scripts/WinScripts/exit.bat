@@ -1,3 +1,3 @@
 @echo off
 
-start /unix /opt/WinScripts/exit.sh
+start /unix /data/data/com.termux/files/usr/glibc/opt/WinScripts/exit.sh

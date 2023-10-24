@@ -1,13 +1,5 @@
-#!/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
 
-VERSION="$(cat ~/.config/wineconf | awk 'NR==1')"
-CURRARCH="$(cat ~/.config/wineconf | awk 'NR==2')"
-if [ "$CURRARCH" == "32" ];then CURRARCH="";fi
-WINEPREFIX=${WINEPREFIX:-$HOME/.local/wineprefix$CURRARCH/wine-$VERSION}
+screenres=$(DISPLAY=:0 xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
 
-    
-if [ ! -f /usr/bin/xrandr ]; then apt install x11-xserver-utils;fi
-screenres=$(xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
-ARGS="/desktop=shell,$screenres /opt/Programs/7zip/7zFM.exe E:"
-
-env --chdir=$HOME wine $@ explorer $ARGS
+exec wine explorer /desktop=shell,$screenres $PREFIX/glibc/opt/Programs/7zip/7zFM.exe E:

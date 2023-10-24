@@ -1,3 +1,3 @@
 @echo off
 
-start /unix /opt/WinScripts/tweaks/install_corefonts.sh
+start /unix /data/data/com.termux/files/usr/glibc/opt/tweaks/install_corefonts.sh

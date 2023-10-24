@@ -1,3 +1,3 @@
 @echo off
 
-start /B Z:\opt\Programs\AkelPad.exe
+start /B Z:\usr\glibc\opt\Programs\AkelPad.exe
