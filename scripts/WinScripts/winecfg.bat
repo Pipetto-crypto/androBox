@@ -1,3 +1,3 @@
 @echo off
 
-start /B winecfg
+start /B C:\windows\system32\winecfg.exe

@@ -1,3 +1,3 @@
 @echo off
 
-start /B wineconsole
+start /B C:\windows\system32\cmd.exe

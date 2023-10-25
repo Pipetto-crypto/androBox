@@ -4,21 +4,30 @@ echo -e "\nInstalling required dependencies"
 
 termux-change-repo
 pkg update && pkg upgrade
-pkg install x11-repo -y
-pkg install pulseaudio virglrenderer-android mesa wget proot-distro -y
+pkg install x11-repo tur-repo -y
+pkg install pulseaudio virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity -y
 
 if [ ! -d ~/storage ]
 then
      echo -e "\nGranting internal storage permissions"
+     termux-setup-storage
 fi
 
-mkdir -p $PREFIX/var/lib/androBox
-if [ -f /sdcard/ubuntu.tar.gz ]
+if [ -f /sdcard/glibc_prefix.tar.xz ]
 then
-     echo -e "\nInstalling Ubuntu rootfs" 
-     tar -xvzf /sdcard/ubuntu.tar.gz -C $PREFIX/var/lib/androBox
+     echo -e "\nInstalling the glibc prefix" 
+     tar -xvzf /sdcard/glibc_prefix.tar.xz -C $PREFIX
 else 
-     echo -e "\nNo rootfs detected, leaving"
+     echo -e "\nNo glibc prefix detected, put the prefix into the root of your sdcard"
+     exit
+fi
+
+if [ -f /sdcard/wine-8.14-amd64.tar.xz ]
+then
+     echo -e "\nInstalling patched wine"
+     tar -xvf /sdcard/wine-8.14-amd64.tar.xz -C $PREFIX/opt
+else
+     echo -e "\nNo patched wine detected, put the patched wine into the root of your sdcard"
      exit
 fi
 

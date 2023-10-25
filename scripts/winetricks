@@ -7,6 +7,7 @@ env BOX64_PATH=$PREFIX/glibc/opt/wine-8.14-amd64/bin \
 PATH=$PREFIX/glibc/opt/wine-8.14-amd64/bin:$PATH \
 BOX64_NOERROR=1 \
 BOX86_NOERROR=1 \
+BOX64_LOG=0 \
 BOX64_NOBANNER=1 \
 BOX86_NOBANNER=1 \
 BOX64_BASH=$HOME/box_bash/bash_x64 \

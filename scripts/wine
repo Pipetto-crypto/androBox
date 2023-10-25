@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 [[ -z $(pidof pulseaudio) ]] && pulseaudio --start --exit-idle-time=-1 && pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
-[[ -z $(pidof app_process) ]] && termux-x11 &
+[[ -z $(pidof app_process) ]] && termux-x11 >/dev/null 2>&1 &
 
 DATE=$(date -u +%F@%H-%M-%S)
 TERMINAL_LOGFILE=/sdcard/androBox/box_logs/terminal_log@$DATE.txt
@@ -24,6 +24,7 @@ exec 1>$TERMINAL_LOGFILE 2>&1
 
 }
 
+#Essential environment variables, do not touch or modify!!
 
 unset LD_PRELOAD
 export GLIBC_PREFIX=/data/data/com.termux/files/usr/glibc
@@ -34,7 +35,10 @@ export BOX64_LD_LIBRARY_PATH=$GLIBC_PREFIX/opt/wine-8.14-amd64/lib/wine/i386-uni
 export VK_ICD_FILENAMES=$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.aarch64.json:$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.armhf.json
 export LIBGL_DRIVERS_PATH=$GLIBC_PREFIX/lib/dri:$GLIBC_PREFIX/lib32/dri
 export DISPLAY=:0
+export BOX86_NOBANNER=0
+export BOX64_NOBANNER=0
 export MESA_LOADER_DRIVER_OVERRIDE=zink
+export FONTCONFIG_PATH=$PREFIX/etc/fonts
 export PULSE_SERVER=127.0.0.1
 export BOX64_BASH=$HOME/box_bash/bash_x64
 export BOX64_RCFILE=/sdcard/androBox/box64.box64rc
@@ -51,19 +55,7 @@ do
        variable=$(echo $line | cut -d"=" -f1)
        [[ ! -v $variable ]] && export "$line"
    fi
-done < /sdcard/androBox/box64opts
-
-while IFS="" read -r line
-do
-   if [[ $line  =~ "#" ]]
-   then
-       continue
-   elif [ "$line" != "" ]
-   then
-       variable=$(echo $line | cut -d"=" -f1)
-       [[ ! -v $variable ]] && export "$line"
-   fi
-done < /sdcard/androBox/box86opts
+done < /sdcard/androBox/boxopts
 
 touch $TMPDIR/tmpvars.txt
 
@@ -108,5 +100,6 @@ fi
 
 
 exec box64 wine "$@"
-
+kill -9 $(ps -aux | grep "[c]heckres" | awk '{print $2}')
+kill -9 $(ps -aux | grep "[w]atch" | awk '{print $2}')
 

@@ -1,3 +1,3 @@
 @echo off
 
-start /B uninstaller
+start /B C:\windows\system32\uninstaller.exe
