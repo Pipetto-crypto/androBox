@@ -5,7 +5,7 @@ echo -e "\nInstalling required dependencies"
 termux-change-repo
 pkg update && pkg upgrade
 pkg install x11-repo tur-repo -y
-pkg install pulseaudio virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity -y
+pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity -y
 
 if [ ! -d ~/storage ]
 then
@@ -31,5 +31,12 @@ else
      exit
 fi
 
-wget https://raw.githubusercontent.com/Pipetto-crypto/androBox/master/androBox
-chmod +x androBox && mv androBox $PREFIX/bin
+git clone https://github.com/Pipetto-crypto/androBox.git -b androBoxNew $HOME
+for item in $HOME/androBox/scripts/*
+do
+   [[ ! -d $item ]] && chmod +x $item && mv $item $PREFIX/bin
+done
+
+rm -rf $HOME/androBox
+
+
