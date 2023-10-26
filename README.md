@@ -6,7 +6,7 @@ androBox is a x86 emulator using Termux, Box86 and Box64. Unlikely similiar proj
 
 An Android phone preferably running Android 10 or newer, Termux from F-Droid  and Termux-X11 apk.
 
-#Install
+# Install
 
 TODO
 
