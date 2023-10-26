@@ -25,7 +25,7 @@ fi
 if [ -f /sdcard/wine-*-amd64.tar.xz ]
 then
      echo -e "\nInstalling patched wine"
-     tar -xvf /sdcard/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt
+     tar -xvf /sdcard/wine-*-amd64.tar.xz -C $PREFIX/glibc/opt
 else
      echo -e "\nNo patched wine detected, put the patched wine into the root of your sdcard"
      exit
@@ -38,7 +38,7 @@ do
 done
 
 mkdir -p /sdcard/androBox
-mv $HOME/androBox/configs /sdcard/androBox
+mv $HOME/androBox/configs/* /sdcard/androBox
 
 echo "check_certificate = off" > $HOME/.wgetrc
 

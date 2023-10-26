@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/glibc/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
 
 export PATH=/data/data/com.termux/files/usr/bin
 unset LD_LIBRARY_PATH
