@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
+
+export PATH=/data/data/com.termux/files/usr/bin
+unset LD_LIBRARY_PATH
 
 export DISPLAY=:0 
 watch -g 'xrandr | grep current | awk "{print \$8\$9\$10}" | tr -d ","' >/dev/null &>/dev/null
