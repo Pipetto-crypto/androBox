@@ -1,6 +1,7 @@
+#User variables go here, you can add your own variables here.
+
 DXVK_CONFIG_FILE=/sdcard/androBox/dxvk.conf
 MESA_NO_ERROR=1
-MESA_VK_WSI_PRESENT_MODE=mailbox
 PULSE_LATENCY_MSEC=60
 ZINK_DESCRIPTORS=lazy
 ZINK_CONTEXT_THREADED=false
@@ -8,5 +9,7 @@ ZINK_DEBUG=compact
 MESA_SHADER_CACHE_DISABLE=false
 MESA_SHADER_CACHE_MAX_SIZE=false
 DXVK_ASYNC=1
-MANGOHUD_CONFIGFILE=/sdcard/androBox/MangoHud.conf
-MANGOHUD_LOG_LEVEL=off
+MESA_VK_WSI_PRESENT_MODE=fifo
+DXVK_HUD=fps
+mesa_glthread=true
+GALLIUM_HUD=simple,fps
