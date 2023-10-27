@@ -1,5 +1,4 @@
 @echo off
 
-del /Q C:\loglevel.txt
+echo 2> C:\loglevel.txt
 Z:\usr\glibc\opt\WinScripts\restart.bat
-
