@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export PATH=/data/data/com.termux/files/usr/bin
+unset LD_LIBRARY_PATH
+
 git clone https://github.com/Pipetto-crypto/androBox.git -b androBoxNew ~/androBox
 chmod +x ~/androBox/scripts/*
 rm -rf $PREFIX/glibc/opt/WinScripts && cp -r ~/androBox/scripts/WinScripts $PREFIX/glibc/opt && rm -rf ~/androBox/scripts/WinScripts
