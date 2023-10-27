@@ -4,7 +4,7 @@ export PATH=/data/data/com.termux/files/usr/bin
 unset LD_LIBRARY_PATH
 WINEPREFIX=${WINEPREFIX:-$HOME/.wine}
 
-cat >> $TMPDIR/tmpvars.txt <<- EOM
+cat >> $HOME/.boxconf <<- EOM
 BOX86_DYNAREC_FASTNAN=1
 BOX86_DYNAREC_FASTROUND=1
 BOX86_DYNAREC_STRONGMEM=0

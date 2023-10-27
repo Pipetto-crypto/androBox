@@ -5,6 +5,4 @@ unset LD_LIBRARY_PATH
 WINEPREFIX=${WINEPREFIX:-$HOME/.wine}
 
 echo "Disabled" > $WINEPREFIX/islog
-sed -i "/BOX86/d" $TMPDIR/tmpvars.txt
-sed -i "/BOX64/d" $TMPDIR/tmpvars.txt
 $PREFIX/glibc/opt/WinScripts/restart.sh
