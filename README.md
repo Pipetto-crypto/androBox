@@ -8,7 +8,9 @@ An Android phone preferably running Android 10 or newer, Termux from F-Droid  an
 
 # Install
 
-TODO
+Paste this command in terminal:
+
+>curl -L https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/setup.sh -O && bash setup.sh
 
 # Links and Credits
 
@@ -29,8 +31,6 @@ Wine: https://gitlab.winehq.org/wine/wine
 Winetricks: https://github.com/Winetricks/winetricks
 
 7z: https://github.com/mcmilk/7-Zip
-
-and many others which I couldn't locate source
 
 
 

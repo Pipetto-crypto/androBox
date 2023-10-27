@@ -41,6 +41,8 @@ esac
 
 mv $PREFIX/glibc/opt/wine-*-amd64 $PREFIX/glibc/opt/wine
 
+git clone https://github.com/Pipetto-crypto/androBox.git -b androBoxNew
+
 for item in $HOME/androBox/scripts/*
 do
    [[ ! -d $item ]] && chmod +x $item && mv $item $PREFIX/bin
