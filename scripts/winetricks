@@ -3,8 +3,8 @@
 unset LD_PRELOAD
 unset LD_LIBRARY_PATH
 
-env BOX64_PATH=$PREFIX/glibc/opt/wine-8.14-amd64/bin \
-PATH=$PREFIX/glibc/opt/wine-8.14-amd64/bin:$PATH \
+env BOX64_PATH=$PREFIX/glibc/opt/wine/bin \
+PATH=$PREFIX/glibc/opt/wine/bin:$PATH \
 BOX64_NOERROR=1 \
 BOX86_NOERROR=1 \
 BOX64_LOG=0 \

@@ -29,8 +29,8 @@ exec 1>$TERMINAL_LOGFILE 2>&1
 unset LD_PRELOAD
 export GLIBC_PREFIX=/data/data/com.termux/files/usr/glibc
 export PATH=$GLIBC_PREFIX/bin:$PATH
-export BOX64_PATH=$GLIBC_PREFIX/opt/wine-8.14-amd64/bin
-export BOX64_LD_LIBRARY_PATH=$GLIBC_PREFIX/opt/wine-8.14-amd64/lib/wine/i386-unix:$GLIBC_PREFIX/opt/wine-8.14-amd64/lib/wine/x86_64-unix:$GLIBC_PREFIX/lib/x86_64-linux-gnu
+export BOX64_PATH=$GLIBC_PREFIX/opt/wine/bin
+export BOX64_LD_LIBRARY_PATH=$GLIBC_PREFIX/opt/wine/lib/wine/i386-unix:$GLIBC_PREFIX/opt/wine/lib/wine/x86_64-unix:$GLIBC_PREFIX/lib/x86_64-linux-gnu
 export VK_ICD_FILENAMES=$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.aarch64.json:$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.armhf.json
 export LIBGL_DRIVERS_PATH=$GLIBC_PREFIX/lib/dri:$GLIBC_PREFIX/lib32/dri
 export DISPLAY=:0
