@@ -3,6 +3,8 @@
 [[ -z $(pidof pulseaudio) ]] && pulseaudio --start --exit-idle-time=-1 && pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
 [[ -z $(pidof app_process) ]] && termux-x11 >/dev/null 2>&1 &
 
+mkdir -p /sdcard/androBox/box_logs/
+
 DATE=$(date -u +%F@%H-%M-%S)
 TERMINAL_LOGFILE=/sdcard/androBox/box_logs/terminal_log@$DATE.txt
 WINEPREFIX=${WINEPREFIX:-$HOME/.wine}
@@ -131,7 +133,8 @@ done
 
 if [ -f $WINEPREFIX/drive_c/loglevel.txt ]
 then
-     case "$(cat $WINEPREFIX/drive_c/loglevel.txt)" in
+     loglevel="$(awk -v RS='\r\n' '{print $NF}' < $HOME/.wine/drive_c/loglevel.txt)"
+     case $loglevel in
      1)
         log1
         ;;

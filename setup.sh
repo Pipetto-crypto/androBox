@@ -11,6 +11,7 @@ if [ ! -d ~/storage ]
 then
      echo -e "\nGranting internal storage permissions"
      termux-setup-storage
+     sleep 25
 fi
 
 wget -nc https://github.com/Pipetto-crypto/androBox/releases/download/glibc_prefix/glibc_prefix.tar.xz -P /sdcard
@@ -18,7 +19,7 @@ wget -nc https://github.com/Pipetto-crypto/androBox/releases/download/glibc_pref
 tar -xvf /sdcard/glibc_prefix.tar.xz -C $PREFIX
 
 echo -e "
-1.Wine 8.0 Stable
+1.Wine 8.0 Stable(Adreno 7xx users recommended)
 2.Wine 8.14 Devel
 "
 read -p "Select a wine version to install:" installchoice
@@ -50,6 +51,7 @@ echo "check_certificate = off" > $HOME/.wgetrc
 
 rm -rf $HOME/androBox
 wine wineboot
+update-scripts
 pfxupdate
 
 cat >> $HOME/.androBox <<- EOM
@@ -58,3 +60,4 @@ cat >> $HOME/.androBox <<- EOM
 checkres=enabled
 services=disabled
 EOM
+ 
