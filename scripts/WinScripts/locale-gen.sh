@@ -4,6 +4,5 @@ export PATH=/data/data/com.termux/files/usr/glibc/bin:/data/data/com.termux/file
 unset LD_LIBRARY_PATH
 unset LD_PRELOAD
 
-nano $PREFIX/glibc/etc/locale.gen
 locale-gen
 
