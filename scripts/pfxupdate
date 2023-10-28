@@ -20,6 +20,7 @@ cleanmenu "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
 cp -r $PREFIX/glibc/opt/WinStartMenu/* "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
 if [ ! -L "$pfx/dosdevices/e:" ];then ln -sf /sdcard "$pfx/dosdevices/e:";fi
 if [ ! -L "$pfx/dosdevices/f:" ];then ln -sf $PREFIX/glibc/opt/Programs "$pfx/dosdevices/f:";fi
+if [ ! -L "$pfx/dosdevices/h:" ];then mkdir -p $HOME/.fonts && ln -sf $HOME/.fonts "$pfx/dosdevices/h:";fi
 if [ ! -L "$pfx/dosdevices/g:" ];then mkdir -p $HOME/.cache/winetricks && ln -sf $HOME/.cache/winetricks "$pfx/dosdevices/g:";fi
 if [ ! -L "$pfx/dosdevices/t:" ];then ln -sf ~/.local/cache "$pfx/dosdevices/t:";fi
    

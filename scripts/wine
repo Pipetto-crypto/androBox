@@ -80,6 +80,7 @@ export BOX64_RCFILE=/sdcard/androBox/box64.box64rc
 export BOX86_RCFILE=/sdcard/androBox/box86.box86rc
 export WINEDEBUG=${WINEDEBUG:=-all}
 [[ -z $(grep -w "services=enabled" $HOME/.androBox) ]] && export WINEDLLOVERRIDES="services.exe=d"
+source $HOME/.locale
 
 while IFS="" read -r line
 do
