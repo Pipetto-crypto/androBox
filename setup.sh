@@ -54,10 +54,10 @@ wine wineboot
 update-scripts
 pfxupdate
 
-cat >> $HOME/.androBox <<- EOM
+cat > $HOME/.androBox <<- EOM
 #androBox configuration file
 
 checkres=enabled
-services=disabled
+services=enabled
 EOM
  
