@@ -10,7 +10,7 @@ An Android phone preferably running Android 10 or newer, Termux from F-Droid  an
 
 Paste this command in terminal:
 
->curl -L https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/setup.sh -O && bash setup.sh
+>curl -L https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/setup.sh -O && source setup.sh
 
 # Links and Credits
 
