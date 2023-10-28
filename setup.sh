@@ -13,14 +13,9 @@ then
      termux-setup-storage
 fi
 
-if [ -f /sdcard/glibc_prefix.tar.xz ]
-then
-     echo -e "\nInstalling the glibc prefix" 
-     tar -xvf /sdcard/glibc_prefix.tar.xz -C $PREFIX
-else 
-     echo -e "\nNo glibc prefix detected, put the prefix into the root of your sdcard"
-     exit
-fi
+wget -nc https://github.com/Pipetto-crypto/androBox/releases/download/glibc_prefix/glibc_prefix.tar.xz -P /sdcard
+[[ -d $PREFIX/glibc ]] && mv $PREFIX/glibc $PREFIX/glibc1
+tar -xvf /sdcard/glibc_prefix.tar.xz -C $PREFIX
 
 echo -e "
 1.Wine 8.0 Stable
@@ -30,11 +25,11 @@ read -p "Select a wine version to install:" installchoice
 
 case $installchoice in
 1) 
-    wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-8.0/wine-8.0-amd64.tar.xz -P /sdcard
+    wget -nc https://github.com/Pipetto-crypto/androBox/releases/download/wine-8.0/wine-8.0-amd64.tar.xz -P /sdcard
     tar -xvf /sdcard/wine-8.0-amd64.tar.xz -C $PREFIX/glibc/opt
     ;;
 2)
-    wget https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-8.14-amd64.tar.xz -P 
+    wget -nc https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-8.14-amd64.tar.xz -P 
     tar -xvf /sdcard/wine-8.0-amd64.tar.xz -C $PREFIX/glibc/opt
     ;;
 esac
