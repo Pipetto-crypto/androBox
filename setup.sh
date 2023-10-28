@@ -5,7 +5,7 @@ echo -e "\nInstalling required dependencies"
 termux-change-repo
 pkg update && pkg upgrade -y
 pkg install x11-repo tur-repo -y
-pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity openbox file xorg-xrandr xterm iconv -y 
+pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity openbox file xorg-xrandr xterm iconv termux-exec termux-exec-glibc -y 
 
 if [ ! -d ~/storage ]
 then
