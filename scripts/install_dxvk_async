@@ -1,0 +1,63 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+export PATH=/data/data/com.termux/files/usr/bin
+unset LD_LIBRARY_PATH
+ARCH=$(cat ~/.wine/system.reg | grep arch= | cut -f2- -d"=")
+PREFIX=$HOME/.wine
+
+
+dlloverride(){
+
+input="$1/user.reg"
+dlltoverride="$2"
+type="$3"
+echo "" >> $input
+echo "[Software\\\Wine\\\DllOverrides]" >> $input
+echo "" >> $input
+echo "\"$dlltoverride"\""=""\"$type"\" >> $input
+
+}
+
+if [ "$1" != "" ]
+then
+     DXVKVER="$1"
+else
+     read -p "Select a DXVK version to install:" DXVKVER
+fi
+
+
+cachedir="$HOME/.local/cache"
+mkdir -p $cachedir
+
+if [ ! -f $cachedir/dxvk-$DXVKVER.tar.gz ]
+then
+     wget https://github.com/Sporif/dxvk-async/releases/download/$DXVKVER/dxvk-async-$DXVKVER.tar.gz -P $cachedir
+fi
+tar -xzf $cachedir/dxvk-async-$DXVKVER.tar.gz -C ~
+
+     
+
+if [ "$ARCH" == "win32" ]
+then
+     cp ~/dxvk-async-$DXVKVER/x32/* $PREFIX/drive_c/windows/system32
+else
+     cp ~/dxvk-async-$DXVKVER/x32/* $PREFIX/drive_c/windows/syswow64
+     cp ~/dxvk-async-$DXVKVER/x64/* $PREFIX/drive_c/windows/system32
+fi
+if [ "$2" == "-partial" ];then rm -rf ~/dxvk-async-$DXVKVER && exit;fi
+   if (( $(echo "$(echo $DXVKVER | cut -f1,2 -d '.') > 1.10" | bc -l) ))
+   then
+        dlloverride $PREFIX dxgi native,builtin
+        dlloverride $PREFIX d3d9 native,builtin
+        dlloverride $PREFIX d3d11 native,builtin
+        dlloverride $PREFIX d3d10core native,builtin
+    else
+        dlloverride $PREFIX dxgi native,builtin
+        dlloverride $PREFIX d3d9 native,builtin
+        dlloverride $PREFIX d3d11 native,builtin
+        dlloverride $PREFIX d3d10 native,builtin
+        dlloverride $PREFIX d3d10_1 native,builtin
+     fi
+fi
+
+rm -rf ~/dxvk-async-$DXVKVER 
