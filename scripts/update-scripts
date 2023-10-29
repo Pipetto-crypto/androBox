@@ -6,7 +6,7 @@ unset LD_LIBRARY_PATH
 cd $HOME
 
 git clone https://github.com/Pipetto-crypto/androBox.git -b androBoxNew
-chmod -R a+x ~/androBox/scripts
+chmod -R a+x ~/androBox/scripts ~/androBox/scripts/WinScripts
 rm -rf $PREFIX/glibc/opt/WinScripts && cp -r ~/androBox/scripts/WinScripts $PREFIX/glibc/opt && rm -rf ~/androBox/scripts/WinScripts
 rm -rf $PREFIX/glibc/opt/Programs && cp -r ~/androBox/scripts/Programs $PREFIX/glibc/opt && rm -rf ~/androBox/scripts/Programs
 rm -rf $PREFIX/glibc/opt/WinStartMenu && cp -r ~/androBox/scripts/WinStartMenu $PREFIX/glibc/opt && rm -rf ~/androBox/scripts/WinStartMenu
