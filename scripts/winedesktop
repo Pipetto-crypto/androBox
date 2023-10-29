@@ -1,6 +1,10 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-[[ -z $(pidof app_process) ]] && termux-x11 >/dev/null 2>&1 &
+if [ "$(pidof app_process)" == "" ]
+then
+     termux-x11 >/dev/null 2>&1 &
+     sleep 7
+fi
 
 screenres=$(DISPLAY=:0 xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
 [[ -z $(grep -w "checkres=disabled" $HOME/.androBox) ]] && [[ -z $(ps -aux | grep "[w]atch" | awk '{print $2}') ]] && $PREFIX/glibc/opt/WinScripts/checkres.sh &
@@ -11,3 +15,4 @@ then
      kill -9 $(ps -aux | grep "[c]heckres" | awk '{print $2}') 
      kill -9 $(ps -aux | grep "[w]atch" | awk '{print $2}')
 fi
+

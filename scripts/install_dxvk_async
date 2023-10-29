@@ -29,7 +29,7 @@ fi
 cachedir="$HOME/.local/cache"
 mkdir -p $cachedir
 
-if [ ! -f $cachedir/dxvk-$DXVKVER.tar.gz ]
+if [ ! -f $cachedir/dxvk-async-$DXVKVER.tar.gz ]
 then
      wget https://github.com/Sporif/dxvk-async/releases/download/$DXVKVER/dxvk-async-$DXVKVER.tar.gz -P $cachedir
 fi

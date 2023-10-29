@@ -1,7 +1,11 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 [[ -z $(pidof pulseaudio) ]] && pulseaudio --start --exit-idle-time=-1 && pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
-[[ -z $(pidof app_process) ]] && termux-x11 >/dev/null 2>&1 &
+if [ "$(pidof app_process)" == "" ]
+then
+     termux-x11 >/dev/null 2>&1 &
+     sleep 7
+fi
 
 mkdir -p /sdcard/androBox/box_logs/
 
