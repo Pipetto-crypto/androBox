@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/sh
 
 fc-cache -f
