@@ -1,7 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-taskset -a -pc 4-7 $$ >/dev/null
-
 if [ "$(pidof app_process)" == "" ]
 then
      termux-x11 >/dev/null 2>&1 &
@@ -11,6 +9,7 @@ fi
 screenres=$(DISPLAY=:0 xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
 [[ -z $(grep -w "checkres=disabled" $HOME/.androBox) ]] && [[ -z $(ps -aux | grep "[w]atch" | awk '{print $2}') ]] && $PREFIX/glibc/opt/WinScripts/checkres.sh &
 
+wine /data/data/com.termux/files/usr/glibc/opt/Programs/ProcessLasso/ProcessGovernor.exe &
 wine explorer /desktop=shell,$screenres $PREFIX/glibc/opt/Programs/7zip/7zFM.exe E:
 if [ "$(grep -w 'checkres=disabled' $HOME/.androBox)" == "" ]
 then

@@ -1,7 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-taskset -a -pc 4-7 $$ >/dev/null 
-
 
 [[ -z $(pidof pulseaudio) ]] && pulseaudio --start --exit-idle-time=-1 && pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
 if [ "$(pidof app_process)" == "" ]
