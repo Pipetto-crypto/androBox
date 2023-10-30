@@ -98,7 +98,7 @@ do
    elif [ "$line" != "" ]
    then
        variable=$(echo $line | cut -d"=" -f1)
-       export "$line"
+       [[ ! -v $variable ]] && export "$line"
    fi
 done < /sdcard/androBox/boxopts
 
@@ -110,7 +110,6 @@ do
        continue
    elif [ "$line" != "" ]
    then
-       variable=$(echo $line | cut -d"=" -f1)
        export "$line"
    fi
 done < /sdcard/androBox/uservars
