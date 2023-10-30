@@ -1,4 +1,4 @@
 @echo off
 
-pushd Z:\usr\glibc\opt\Programs\EnvMapping
+pushd F:\EnvMapping
 CubeMap.exe

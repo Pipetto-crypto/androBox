@@ -1,5 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+taskset -a -pc 4-7 $$ >/dev/null
+
 if [ "$(pidof app_process)" == "" ]
 then
      termux-x11 >/dev/null 2>&1 &

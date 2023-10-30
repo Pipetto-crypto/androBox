@@ -1,5 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+taskset -a -pc 4-7 $$ >/dev/null 
+
+
 [[ -z $(pidof pulseaudio) ]] && pulseaudio --start --exit-idle-time=-1 && pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
 if [ "$(pidof app_process)" == "" ]
 then
@@ -12,6 +15,7 @@ mkdir -p /sdcard/androBox/box_logs/
 DATE=$(date -u +%F@%H-%M-%S)
 TERMINAL_LOGFILE=/sdcard/androBox/box_logs/terminal_log@$DATE.txt
 WINEPREFIX=${WINEPREFIX:-$HOME/.wine}
+
 
 prepare_prefix(){
 
@@ -96,11 +100,10 @@ do
    elif [ "$line" != "" ]
    then
        variable=$(echo $line | cut -d"=" -f1)
-       [[ ! -v $variable ]] && export "$line"
+       export "$line"
    fi
 done < /sdcard/androBox/boxopts
 
-touch $TMPDIR/tmpvars.txt
 
 while IFS="" read -r line
 do
@@ -110,7 +113,7 @@ do
    elif [ "$line" != "" ]
    then
        variable=$(echo $line | cut -d"=" -f1)
-       [[ ! -v $variable ]] && export "$line"
+       export "$line"
    fi
 done < /sdcard/androBox/uservars
 
