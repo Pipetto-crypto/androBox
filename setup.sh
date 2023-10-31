@@ -48,7 +48,7 @@ mv $HOME/androBox/configs/* /sdcard/androBox
 
 echo "check_certificate = off" > $HOME/.wgetrc
 
-rm -rf $HOME/androBox
+rm -rf $HOME/androBox && rm -rf $HOME/.wine
 wine wineboot
 update-scripts
 pfxupdate
