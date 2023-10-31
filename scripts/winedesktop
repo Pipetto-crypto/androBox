@@ -9,8 +9,8 @@ fi
 screenres=$(DISPLAY=:0 xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
 [[ -z $(grep -w "checkres=disabled" $HOME/.androBox) ]] && [[ -z $(ps -aux | grep "[w]atch" | awk '{print $2}') ]] && $PREFIX/glibc/opt/WinScripts/checkres.sh &
 
-wine /data/data/com.termux/files/usr/glibc/opt/Programs/ProcessLasso/ProcessGovernor.exe &
-wine explorer /desktop=shell,$screenres $PREFIX/glibc/opt/Programs/7zip/7zFM.exe E:
+wine explorer /desktop=shell,$screenres $PREFIX/glibc/opt/WinScripts/startup.bat
+
 if [ "$(grep -w 'checkres=disabled' $HOME/.androBox)" == "" ]
 then
      kill -9 $(ps -aux | grep "[c]heckres" | awk '{print $2}') 

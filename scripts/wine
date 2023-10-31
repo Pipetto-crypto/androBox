@@ -9,6 +9,7 @@ then
 fi
 
 mkdir -p /sdcard/androBox/box_logs/
+mkdir -p /sdcard/androBox/dxvk_log/
 
 DATE=$(date -u +%F@%H-%M-%S)
 TERMINAL_LOGFILE=/sdcard/androBox/box_logs/terminal_log@$DATE.txt
@@ -28,6 +29,7 @@ log1(){
 export WINEDEBUG="+err"
 export BOX86_LOG=1
 export BOX64_LOG=1
+export DXVK_LOG_LEVEL=debug
 export BOX86_DLSYM_ERROR=1
 export BOX64_DLSYM_ERROR=1
 export BOX86_DYNAREC_LOG=1
@@ -43,6 +45,7 @@ log2(){
 export WINEDEBUG="+err"
 export BOX86_LOG=2
 export BOX64_LOG=2
+export DXVK_LOG_LEVEL=debug
 export BOX86_DLSYM_ERROR=1
 export BOX64_DLSYM_ERROR=1
 export BOX86_DYNAREC_LOG=2
@@ -57,7 +60,8 @@ log3(){
 
 export WINEDEBUG="+err"
 export BOX86_LOG=3
-export BOX64_LOG=37
+export BOX64_LOG=3
+export DXVK_LOG_LEVEL=debug
 export BOX86_DLSYM_ERROR=1
 export BOX64_DLSYM_ERROR=1
 export BOX86_DYNAREC_LOG=3
@@ -78,8 +82,9 @@ export BOX64_LD_LIBRARY_PATH=$GLIBC_PREFIX/opt/wine/lib/wine/i386-unix:$GLIBC_PR
 export VK_ICD_FILENAMES=$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.aarch64.json:$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.armhf.json
 export LIBGL_DRIVERS_PATH=$GLIBC_PREFIX/lib/dri:$GLIBC_PREFIX/lib32/dri
 export DISPLAY=:0
-export BOX86_NOBANNER=0
-export BOX64_NOBANNER=0
+export DXVK_LOG_PATH=/sdcard/androBox/dxvk_log
+export BOX86_NOBANNER=1
+export BOX64_NOBANNER=1
 export MESA_LOADER_DRIVER_OVERRIDE=zink
 export FONTCONFIG_PATH=$PREFIX/etc/fonts
 export PULSE_SERVER=127.0.0.1
@@ -98,7 +103,7 @@ do
    elif [ "$line" != "" ]
    then
        variable=$(echo $line | cut -d"=" -f1)
-       [[ ! -v $variable ]] && export "$line"
+       export "$line"
    fi
 done < /sdcard/androBox/boxopts
 
@@ -110,6 +115,7 @@ do
        continue
    elif [ "$line" != "" ]
    then
+       variable=$(echo $line | cut -d"=" -f1)
        export "$line"
    fi
 done < /sdcard/androBox/uservars
