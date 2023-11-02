@@ -14,8 +14,28 @@ then
      sleep 25
 fi
 
+if [ ! -d ~/storage ]
+then
+     echo -e "Storage is still not set, I will retry again"
+     termux-setup-storage
+     sleep 25
+fi
+
+if [ ! -d ~/storage ]
+then
+     echo -e "I couldn't setup storage, I will leave now"
+     exit
+fi
+
 [[ ! -f /sdcard/glibc_prefix.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/glibc_prefix/glibc_prefix.tar.xz -P /sdcard
-tar -xvf /sdcard/glibc_prefix.tar.xz -C $PREFIX
+
+if [ -f /sdcard/glibc_prefix.tar.xz ]
+then
+     tar -xvf /sdcard/glibc_prefix.tar.xz -C $PREFIX
+else
+     echo -e "It seems that the glibc prefix didn't download properly, exiting now. Please make sure you have a good internet connection and retry"
+     exit
+fi
 
 echo -e "
 1.Wine 8.0 Stable(Adreno 7xx users recommended)
