@@ -27,4 +27,4 @@ wine wineboot
 sleep 3
 pfxupdate
 sleep 4
-winedesktop >/dev/null 2>&1 &   
+$PREFIX/glibc/opt/WinScripts/exit.sh

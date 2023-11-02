@@ -4,4 +4,4 @@ export PATH=/data/data/com.termux/files/usr/bin
 unset LD_LIBRARY_PATH
 
 xterm -e $PREFIX/glibc/opt/WinScripts/winetricks.sh vcrun2010
-winedesktop >/dev/null 2>&1 &
+$PREFIX/glibc/opt/WinScripts/restart.sh
