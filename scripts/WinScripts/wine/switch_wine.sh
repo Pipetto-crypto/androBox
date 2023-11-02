@@ -27,4 +27,4 @@ wine wineboot
 sleep 3
 pfxupdate
 sleep 4
-$PREFIX/glibc/opt/WinScripts/exit.sh
+$PREFIX/glibc/opt/WinScripts/restart.sh
