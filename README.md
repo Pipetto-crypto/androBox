@@ -12,6 +12,10 @@ Paste this command in terminal:
 
 >curl -L https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/setup.sh -O && source setup.sh
 
+# Simple Usage
+
+Run winedesktop to start it, it autolaunches Termux X11. If it does not, update from Start Menu (Update->Prefix). If for some reasons, the X11 server doesn't start, run winedesktop with the -ol option: winedesktop -ol
+
 # Links and Credits
 
 Termux: https://github.com/termux/termux-app
