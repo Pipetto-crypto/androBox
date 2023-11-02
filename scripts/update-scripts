@@ -8,6 +8,7 @@ cd $HOME
 git clone https://github.com/Pipetto-crypto/androBox.git -b androBoxNew
 chmod -R a+x ~/androBox/scripts ~/androBox/scripts/WinScripts
 [[ ! -d $HOME/box_bash ]] && mv  ~/androBox/scripts/box_bash $HOME
+mv ~/androBox/scripts/loader.apk $PREFIX/glibc
 rm -rf ~/androBox/scripts/box_bash
 rm -rf $PREFIX/glibc/opt/WinScripts && cp -r ~/androBox/scripts/WinScripts $PREFIX/glibc/opt && rm -rf ~/androBox/scripts/WinScripts
 rm -rf $PREFIX/glibc/opt/Programs && cp -r ~/androBox/scripts/Programs $PREFIX/glibc/opt && rm -rf ~/androBox/scripts/Programs

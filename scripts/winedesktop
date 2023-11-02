@@ -1,9 +1,24 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+oldloader(){
+
+export CLASSPATH=/data/data/com.termux/files/usr/glibc/loader.apk
+unset LD_LIBRARY_PATH LD_PRELOAD
+exec /system/bin/app_process / com.termux.x11.Loader &
+
+}
+
+
+
 if [ "$(pidof app_process)" == "" ]
 then
-     termux-x11 >/dev/null 2>&1 &
-     sleep 7
+     if [ $1 == "-ol" ]
+     then
+          oldloader
+     else 
+          termux-x11 >/dev/null 2>&1 &
+          sleep 7
+     fi
 fi
 
 screenres=$(DISPLAY=:0 xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
