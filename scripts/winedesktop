@@ -25,6 +25,7 @@ fi
 screenres=$(DISPLAY=:0 xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
 [[ -z $(grep -w "checkres=disabled" $HOME/.androBox) ]] && [[ -z $(ps -aux | grep "[w]atch" | awk '{print $2}') ]] && $PREFIX/glibc/opt/WinScripts/checkres.sh &
 
+am start -n com.termux.x11/com.termux.x11.MainActivity >/dev/null 2>&1
 wine explorer /desktop=shell,$screenres $PREFIX/glibc/opt/WinScripts/startup.bat
 
 if [ "$(grep -w 'checkres=disabled' $HOME/.androBox)" == "" ]
