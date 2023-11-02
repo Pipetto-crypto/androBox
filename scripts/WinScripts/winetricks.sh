@@ -6,7 +6,7 @@ unset LD_LIBRARY_PATH
 $PREFIX/glibc/opt/WinScripts/exit.sh
 sleep 3
 openbox-session &
-winetricks
+winetricks $@
 pkill openbox
 sleep 3
 winedesktop >/dev/null 2>&1 &

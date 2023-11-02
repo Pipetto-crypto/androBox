@@ -1,13 +1,21 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-mesaver=$1
+arch=$1
+type=$2
+date=$3
+revision=$4
 
 cachedir="$HOME/.local/cache"
-mkdir -p $cachedir
+mkdir -p $cachedir/mesa/aarch64/turnip
+mkdir -p $cachedir/mesa/aarch64/zink
+mkdir -p $cachedir/mesa/armhf/turnip
+mkdir -p $cachedir/mesa/armhf/zink
 
-[[ ! -f $cachedir/mesa32_$mesaver.deb ]] && wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa32_$mesaver.deb -P $cachedir
-[[ ! -f $cachedir/mesa64_$mesaver.deb ]] && wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/mesa64_$mesaver.deb -P $cachedir
-dpkg -r mesa
-dpkg -r mesa:armhf
-dpkg -i --force-overwrite $cachedir/mesa64_$mesaver.deb
-dpkg -i --force-overwrite $cachedir/mesa32_$mesaver.deb
+[[ ! -f $cachedir/mesa/$arch/$type/$type_$date$revision.tar.xz ]] && wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/$arch/$type/$type_$date$revision.tar.xz -P $cachedir/mesa/$arch/$type
+
+if [ $type == "armhf" ]
+then
+     tar -xf $cachedir/mesa/$arch/$type/$type_$date$revision.tar.xz -C $PREFIX/lib32
+else
+     tar -xf $cachedir/mesa/$arch/$type/$type_$date$revision.tar.xz -C $PREFIX/lib
+fi
