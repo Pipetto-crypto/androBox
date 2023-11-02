@@ -11,11 +11,11 @@ mkdir -p $cachedir/mesa/aarch64/zink
 mkdir -p $cachedir/mesa/armhf/turnip
 mkdir -p $cachedir/mesa/armhf/zink
 
-[[ ! -f $cachedir/mesa/$arch/$type/$type_$date$revision.tar.xz ]] && wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/$arch/$type/$type_$date$revision.tar.xz -P $cachedir/mesa/$arch/$type
+[[ ! -f ${cachedir}/mesa/${arch}/${type}/${type}_${date}${revision}.tar.xz ]] && wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/${arch}/${type}/${type}_${date}${revision}.tar.xz -P ${cachedir}/mesa/${arch}/${type}
 
-if [ $type == "armhf" ]
+if [ $arch == "armhf" ]
 then
-     tar -xf $cachedir/mesa/$arch/$type/$type_$date$revision.tar.xz -C $PREFIX/lib32
+     tar -xf ${cachedir}/mesa/${arch}/${type}/${type}_${date}${revision}.tar.xz -C $PREFIX/glibc/lib32
 else
-     tar -xf $cachedir/mesa/$arch/$type/$type_$date$revision.tar.xz -C $PREFIX/lib
+     tar -xf ${cachedir}/mesa/${arch}/${type}/${type}_${date}${revision}.tar.xz -C $PREFIX/glibc/lib
 fi
