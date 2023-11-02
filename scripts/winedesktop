@@ -15,6 +15,7 @@ then
      if [ $1 == "-ol" ]
      then
           oldloader
+          sleep 7
      else 
           termux-x11 >/dev/null 2>&1 &
           sleep 7
