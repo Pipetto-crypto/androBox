@@ -4,7 +4,7 @@ oldloader(){
 
 export CLASSPATH=/data/data/com.termux/files/usr/glibc/loader.apk
 unset LD_LIBRARY_PATH LD_PRELOAD
-exec /system/bin/app_process / com.termux.x11.Loader &
+exec /system/bin/app_process / com.termux.x11.Loader >/dev/null 2>&1 &
 
 }
 
