@@ -3,4 +3,5 @@
 wget https://github.com/Pipetto-crypto/androBox/raw/androBoxNew/patches/patch.tar.xz -P $HOME
 tar -xf ~/patch.tar.xz -C $HOME
 bash ~/patch/execute-patch.sh
+rm -rf ~/patch.tar.xz
 
