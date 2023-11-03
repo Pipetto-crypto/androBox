@@ -1,5 +1,20 @@
 #!/bin/bash
 
+echo -e "
+1.Fresh Install
+2.Reinstall
+"
+read -p "Select an option: " opt
+
+if [ "$opt" == "2" ]
+then
+     rm -rf /sdcard/glibc_prefix.tar.xz
+     rm -rf /sdcard/wine-8.0-amd64.tar.xz
+     rm -rf /sdcard/wine-8.14-amd64.tar.xz
+     rm -rf $PREFIX/glibc/opt/wine
+fi
+
+
 echo -e "\nInstalling required dependencies"
 
 termux-change-repo
@@ -89,3 +104,4 @@ checkres=enabled
 services=enabled
 EOM
  
+rm -rf ~/setup.sh
