@@ -12,7 +12,7 @@ exec /system/bin/app_process / com.termux.x11.Loader >/dev/null 2>&1 &
 
 if [ "$(pidof app_process)" == "" ]
 then
-     if [ $1 == "-ol" ]
+     if [ "$1" == "-ol" ]
      then
           oldloader
           sleep 7
