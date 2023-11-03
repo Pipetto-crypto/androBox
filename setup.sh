@@ -53,7 +53,7 @@ fi
 
 if [ -f /sdcard/glibc_prefix.tar.xz ]
 then
-     tar -xvf /sdcard/glibc_prefix.tar.xz -C $PREFIX
+     tar -xf /sdcard/glibc_prefix.tar.xz -C $PREFIX
 else
      echo -e "It seems that the glibc prefix didn't download properly, exiting now. Please make sure you have a good internet connection and retry"
      exit
@@ -68,11 +68,11 @@ read -p "Select a wine version to install:" installchoice
 case $installchoice in
 1) 
     [[ ! -f /sdcard/wine-8.0-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-8.0/wine-8.0-amd64.tar.xz -P /sdcard
-    tar -xvf /sdcard/wine-8.0-amd64.tar.xz -C $PREFIX/glibc/opt
+    tar -xf /sdcard/wine-8.0-amd64.tar.xz -C $PREFIX/glibc/opt
     ;;
 2)
     [[ ! -f /sdcard/wine-8.14-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-8.14-amd64.tar.xz -P /sdcard
-    tar -xvf /sdcard/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt
+    tar -xf /sdcard/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt
     ;;
 esac
 
