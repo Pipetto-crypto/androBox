@@ -8,7 +8,7 @@ then
      sleep 7
 fi
 
-taskset -a -pc 4-7 $$
+taskset -a -pc 4-7 $(pidof com.termux) >/dev/null 2>&1
 
 mkdir -p /sdcard/androBox/box_logs/
 mkdir -p /sdcard/androBox/dxvk_log/
