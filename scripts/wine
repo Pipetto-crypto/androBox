@@ -97,10 +97,8 @@ export BOX64_BASH=$HOME/box_bash/bash_x64
 export BOX64_RCFILE=/sdcard/androBox/box64.box64rc
 export BOX86_RCFILE=/sdcard/androBox/box86.box86rc
 export WINEDEBUG=${WINEDEBUG:=-all}
-if [ "$(grep 'services' $HOME/.androBox | cut -d'=' -f2- )" == "disabled" ]
-then
-     export WINEDLLOVERRIDES="services.exe=d"
-fi
+
+
 [[ -f $HOME/.locale ]] && export LANG=$(cat $HOME/.locale)
 
 
