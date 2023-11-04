@@ -87,6 +87,7 @@ export DISPLAY=:0
 export USE_HEAP=1
 export TU_DEBUG=noconform
 export DXVK_LOG_PATH=/sdcard/androBox/dxvk_log
+export BOX64_LOG=0
 export BOX86_NOBANNER=1
 export BOX64_NOBANNER=1
 export MESA_LOADER_DRIVER_OVERRIDE=zink
@@ -102,17 +103,8 @@ then
 fi
 [[ -f $HOME/.locale ]] && export LANG=$(cat $HOME/.locale)
 
-while IFS="" read -r line
-do
-   if [[ $line  =~ "#" ]]
-   then
-       continue
-   elif [ "$line" != "" ]
-   then
-       variable=$(echo $line | cut -d"=" -f1)
-       export "$line"
-   fi
-done < /sdcard/androBox/boxopts
+
+[[ ! -f $HOME/.boxconf ]] && cp /sdcard/androBox/boxopts $HOME/.boxconf
 
 
 while IFS="" read -r line
