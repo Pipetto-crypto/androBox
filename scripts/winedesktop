@@ -65,8 +65,9 @@ then
      fi
 fi
 
-apply_last_patch
 update_scripts
+apply_last_patch
+
 
 echo -e "\nTrying to apply correct resolution, the desktop will restart multiple times until correct resolution is applied"
 
