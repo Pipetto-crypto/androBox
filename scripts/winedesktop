@@ -1,5 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+clear
+
 oldloader(){
 
 export CLASSPATH=/data/data/com.termux/files/usr/glibc/loader.apk
@@ -8,6 +10,47 @@ exec /system/bin/app_process / com.termux.x11.Loader >/dev/null 2>&1 &
 
 }
 
+apply_last_patch(){
+
+echo -e "Checking for available patches..."
+lastavailablepatch="1badffd185f96034dd54a6c803e5d068571227df"
+lastinstalledpatch="$(cat /sdcard/androBox/.patch1sum)"
+
+if [ "$lastavailablepatch" == "$lastinstalledpatch" ]
+then
+     echo -e "\nLast patch is already installed"
+else
+     echo -e "\nInstalling last patch"
+     apply_patch >/dev/null 2>&1
+     update-scripts >/dev/null 2>&1
+     echo -e "\nLast patch installed"
+fi
+
+}
+
+update_scripts(){
+
+echo -e "\nChecking for available scripts update..\n"
+touch /sdcard/androBox/.lastupdated
+lastavailablecommit="$(git ls-remote --heads https://github.com/Pipetto-crypto/androBox.git | grep refs/heads/androBoxNew | awk '{print $1}')"
+lastinstalledcommit="$(cat /sdcard/androBox/.lastupdated)"
+
+if [ ! -z "$lastavailablecommit" ]
+then 
+     if [ "$lastavailablecommit" == "$lastinstalledcommit" ]
+     then
+          echo -e "\nNo new updates found"
+     else
+          echo -e "\nInstalling new updates"
+          update-scripts >/dev/null 2>&1
+          echo -e "\nNew updates installed"
+     fi
+else
+     echo -e "\nI am not capable of finding any new update, enable your Internet connection next time"
+fi
+
+
+}
 
 
 if [ "$(pidof app_process)" == "" ]
@@ -22,8 +65,19 @@ then
      fi
 fi
 
+apply_last_patch
+update_scripts
+
+echo -e "\nTrying to apply correct resolution, the desktop will restart multiple times until correct resolution is applied"
+
+sleep 3
+
 screenres=$(DISPLAY=:0 xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
 [[ -z $(grep -w "checkres=disabled" $HOME/.androBox) ]] && [[ -z $(ps -aux | grep "[w]atch" | awk '{print $2}') ]] && $PREFIX/glibc/opt/WinScripts/checkres.sh &
+
+echo -e "\nLaunching"
+
+sleep 3
 
 am start -n com.termux.x11/com.termux.x11.MainActivity >/dev/null 2>&1
 wine explorer /desktop=shell,$screenres $PREFIX/glibc/opt/WinScripts/startup.bat

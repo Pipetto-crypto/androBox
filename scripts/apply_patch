@@ -1,7 +1,9 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 wget https://github.com/Pipetto-crypto/androBox/raw/androBoxNew/patches/patch.tar.xz -P $HOME
+sha1sum="$(sha1sum ~/patch.tar.xz | awk '{print $1}')"
 tar -xf ~/patch.tar.xz -C $HOME
 bash ~/patch/execute-patch.sh
+echo "$sha1sum" > /sdcard/androBox/.patch1sum
 rm -rf ~/patch.tar.xz
 
