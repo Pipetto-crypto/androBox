@@ -1,10 +1,18 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+oldloader(){
+
+export CLASSPATH=/data/data/com.termux/files/usr/glibc/loader.apk
+unset LD_LIBRARY_PATH LD_PRELOAD
+exec /system/bin/app_process / com.termux.x11.Loader >/dev/null 2>&1 &
+
+}
+
 
 [[ -z $(pidof pulseaudio) ]] && pulseaudio --start --exit-idle-time=-1 && pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
 if [ "$(pidof app_process)" == "" ]
 then
-     termux-x11 >/dev/null 2>&1 &
+     oldloader
      sleep 7
 fi
 

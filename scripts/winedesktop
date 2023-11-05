@@ -59,14 +59,8 @@ fi
 
 if [ "$(pidof app_process)" == "" ]
 then
-     if [ "$1" == "-ol" ]
-     then
-          oldloader
-          sleep 7
-     else 
-          termux-x11 >/dev/null 2>&1 &
-          sleep 7
-     fi
+     oldloader
+     sleep 7
 fi
 
 update_scripts

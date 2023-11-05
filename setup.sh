@@ -82,7 +82,12 @@ git clone https://github.com/Pipetto-crypto/androBox.git -b androBoxNew
 
 for item in $HOME/androBox/scripts/*
 do
-   [[ ! -d $item ]] && chmod +x $item && mv $item $PREFIX/bin
+   if [ ! -d $item ]
+   then
+        chmod +x $item && mv $item $PREFIX/bin
+   else
+        cp -r $item  $PREFIX/glibc/opt
+   fi
 done
 
 mkdir -p /sdcard/androBox
@@ -90,11 +95,13 @@ mv $HOME/androBox/configs/* /sdcard/androBox
 
 echo "check_certificate = off" > $HOME/.wgetrc
 
+apply_patch
+
 rm -rf $HOME/androBox && rm -rf $HOME/.wine
 wine wineboot
 sleep 3
 am start -n com.termux.x11/com.termux.x11.MainActivity >/dev/null 2>&1
-update-scripts
+sleep 3
 pfxupdate
 
 cat > $HOME/.androBox <<- EOM
