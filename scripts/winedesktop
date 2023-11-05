@@ -24,7 +24,6 @@ elif [ "$isonline" == "0" ]
 then
      echo -e "\nInstalling last patch"
      apply_patch >/dev/null 2>&1
-     update-scripts >/dev/null 2>&1
      echo -e "\nLast patch installed"
 else
      echo -e "\nI am not capable of find any new patch online, enable your Internet connection next time."
@@ -46,7 +45,7 @@ then
           echo -e "\nNo new updates found"
      else
           echo -e "\nInstalling new updates"
-          update-scripts >/dev/null 2>&1
+          source update-scripts >/dev/null 2>&1
           echo -e "\nNew updates installed"
      fi
 else
@@ -55,6 +54,9 @@ fi
 
 
 }
+
+update_scripts
+apply_last_patch
 
 
 if [ "$(pidof app_process)" == "" ]
@@ -68,9 +70,6 @@ then
           sleep 7
      fi
 fi
-
-update_scripts
-apply_last_patch
 
 
 echo -e "\nTrying to apply correct resolution, the desktop will restart multiple times until correct resolution is applied"

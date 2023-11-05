@@ -3,6 +3,8 @@
 export PATH=/data/data/com.termux/files/usr/bin
 unset LD_LIBRARY_PATH
 
+kill $(pidof app_process)
+
 cd $HOME
 
 git clone https://github.com/Pipetto-crypto/androBox.git -b androBoxNew >/dev/null 2>&1
