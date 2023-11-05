@@ -12,7 +12,7 @@ exec /system/bin/app_process / com.termux.x11.Loader >/dev/null 2>&1 &
 [[ -z $(pidof pulseaudio) ]] && pulseaudio --start --exit-idle-time=-1 && pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
 if [ "$(pidof app_process)" == "" ]
 then
-     termux-x11 >/dev/null 2>&1
+     termux-x11 :1 >/dev/null 2>&1 &
      sleep 7
 fi
 
@@ -91,7 +91,7 @@ export BOX64_PATH=$GLIBC_PREFIX/opt/wine/bin
 export BOX64_LD_LIBRARY_PATH=$GLIBC_PREFIX/opt/wine/lib/wine/i386-unix:$GLIBC_PREFIX/opt/wine/lib/wine/x86_64-unix:$GLIBC_PREFIX/lib/x86_64-linux-gnu
 export VK_ICD_FILENAMES=$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.aarch64.json:$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.armhf.json
 export LIBGL_DRIVERS_PATH=$GLIBC_PREFIX/lib/dri:$GLIBC_PREFIX/lib32/dri
-export DISPLAY=:0
+export DISPLAY=${DISPLAY:-:1}
 export USE_HEAP=1
 export TU_DEBUG=noconform
 export DXVK_LOG_PATH=/sdcard/androBox/dxvk_log
