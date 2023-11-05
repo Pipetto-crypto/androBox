@@ -10,6 +10,12 @@ exec /system/bin/app_process / com.termux.x11.Loader >/dev/null 2>&1 &
 
 
 [[ -z $(pidof pulseaudio) ]] && pulseaudio --start --exit-idle-time=-1 && pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
+
+if [ "$(ps -aux | grep -w '[:]1' | awk '{print $2}')" == "" ]
+then
+     kill $(pidof app_process)
+fi
+
 if [ "$(pidof app_process)" == "" ]
 then
      termux-x11 :1 >/dev/null 2>&1 &
