@@ -12,18 +12,22 @@ exec /system/bin/app_process / com.termux.x11.Loader >/dev/null 2>&1 &
 
 apply_last_patch(){
 
-echo -e "Checking for available patches..."
-lastavailablepatch="1badffd185f96034dd54a6c803e5d068571227df"
+echo -e "\nChecking for available patches..."
+lastavailablepatch="$(curl -sL https://github.com/Pipetto-crypto/androBox/raw/androBoxNew/patches/patch.tar.xz | sha1sum | awk '{print $1}')"
 lastinstalledpatch="$(cat /sdcard/androBox/.patch1sum)"
+isonline="$(ping -w1 -q -c1 google.com &>/dev/null && echo $?)"
 
 if [ "$lastavailablepatch" == "$lastinstalledpatch" ]
 then
      echo -e "\nLast patch is already installed"
-else
+elif [ "$isonline" == "0" ]
+then
      echo -e "\nInstalling last patch"
      apply_patch >/dev/null 2>&1
      update-scripts >/dev/null 2>&1
      echo -e "\nLast patch installed"
+else
+     echo -e "\nI am not capable of find any new patch online, enable your Internet connection next time."
 fi
 
 }
