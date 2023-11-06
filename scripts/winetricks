@@ -3,6 +3,8 @@
 unset LD_PRELOAD
 unset LD_LIBRARY_PATH
 
+export DISPLAY=${DISPLAY:-:1}
+
 env BOX64_PATH=$PREFIX/glibc/opt/wine/bin \
 PATH=$PREFIX/glibc/opt/wine/bin:$PATH \
 BOX64_NOERROR=1 \
@@ -12,7 +14,6 @@ BOX64_NOBANNER=1 \
 BOX86_NOBANNER=1 \
 BOX64_BASH=$HOME/box_bash/bash_x64 \
 BOX86_BASH=$HOME/box_bash/bash_x86 \
-DISPLAY=:1 \
 $PREFIX/glibc/bin/box64 winetricks_x86 $@
 
 
