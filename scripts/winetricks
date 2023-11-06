@@ -12,7 +12,7 @@ BOX64_NOBANNER=1 \
 BOX86_NOBANNER=1 \
 BOX64_BASH=$HOME/box_bash/bash_x64 \
 BOX86_BASH=$HOME/box_bash/bash_x86 \
-DISPLAY=:0 \
+DISPLAY=:1 \
 $PREFIX/glibc/bin/box64 winetricks_x86 $@
 
 
