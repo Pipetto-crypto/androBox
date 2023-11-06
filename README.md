@@ -16,6 +16,8 @@ Paste this command in terminal:
 
 Run winedesktop to start it, it autolaunches Termux X11. If it does not, update from Start Menu (Update->Scripts). If for some reasons, the X11 server doesn't start, run winedesktop with the -ol option: winedesktop -ol
 
+If sometimes it doesn't boot or the screen stays black, force close Termux and Termux:X11. I will address this in future releases
+
 # Links and Credits
 
 Termux: https://github.com/termux/termux-app
