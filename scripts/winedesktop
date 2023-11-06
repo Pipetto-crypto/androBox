@@ -7,7 +7,6 @@ oldloader(){
 export CLASSPATH=/data/data/com.termux/files/usr/glibc/loader.apk
 unset LD_LIBRARY_PATH LD_PRELOAD
 exec /system/bin/app_process / com.termux.x11.Loader :0 >/dev/null 2>&1 &
-export DISPLAY=:0
 
 }
 
@@ -67,12 +66,12 @@ then
           oldloader
           sleep 7
      else
-          termux-x11 :1 >/dev/null 2>&1 &
+          termux-x11 :0 >/dev/null 2>&1 &
           sleep 7
      fi
 fi
 
-export DISPLAY=${DISPLAY:-:1}
+export DISPLAY=${DISPLAY:-:0}
 
 
 echo -e "\nTrying to apply correct resolution, the desktop will restart multiple times until correct resolution is applied"

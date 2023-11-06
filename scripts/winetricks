@@ -3,7 +3,7 @@
 unset LD_PRELOAD
 unset LD_LIBRARY_PATH
 
-export DISPLAY=${DISPLAY:-:1}
+export DISPLAY=${DISPLAY:-:0}
 
 env BOX64_PATH=$PREFIX/glibc/opt/wine/bin \
 PATH=$PREFIX/glibc/opt/wine/bin:$PATH \
