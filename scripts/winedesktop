@@ -6,7 +6,7 @@ oldloader(){
 
 export CLASSPATH=/data/data/com.termux/files/usr/glibc/loader.apk
 unset LD_LIBRARY_PATH LD_PRELOAD
-exec /system/bin/app_process / com.termux.x11.Loader :0 >/dev/null 2>&1 &
+exec /system/bin/app_process / com.termux.x11.Loader >/dev/null 2>&1 &
 
 }
 
@@ -66,19 +66,19 @@ then
           oldloader
           sleep 7
      else
-          termux-x11 :0 >/dev/null 2>&1 &
+          termux-x11 >/dev/null 2>&1 &
           sleep 7
      fi
 fi
 
-export DISPLAY=${DISPLAY:-:0}
+export DISPLAY=:0
 
 
 echo -e "\nTrying to apply correct resolution, the desktop will restart multiple times until correct resolution is applied"
 
 sleep 3
 
-screenres=$(xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
+screenres="$(xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)"
 [[ -z $(grep -w "checkres=disabled" $HOME/.androBox) ]] && [[ -z $(ps -aux | grep "[w]atch" | awk '{print $2}') ]] && $PREFIX/glibc/opt/WinScripts/checkres.sh &
 
 echo -e "\nLaunching"
