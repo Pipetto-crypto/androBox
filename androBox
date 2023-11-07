@@ -32,12 +32,12 @@ isonline="$(ping -w1 -q -c1 google.com &>/dev/null && echo $?)"
 
 if [ "$lastavailablepatch" == "$lastinstalledpatch" ]
 then
-     echo -e "\nLast patch is already installed"
+     echo -e "\nLast patch is already installed."
 elif [ "$isonline" == "0" ]
 then
-     echo -e "\nInstalling last patch"
+     echo -e "\nInstalling last patch..."
      apply_patch >/dev/null 2>&1
-     echo -e "\nLast patch installed"
+     echo -e "\nLast patch installed."
 else
      echo -e "\nI am not capable of find any new patch online, enable your Internet connection next time."
 fi
@@ -46,7 +46,7 @@ fi
 
 update_scripts(){
 
-echo -e "\nChecking for available scripts update.."
+echo -e "\nChecking for available scripts update..."
 touch /sdcard/androBox/.lastupdated
 lastavailablecommit="$(git ls-remote --heads https://github.com/Pipetto-crypto/androBox.git | grep refs/heads/androBoxNew | awk '{print $1}')"
 lastinstalledcommit="$(cat /sdcard/androBox/.lastupdated)"
@@ -55,14 +55,14 @@ if [ ! -z "$lastavailablecommit" ]
 then
      if [ "$lastavailablecommit" == "$lastinstalledcommit" ]
      then
-          echo -e "\nNo new updates found"
+          echo -e "\nNo new updates found."
      else
-          echo -e "\nInstalling new updates"
+          echo -e "\nInstalling new updates..."
           source update-scripts >/dev/null 2>&1
           echo -e "\nNew updates installed"
      fi
 else
-     echo -e "\nI am not capable of finding any new update, enable your Internet connection next time"
+     echo -e "\nI am not capable of finding any new update, enable your Internet connection next time."
 fi
 
 
@@ -74,10 +74,10 @@ isonline="$(ping -w1 -q -c1 google.com &>/dev/null && echo $?)"
 if [ "$isonline" == "0" ]
 then 
      wget -q  https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox -P $HOME
-     echo -e "Checking for new androBox updates.."
+     echo -e "Checking for new androBox updates..."
      if ! git diff --no-index --quiet $HOME/androBox $PATH/androBox
      then 
-          echo -e "\nInstalling new androBox update, remember to relaunch after update is done"   
+          echo -e "\nInstalling new androBox update, remember to relaunch after update is done..."   
           mv $HOME/androBox $PATH
           chmod +x $PATH/androBox
           exit
@@ -100,14 +100,14 @@ sleep 2
 
 startdesktop(){
 
-echo -e "\nTrying to apply correct resolution, the desktop will restart multiple times until correct resolution is applied"
+echo -e "\nTrying to apply correct resolution, the desktop will restart multiple times until correct resolution is applied..."
 
 sleep 3
 
 export screenres="$(xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)"
 [[ -z $(grep -w "checkres=disabled" $HOME/.androBox) ]] && [[ -z $(ps -aux | grep "[w]atch" | awk '{print $2}') ]] && $PREFIX/glibc/opt/WinScripts/checkres.sh &
 
-echo -e "\nLaunching"
+echo -e "\nLaunching..."
 
 sleep 2
 
