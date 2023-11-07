@@ -78,6 +78,7 @@ then
      if [ "$remotesum" != "$localsum" ]
      then 
           echo -e "\nInstalling new androBox update, remember to relaunch after update is done..."   
+          wget -q https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox -P $HOME
           mv $HOME/androBox $PATH
           chmod +x $PATH/androBox
           exit
