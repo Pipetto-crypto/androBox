@@ -77,6 +77,7 @@ then
      then 
           echo -e "\nInstalling new androBox update, remember to relaunch after update is done"   
           mv $HOME/androBox $PATH
+          chmod +x $PATH/androBox
           exit
      else
           rm -rf $HOME/androBox
