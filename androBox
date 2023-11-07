@@ -185,6 +185,7 @@ do
        wget -q https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox -P $HOME
        mv $HOME/androBox $PATH
        chmod +x $PATH/androBox
+       exit
        ;;
    6)
        kill $(pidof app_process)
