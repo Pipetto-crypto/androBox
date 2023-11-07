@@ -71,7 +71,7 @@ update_androbox(){
 isonline="$(ping -w1 -q -c1 google.com &>/dev/null && echo $?)"
 if [ "$isonline" == "0" ]
 then 
-     wget -q  -P $HOME
+     wget -q  https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox -P $HOME
      echo -e "Checking for new androBox updates"
      if cmp --silent -- $HOME/androBox $PATH/androBox
      then 
