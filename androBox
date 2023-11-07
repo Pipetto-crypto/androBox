@@ -73,7 +73,7 @@ update_androbox(){
 isonline="$(ping -w1 -q -c1 google.com &>/dev/null && echo $?)"
 if [ "$isonline" == "0" ]
 then 
-     remotesum="$(curl -sL https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox -o $HOME/androBox | sha1sum | awk '{print $1}')"
+     remotesum="$(curl -sL https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox | sha1sum | awk '{print $1}')"
      localsum="$(sha1sum $PATH/androBox | awk '{print $1}')"
      if [ "$remotesum" != "$localsum" ]
      then 
