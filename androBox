@@ -10,7 +10,8 @@ echo -e "
 2.Launch Windesktop with OldLoader(Devices with Black Screen)
 3.CLI Launcher(only useful when debug log are not complete)
 4.Stop Winedesktop
-5.Quit
+5.Update
+6.Quit
 "
 
 }
@@ -147,9 +148,12 @@ source $TMPDIR/.myvars
 
 }
 
-update_androbox
-update_scripts
-apply_last_patch
+if [ "$1" != "-nc" ]
+then
+     update_androbox
+     update_scripts
+     apply_last_patch
+fi
 
 startservers
 setvars
@@ -177,6 +181,12 @@ do
        $PREFIX/glibc/opt/WinScripts/exit.sh
        ;;   
    5)
+       echo -e "\nInstalling new androBox update, remember to relaunch after update is done..."
+       wget -q https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox -P $HOME
+       mv $HOME/androBox $PATH
+       chmod +x $PATH/androBox
+       ;;
+   6)
        kill $(pidof app_process)
        pkill pulseaudio
        exit
