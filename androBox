@@ -73,7 +73,7 @@ if [ "$isonline" == "0" ]
 then 
      wget -q  https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox -P $HOME
      echo -e "Checking for new androBox updates"
-     if cmp --silent -- $HOME/androBox $PATH/androBox
+     if ! cmp --silent -- $HOME/androBox $PATH/androBox
      then 
           echo -e "\nInstalling new androBox update, remember to relaunch after update is done"   
           mv $HOME/androBox $PATH
