@@ -1,16 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-
-
-[[ -z $(pidof pulseaudio) ]] && pulseaudio --start --exit-idle-time=-1 && pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
-
-
-if [ "$(pidof app_process)" == "" ]
-then
-     termux-x11 >/dev/null 2>&1 &
-     sleep 7
-fi
-
 taskset -a -pc 4-7 $(pidof com.termux) >/dev/null 2>&1
 
 mkdir -p /sdcard/androBox/box_logs/
@@ -80,26 +69,21 @@ exec 1>$TERMINAL_LOGFILE 2>&1
 #Essential environment variables, do not touch or modify!!
 
 unset LD_PRELOAD
+
 export GLIBC_PREFIX=/data/data/com.termux/files/usr/glibc
 export PATH=$GLIBC_PREFIX/bin:$PATH
 export BOX64_PATH=$GLIBC_PREFIX/opt/wine/bin
 export BOX64_LD_LIBRARY_PATH=$GLIBC_PREFIX/opt/wine/lib/wine/i386-unix:$GLIBC_PREFIX/opt/wine/lib/wine/x86_64-unix:$GLIBC_PREFIX/lib/x86_64-linux-gnu
-export VK_ICD_FILENAMES=$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.aarch64.json:$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.armhf.json
-export LIBGL_DRIVERS_PATH=$GLIBC_PREFIX/lib/dri:$GLIBC_PREFIX/lib32/dri
-export DISPLAY=:0
-export USE_HEAP=1
-export TU_DEBUG=noconform
-export DXVK_LOG_PATH=/sdcard/androBox/dxvk_log
-export BOX64_LOG=0
-export BOX86_NOBANNER=1
-export BOX64_NOBANNER=1
-export MESA_LOADER_DRIVER_OVERRIDE=zink
-export FONTCONFIG_PATH=$PREFIX/etc/fonts
-export PULSE_SERVER=127.0.0.1
 export BOX64_BASH=$HOME/box_bash/bash_x64
 export BOX64_RCFILE=/sdcard/androBox/box64.box64rc
 export BOX86_RCFILE=/sdcard/androBox/box86.box86rc
 export WINEDEBUG=${WINEDEBUG:=-all}
+export DXVK_LOG_PATH=/sdcard/androBox/dxvk_log
+export BOX64_LOG=0
+export BOX86_NOBANNER=1
+export BOX64_NOBANNER=1
+
+[[ -f $TMPDIR/.myvars ]] && source $TMPDIR/.myvars
 
 
 [[ -f $HOME/.locale ]] && export LANG=$(cat $HOME/.locale)

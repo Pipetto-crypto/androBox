@@ -90,6 +90,8 @@ do
    fi
 done
 
+mv $HOME/androBox/androBox $PATH && chmod +x $PATH/androBox
+
 mkdir -p /sdcard/androBox
 mv $HOME/androBox/configs/* /sdcard/androBox
 
@@ -99,8 +101,6 @@ apply_patch
 
 rm -rf $HOME/androBox && rm -rf $HOME/.wine
 wine wineboot
-sleep 3
-am start -n com.termux.x11/com.termux.x11.MainActivity >/dev/null 2>&1
 sleep 3
 pfxupdate
 

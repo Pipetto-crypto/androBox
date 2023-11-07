@@ -1,0 +1,181 @@
+#!/bin/bash
+
+printmenu(){
+
+clear
+echo -e "
+1.Launch Winedesktop
+2.Launch Windesktop with OldLoader(Devices with Black Screen)
+3.CLI Launcher(only useful when debug log are not complete)
+4.Stop Winedesktop
+5.Quit
+"
+
+}
+
+oldloader(){
+
+export CLASSPATH=/data/data/com.termux/files/usr/glibc/loader.apk
+unset LD_LIBRARY_PATH LD_PRELOAD
+exec /system/bin/app_process / com.termux.x11.Loader >/dev/null 2>&1 &
+
+}
+
+apply_last_patch(){
+
+echo -e "\nChecking for available patches..."
+lastavailablepatch="$(curl -sL https://github.com/Pipetto-crypto/androBox/raw/androBoxNew/patches/patch.tar.xz | sha1sum | awk '{print $1}')"
+lastinstalledpatch="$(cat /sdcard/androBox/.patch1sum)"
+isonline="$(ping -w1 -q -c1 google.com &>/dev/null && echo $?)"
+
+if [ "$lastavailablepatch" == "$lastinstalledpatch" ]
+then
+     echo -e "\nLast patch is already installed"
+elif [ "$isonline" == "0" ]
+then
+     echo -e "\nInstalling last patch"
+     apply_patch >/dev/null 2>&1
+     echo -e "\nLast patch installed"
+else
+     echo -e "\nI am not capable of find any new patch online, enable your Internet connection next time."
+fi
+
+}
+
+update_scripts(){
+
+echo -e "\nChecking for available scripts update..\n"
+touch /sdcard/androBox/.lastupdated
+lastavailablecommit="$(git ls-remote --heads https://github.com/Pipetto-crypto/androBox.git | grep refs/heads/androBoxNew | awk '{print $1}')"
+lastinstalledcommit="$(cat /sdcard/androBox/.lastupdated)"
+
+if [ ! -z "$lastavailablecommit" ]
+then
+     if [ "$lastavailablecommit" == "$lastinstalledcommit" ]
+     then
+          echo -e "\nNo new updates found"
+     else
+          echo -e "\nInstalling new updates"
+          source update-scripts >/dev/null 2>&1
+          echo -e "\nNew updates installed"
+     fi
+else
+     echo -e "\nI am not capable of finding any new update, enable your Internet connection next time"
+fi
+
+
+}
+
+update_androbox(){
+
+isonline="$(ping -w1 -q -c1 google.com &>/dev/null && echo $?)"
+if [ "$isonline" == "0" ]
+then 
+     wget -q  -P $HOME
+     echo -e "Checking for new androBox updates"
+     if cmp --silent -- $HOME/androBox $PATH/androBox
+     then 
+          echo -e "\nInstalling new androBox update, remember to relaunch after update is done"   
+          mv $HOME/androBox $PATH
+          exit
+     else
+          rm -rf $HOME/androBox
+     fi
+fi
+
+}
+
+startservers(){
+
+[[ -z $(pidof pulseaudio) ]] && pulseaudio --start --exit-idle-time=-1 && pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
+termux-x11 >/dev/null 2>&1 &
+sleep 2
+
+}
+
+
+
+startdesktop(){
+
+echo -e "\nTrying to apply correct resolution, the desktop will restart multiple times until correct resolution is applied"
+
+sleep 3
+
+export screenres="$(xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)"
+[[ -z $(grep -w "checkres=disabled" $HOME/.androBox) ]] && [[ -z $(ps -aux | grep "[w]atch" | awk '{print $2}') ]] && $PREFIX/glibc/opt/WinScripts/checkres.sh &
+
+echo -e "\nLaunching"
+
+sleep 2
+
+am start -n com.termux.x11/com.termux.x11.MainActivity >/dev/null 2>&1
+winedesktop >/dev/null 2>&1 &
+
+}
+
+startoldloader(){
+
+kill $(pidof app_process)
+oldloader
+sleep 2
+
+}
+
+
+setvars(){
+
+GLIBC_PREFIX=/data/data/com.termux/files/usr/glibc
+
+cat > $TMPDIR/.myvars <<- EOM
+#!/data/data/com.termux/files/usr/bin/bash
+
+export VK_ICD_FILENAMES=$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.aarch64.json:$GLIBC_PREFIX/share/vulkan/icd.d/freedreno_icd.armhf.json
+export LIBGL_DRIVERS_PATH=$GLIBC_PREFIX/lib/dri:$GLIBC_PREFIX/lib32/dri
+export DISPLAY=:0
+export USE_HEAP=1
+export TU_DEBUG=noconform
+export MESA_LOADER_DRIVER_OVERRIDE=zink
+export FONTCONFIG_PATH=$PREFIX/etc/fonts
+export PULSE_SERVER=127.0.0.1
+EOM
+
+source $TMPDIR/.myvars
+
+}
+
+update_androbox
+update_scripts
+apply_last_patch
+
+startservers
+setvars
+
+code=""
+
+while [ True ]
+do 
+   printmenu
+   read -p "Select an operation: " code
+   case $code in 
+   1)
+       
+       startdesktop
+       ;;
+   2)
+       startoldloader
+       startdesktop
+       ;;
+   3)
+       file=$(nnn -p - $HOME/.wine)
+       wine $file &
+       ;;
+   4)
+       $PREFIX/glibc/opt/WinScripts/exit.sh
+       ;;   
+   5)
+       kill $(pidof app_process)
+       pkill pulseaudio
+       exit
+       ;;
+   esac
+done
