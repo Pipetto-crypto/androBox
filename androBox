@@ -73,9 +73,9 @@ update_androbox(){
 isonline="$(ping -w1 -q -c1 google.com &>/dev/null && echo $?)"
 if [ "$isonline" == "0" ]
 then 
-     wget -q  https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox -P $HOME
-     echo -e "Checking for new androBox updates..."
-     if ! git diff --no-index --quiet $HOME/androBox $PATH/androBox
+     remotesum="$(curl -sL https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox -o $HOME/androBox | sha1sum | awk '{print $1}')"
+     localsum="$(sha1sum $PATH/androBox | awk '{print $1}')"
+     if [ "$remotesum" != "$localsum" ]
      then 
           echo -e "\nInstalling new androBox update, remember to relaunch after update is done..."   
           mv $HOME/androBox $PATH
