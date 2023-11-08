@@ -24,6 +24,17 @@ exec /system/bin/app_process / com.termux.x11.Loader >/dev/null 2>&1 &
 
 }
 
+getcommitmessage(){
+
+cd $HOME
+git clone --filter=blob:none --no-checkout --single-branch --branch androBoxNew https://github.com/Pipetto-crypto/androBox.git >/dev/null 2>&1
+cd androBox
+log="$(git log -n 1 --pretty=format:%B -- $1 | cut -d':' -f2-)"
+rm -rf $HOME/androBox
+echo "$log"
+
+}
+
 apply_last_patch(){
 
 echo -e "\nChecking for available patches..."
@@ -36,6 +47,7 @@ then
      echo -e "\nLast patch is already installed."
 elif [ "$isonline" == "0" ]
 then
+     printf "\nYou are downloading a new patch which commit message is: %s" "$(getcommitmessage patches)"
      echo -e "\nInstalling last patch..."
      apply_patch >/dev/null 2>&1
      echo -e "\nLast patch installed."
@@ -58,6 +70,7 @@ then
      then
           echo -e "\nNo new updates found."
      else
+          printf "\nYou are downloading an update to scripts which commit message is: %s" "$(getcommitmessage scripts)"
           echo -e "\nInstalling new updates..."
           source update-scripts >/dev/null 2>&1
           echo -e "\nNew updates installed"
@@ -77,7 +90,8 @@ then
      remotesum="$(curl -sL https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox | sha1sum | awk '{print $1}')"
      localsum="$(sha1sum $PATH/androBox | awk '{print $1}')"
      if [ "$remotesum" != "$localsum" ]
-     then 
+     then
+          printf "\nYou are downloading an update to androBox which commit message is: %s" "$(getcommitmessage patches)"
           echo -e "\nInstalling new androBox update, remember to relaunch after update is done..."   
           wget -q https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox -P $HOME
           mv $HOME/androBox $PATH
