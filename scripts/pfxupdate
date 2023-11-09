@@ -23,4 +23,4 @@ if [ ! -L "$pfx/dosdevices/f:" ];then ln -sf $PREFIX/glibc/opt/Programs "$pfx/do
 if [ ! -L "$pfx/dosdevices/h:" ];then mkdir -p $HOME/.fonts && ln -sf $HOME/.fonts "$pfx/dosdevices/h:";fi
 if [ ! -L "$pfx/dosdevices/g:" ];then mkdir -p $HOME/.cache/winetricks && ln -sf $HOME/.cache/winetricks "$pfx/dosdevices/g:";fi
 if [ ! -L "$pfx/dosdevices/t:" ];then ln -sf ~/.local/cache "$pfx/dosdevices/t:";fi
-   
+if [ ! -L "$pfx/dosdevices/a:" ];then ln -sf /sdcard/Android/data/com.termux/files "$pfx/dosdevices/a:";fi
