@@ -3,6 +3,5 @@
 start /B F:\ProcessLasso\ProcessGovernor.exe
 start /B F:\7zip\7zFM.exe E:
 start /B Z:\usr\glibc\opt\WinScripts\ProcessLasso.bat
-findstr /c:"services=disabled" Z:\home\.androBox >nul 2>&1
-if not errorlevel 1 taskkill /im services.exe /f >nul 2>&1
+start /unix /data/data/com.termux/files/usr/glibc/opt/WinScripts/startup.sh
 start /B F:\IB\ib.exe
