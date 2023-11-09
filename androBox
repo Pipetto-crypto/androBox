@@ -9,12 +9,14 @@ echo -e "
 1.Launch Winedesktop
 2.Launch Windesktop with OldLoader(Devices with Black Screen)
 3.CLI Launcher(only useful when debug log are not complete)
-4.Stop Winedesktop
-5.Update
-6.Quit
+4.Kill wine
+5.Install a winetricks verb
+6.Update
+7.Quit
 "
 
 }
+
 
 oldloader(){
 
@@ -59,14 +61,17 @@ fi
 
 update_scripts(){
 
+isonline="$(ping -w1 -q -c1 google.com &>/dev/null && echo $?)"
 echo -e "\nChecking for available scripts update..."
 touch /sdcard/androBox/.lastupdated
 lastavailablecommit="$(git ls-remote --heads https://github.com/Pipetto-crypto/androBox.git | grep refs/heads/androBoxNew | awk '{print $1}')"
-lastinstalledcommit="$(cat /sdcard/androBox/.lastupdated)"
+lastinstalledcommit="$(cat /sdcard/androBox/.lastupdated | head -n1)"
+lastinstalledcommitmessage="$(cat /sdcard/androBox/.lastupdated | tail -n1)"
+lastavailablecommitmessage="$(getcommitmessage scripts)"
 
-if [ ! -z "$lastavailablecommit" ]
+if [ "$isonline" == "0" ]
 then
-     if [ "$lastavailablecommit" == "$lastinstalledcommit" ]
+     if [ "$lastavailablecommit" == "$lastinstalledcommit" ] && [ "$lastavailablecommitmessage" == "$lastinstalledcommitmessage" ]
      then
           echo -e "\nNo new updates found."
      else
@@ -74,6 +79,7 @@ then
           echo -e "\nInstalling new updates..."
           source update-scripts >/dev/null 2>&1
           echo -e "\nNew updates installed"
+          echo "$lastavailablecommitmessage" >> /sdcard/androBox/.lastupdated
      fi
 else
      echo -e "\nI am not capable of finding any new update, enable your Internet connection next time."
@@ -91,7 +97,7 @@ then
      localsum="$(sha1sum $PATH/androBox | awk '{print $1}')"
      if [ "$remotesum" != "$localsum" ]
      then
-          printf "\nYou are downloading an update to androBox which commit message is: %s" "$(getcommitmessage patches)"
+          printf "\nYou are downloading an update to androBox which commit message is: %s\n" "$(getcommitmessage androBox)"
           echo -e "\nInstalling new androBox update, remember to relaunch after update is done..."   
           wget -q https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox -P $HOME
           mv $HOME/androBox $PATH
@@ -193,15 +199,22 @@ do
        ;;
    4)
        $PREFIX/glibc/opt/WinScripts/exit.sh
-       ;;   
+       ;;
    5)
+       
+       clear
+       read -p "Type the name of a winetrick verb you want to install: " tweak
+       printf "\nI will install %s verb...\n" "$tweak"
+       winetricks $tweak -f
+       ;;
+   6)
        echo -e "\nInstalling new androBox update, remember to relaunch after update is done..."
        wget -q https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox -P $HOME
        mv $HOME/androBox $PATH
        chmod +x $PATH/androBox
        exit
        ;;
-   6)
+   7)
        kill $(pidof app_process)
        pkill pulseaudio
        exit
