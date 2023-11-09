@@ -1,4 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+screenres="$(xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)"
+
 wine explorer /desktop=shell,$screenres $PREFIX/glibc/opt/WinScripts/startup.bat
 
