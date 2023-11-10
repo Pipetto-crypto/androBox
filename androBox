@@ -24,6 +24,8 @@ cat << EOF
 1.Rebuild prefix
 2.Kill wine
 3.Switch to new Termux:X11 loader
+4.Reinstall glibc prefix
+5.Reinstall wine
 
 EOF
 
@@ -94,7 +96,7 @@ lastavailablecommitmessage="$(getcommitmessage scripts)"
 
 if [ "$isonline" == "0" ]
 then
-     if [ "$lastavailablecommit" == "$lastinstalledcommit" ] && [[ "$lastavailablecommitmessage" =~ "$lastinstalledcommitmessage" ]]
+     if [ "$lastavailablecommit" == "$lastinstalledcommit" ] || [[ "$lastavailablecommitmessage" =~ "$lastinstalledcommitmessage" ]]
      then
           echo -e "\nNo new updates found."
      else
@@ -197,6 +199,22 @@ $PREFIX/glibc/opt/WinScripts/exit.sh
 
 }
 
+reinstallglibcprefix(){
+
+rm -rf /sdcard/glibc_prefix.tar.xz && rm -rf $PREFIX/glibc
+wget https://github.com/Pipetto-crypto/androBox/releases/download/glibc_prefix/glibc_prefix.tar.xz -P /sdcard
+tar -xf /sdcard/glibc_prefix.tar.xz -C $PREFIX
+
+}
+
+reinstallwine(){
+
+rm -rf /sdcard/wine-8.14-amd64.tar.xz && rm -rf $PREFIX/glibc/opt/wine
+wget https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-8.14-amd64.tar.xz -P /sdcard
+tar -xf /sdcard/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt && mv $PREFIX/glibc/opt/wine-8.14-amd64  $PREFIX/glibc/opt/wine
+
+}
+
 killonexit(){
 
 kill $(pidof app_process)
@@ -242,7 +260,7 @@ do
        1)
           killwine
           rm -rf $HOME/.wine
-          wine wineboot
+          WINEDLLOVERRIDES="mscoree,mshtml=disabled" wine wineboot
           pfxupdate
           ;;
        2)
@@ -250,6 +268,14 @@ do
           ;;
        3)
           pkg install --reinstall termux-x11-nightly -y >/dev/null 2>&1
+          ;;
+       4)
+          killwine
+          reinstallglibcprefix
+          ;;
+       5)
+          kilwine
+          reinstallwine
           ;;
        esac
        ;;
