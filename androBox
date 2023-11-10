@@ -10,7 +10,7 @@ echo -e "
 2.Launch Windesktop with OldLoader(Devices with Black Screen)
 3.CLI Launcher(only useful when debug log are not complete)
 4.Troubleshooting
-5.Install a winetricks verb
+5.Tweaks
 6.Update
 7.Quit
 "
@@ -74,7 +74,7 @@ then
      echo -e "\nLast patch is already installed."
 elif [ "$isonline" == "0" ]
 then
-     printf "\nYou are downloading a new patch which commit message is: %s" "$(getcommitmessage patches)"
+     printf "\nYou are downloading a new patch which commit message is:%s\n" "$(getcommitmessage patches)"
      echo -e "\nInstalling last patch..."
      apply_patch >/dev/null 2>&1
      echo -e "\nLast patch installed."
@@ -100,7 +100,7 @@ then
      then
           echo -e "\nNo new updates found."
      else
-          printf "\nYou are downloading an update to scripts which commit message is: %s" "$(getcommitmessage scripts)"
+          printf "\nYou are downloading an update to scripts which commit message is:%s\n" "$(getcommitmessage scripts)"
           echo -e "\nInstalling new updates..."
           source update-scripts >/dev/null 2>&1
           echo -e "\nNew updates installed"
@@ -122,7 +122,7 @@ then
      localsum="$(sha1sum $PATH/androBox | awk '{print $1}')"
      if [ "$remotesum" != "$localsum" ]
      then
-          printf "\nYou are downloading an update to androBox which commit message is: %s\n" "$(getcommitmessage androBox)"
+          printf "\nYou are downloading an update to androBox which commit message is:%s\n" "$(getcommitmessage androBox)"
           echo -e "\nInstalling new androBox update, remember to relaunch after update is done..."   
           wget -q https://raw.githubusercontent.com/Pipetto-crypto/androBox/androBoxNew/androBox -P $HOME
           mv $HOME/androBox $PATH
@@ -280,11 +280,15 @@ do
        esac
        ;;
    5)
-       
-       clear
-       read -p "Type the name of a winetrick verb you want to install: " tweak
-       printf "\nI will install %s verb...\n" "$tweak"
-       winetricks $tweak -f
+       tweaksmenu
+       read -p "Select an option: " twkopt
+       case $twkopt in
+       1)
+          read -p "Type the name of a winetrick verb you want to install: " tweak
+          printf "\nI will install %s verb...\n" "$tweak"
+          winetricks $tweak -f
+          ;;
+       esac
        ;;
    6)
        echo -e "\nInstalling new androBox update, remember to relaunch after update is done..."
