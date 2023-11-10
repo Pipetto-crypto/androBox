@@ -23,7 +23,7 @@ tar -xf $cachedir/wine-$1-amd64.tar.xz -C $PREFIX/glibc/opt
 mv $PREFIX/glibc/opt/wine-$1-amd64 $PREFIX/glibc/opt/wine
 
 rm -rf $HOME/.wine
-wine wineboot
+WINEDLLOVERRIDES="mscoree,mshtml=disabled" wine wineboot
 sleep 3
 pfxupdate
 sleep 4
