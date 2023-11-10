@@ -9,11 +9,34 @@ echo -e "
 1.Launch Winedesktop
 2.Launch Windesktop with OldLoader(Devices with Black Screen)
 3.CLI Launcher(only useful when debug log are not complete)
-4.Kill wine
+4.Troubleshooting
 5.Install a winetricks verb
 6.Update
 7.Quit
 "
+
+}
+
+troubleshootingmenu(){
+
+clear
+cat << EOF
+1.Rebuild prefix
+2.Kill wine
+3.Switch to new Termux:X11 loader
+
+EOF
+
+
+}
+
+tweaksmenu(){
+
+clear
+cat << EOF
+1.Install a winetricks verb
+
+EOF
 
 }
 
@@ -71,7 +94,7 @@ lastavailablecommitmessage="$(getcommitmessage scripts)"
 
 if [ "$isonline" == "0" ]
 then
-     if [ "$lastavailablecommit" == "$lastinstalledcommit" ] && [ "$lastavailablecommitmessage" == "$lastinstalledcommitmessage" ]
+     if [ "$lastavailablecommit" == "$lastinstalledcommit" ] && [[ "$lastavailablecommitmessage" =~ "$lastinstalledcommitmessage" ]]
      then
           echo -e "\nNo new updates found."
      else
@@ -168,6 +191,19 @@ source $TMPDIR/.myvars
 
 }
 
+killwine(){
+
+$PREFIX/glibc/opt/WinScripts/exit.sh
+
+}
+
+killonexit(){
+
+kill $(pidof app_process)
+pkill pulseaudio
+
+}
+
 if [ "$1" != "-nc" ]
 then
      update_androbox
@@ -186,19 +222,36 @@ do
    read -p "Select an operation: " code
    case $code in 
    1)
-       
+       killwine
        startdesktop
        ;;
    2)
+       killwine
        startoldloader
        startdesktop
        ;;
    3)
+       killwine
        file=$(nnn -p - $HOME/.wine)
        wine $file &
        ;;
    4)
-       $PREFIX/glibc/opt/WinScripts/exit.sh
+       troubleshootingmenu
+       read -p "Select an option: " tbshmenu
+       case $tbshmenu in
+       1)
+          killwine
+          rm -rf $HOME/.wine
+          wine wineboot
+          pfxupdate
+          ;;
+       2)
+          killwine
+          ;;
+       3)
+          pkg install --reinstall termux-x11-nightly -y >/dev/null 2>&1
+          ;;
+       esac
        ;;
    5)
        
@@ -215,8 +268,7 @@ do
        exit
        ;;
    7)
-       kill $(pidof app_process)
-       pkill pulseaudio
+       killonexit
        exit
        ;;
    esac
