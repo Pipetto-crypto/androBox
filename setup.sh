@@ -1,17 +1,12 @@
 #!/bin/bash
 
-echo -e "
-1.Fresh Install
-2.Reinstall
-"
-read -p "Select an option: " opt
-
-if [ "$opt" == "2" ]
+if [ "$(ls $PREFIX | grep glibc)" == "glibc" ]
 then
+     echo -e "I have detected an already existing install. I will proceed to wipe it now".
      rm -rf /sdcard/glibc_prefix.tar.xz
      rm -rf /sdcard/wine-8.0-amd64.tar.xz
      rm -rf /sdcard/wine-8.14-amd64.tar.xz
-     rm -rf $PREFIX/glibc/opt/wine
+     rm -rf $PREFIX/glibc
 fi
 
 
@@ -20,7 +15,7 @@ echo -e "\nInstalling required dependencies"
 termux-change-repo
 pkg upgrade -y
 pkg install x11-repo tur-repo -y
-pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity openbox file xorg-xrandr xterm iconv termux-exec -y 
+pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity openbox file xorg-xrandr xterm iconv termux-exec nnn -y 
 
 if [ ! -d ~/storage ]
 then
