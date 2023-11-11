@@ -16,11 +16,19 @@ case $1 in
 8.14)
     [[ ! -f $cachedir/wine-$1-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-$1-amd64.tar.xz -P $cachedir
     ;;
+ge8-13)
+    [[ ! -f $cachedir/wine-lutris-GE-Proton8-13-x86_64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-ge-8.13/wine-lutris-GE-Proton8-13-x86_64.tar.xz -P $cachedir
 esac 
 
 rm -rf $PREFIX/glibc/opt/wine
-tar -xf $cachedir/wine-$1-amd64.tar.xz -C $PREFIX/glibc/opt
-mv $PREFIX/glibc/opt/wine-$1-amd64 $PREFIX/glibc/opt/wine
+if [[ "$1" =~ "ge" ]]
+then
+     tar -xf $cachedir/wine-lutris-GE-Proton8-13-x86_64.tar.xz -C $PREFIX/glibc/opt
+     mv $PREFIX/glibc/opt/lutris* $PREFIX/glibc/opt/wine
+else
+     tar -xf $cachedir/wine-$1-amd64 -C $PREFIX/glibc/opt
+     mv $PREFIX/glibc/opt/wine-$1-amd64 $PREFIX/glibc/opt/wine
+fi
 
 rm -rf $HOME/.wine
 WINEDLLOVERRIDES="mscoree,mshtml=disabled" wine wineboot
