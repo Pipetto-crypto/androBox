@@ -266,7 +266,7 @@ do
        1)
           killwine
           rm -rf $HOME/.wine
-          WINEDLLOVERRIDES="mscoree,mshtml=disabled" wine wineboot
+          WINEDLLOVERRIDES="mscoree=" wine wineboot
           pfxupdate
           ;;
        2)
