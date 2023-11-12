@@ -21,12 +21,12 @@ ge8-13)
 esac 
 
 rm -rf $PREFIX/glibc/opt/wine
-if [[ "$1" =~ "ge" ]]
+if [ "$1" == "ge8-13" ]
 then
      tar -xf $cachedir/wine-lutris-GE-Proton8-13-x86_64.tar.xz -C $PREFIX/glibc/opt
      mv $PREFIX/glibc/opt/lutris* $PREFIX/glibc/opt/wine
 else
-     tar -xf $cachedir/wine-$1-amd64 -C $PREFIX/glibc/opt
+     tar -xf $cachedir/wine-$1-amd64.tar.xz -C $PREFIX/glibc/opt
      mv $PREFIX/glibc/opt/wine-$1-amd64 $PREFIX/glibc/opt/wine
 fi
 
