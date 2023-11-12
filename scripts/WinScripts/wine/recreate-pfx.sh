@@ -6,7 +6,7 @@ unset LD_LIBRARY_PATH
 $PREFIX/glibc/opt/WinScripts/exit.sh
 
 rm -rf $HOME/.wine
-WINEDLLOVERRIDES="mscoree,mshtml=disabled" wine wineboot
+WINEDLLOVERRIDES="mscoree=" wine wineboot
 sleep 3
 pfxupdate
 sleep 4
