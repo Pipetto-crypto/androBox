@@ -210,8 +210,13 @@ tar -xf /sdcard/glibc_prefix.tar.xz -C $PREFIX
 reinstallwine(){
 
 rm -rf /sdcard/wine-8.14-amd64.tar.xz && rm -rf $PREFIX/glibc/opt/wine
-wget https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-8.14-amd64.tar.xz -P /sdcard
-tar -xf /sdcard/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt && mv $PREFIX/glibc/opt/wine-8.14-amd64  $PREFIX/glibc/opt/wine
+if [ ! -f $HOME/.local/cache/wine-8.14-amd64.tar.xz ]
+then
+     wget https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-8.14-amd64.tar.xz -P /sdcard
+     tar -xf /sdcard/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt && mv $PREFIX/glibc/opt/wine-8.14-amd64  $PREFIX/glibc/opt/wine
+else
+     tar -xf $HOME/.local/cache/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt && mv $PREFIX/glibc/opt/wine-8.14-amd64  $PREFIX/glibc/opt/wine
+fi
 
 }
 
@@ -219,6 +224,7 @@ killonexit(){
 
 kill $(pidof app_process)
 pkill pulseaudio
+killwine
 
 }
 
@@ -274,7 +280,7 @@ do
           reinstallglibcprefix
           ;;
        5)
-          kilwine
+          killwine
           reinstallwine
           ;;
        esac
