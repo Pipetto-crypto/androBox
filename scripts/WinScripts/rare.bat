@@ -1,3 +1,4 @@
 @echo off
 
-start /B C:\Program Files\Rare\Rare.exe
+pushd C:\Program Files\Rare\
+start /B Rare.exe
