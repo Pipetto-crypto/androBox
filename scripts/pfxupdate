@@ -24,7 +24,3 @@ if [ ! -L "$pfx/dosdevices/h:" ];then mkdir -p $HOME/.fonts && ln -sf $HOME/.fon
 if [ ! -L "$pfx/dosdevices/g:" ];then mkdir -p $HOME/.cache/winetricks && ln -sf $HOME/.cache/winetricks "$pfx/dosdevices/g:";fi
 if [ ! -L "$pfx/dosdevices/t:" ];then ln -sf ~/.local/cache "$pfx/dosdevices/t:";fi
 if [ ! -L "$pfx/dosdevices/a:" ];then ln -sf /sdcard/Android/data/com.termux/files "$pfx/dosdevices/a:";fi
-user="$(ls $HOME/.wine/drive_c/users | grep -e '^u')"
-mkdir -p $HOME/.wine/drive_c/users/$user/AppData/Local/ProcessLasso/config
-cp -r $PREFIX/glibc/opt/Programs/ProcessLasso/prolasso.ini $HOME/.wine/drive_c/users/u*/AppData/Local/ProcessLasso/config
-
