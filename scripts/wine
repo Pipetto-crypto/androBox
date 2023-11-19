@@ -77,6 +77,7 @@ export BOX64_LD_LIBRARY_PATH=$GLIBC_PREFIX/opt/wine/lib/wine/i386-unix:$GLIBC_PR
 export BOX64_BASH=$HOME/box_bash/bash_x64
 export BOX64_RCFILE=/sdcard/androBox/box64.box64rc
 export BOX86_RCFILE=/sdcard/androBox/box86.box86rc
+export DRIRC_CONFIGDIR=$GLIBC_PREFIX/share/drirc.d
 export WINEDEBUG=${WINEDEBUG:=-all}
 export DXVK_LOG_PATH=/sdcard/androBox/dxvk_log
 export BOX64_LOG=0
