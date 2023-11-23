@@ -228,12 +228,27 @@ killwine
 
 }
 
-if [ "$1" != "-nc" ]
-then
+uninstall(){
+
+rm -rf $PREFIX/glibc
+rm -rf Configurator.py install_dxvk remove_dxwrapper install_dxvk_async remove_wined3d install_dxvk_gplasync startup.bat install_dxwrapper update-scripts apply_patch install_wined3d wine box64switch mesaswitch winedesktop box86switch pfxupdate winetricks install_d3d8to9 remove_d8vk winetricks_x86 install_d8vk remove_dxvk androBox
+exit
+
+}
+
+case "$1" in
+--uninstall)
+     uninstall
+     ;;
+-nc)
+     echo -e "Skipping updates checking"
+     ;;
+*)
      update_androbox
      update_scripts
      apply_last_patch
-fi
+     ;;
+esac
 
 startservers
 setvars
