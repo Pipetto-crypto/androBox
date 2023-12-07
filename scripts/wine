@@ -146,4 +146,4 @@ then
 fi
 
 
-box64 wine "$@"
+box64 wine64 "$@"
