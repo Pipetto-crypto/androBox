@@ -8,3 +8,5 @@ cachedir=$HOME/.local/cache
 mkdir -p $cachedir
 [[ ! -f $cachedir/nglide.exe ]] && curl -J -L https://www.zeus-software.com/downloads/nglide/d-1.html -o $cachedir/nglide.exe
 wine $cachedir/nglide.exe
+$PREFIX/glibc/opt/WinScripts/startup.sh
+

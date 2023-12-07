@@ -11,3 +11,4 @@ mkdir -p $cachedir
 
 wine $cachedir/SteamSetup.exe
 $PREFIX/glibc/opt/WinScripts/tweaks/install_arial.sh
+$PREFIX/glibc/opt/WinScripts/startup.sh
