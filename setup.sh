@@ -92,8 +92,6 @@ mv $HOME/androBox/configs/* /sdcard/androBox
 
 echo "check_certificate = off" > $HOME/.wgetrc
 
-apply_patch
-
 rm -rf $HOME/androBox && rm -rf $HOME/.wine
 wine wineboot
 sleep 3
@@ -103,7 +101,7 @@ cat > $HOME/.androBox <<- EOM
 #androBox configuration file
 
 checkres=enabled
-services=enabled
+services=disabled
 EOM
  
 rm -rf ~/setup.sh
