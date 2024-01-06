@@ -145,5 +145,11 @@ then
      esac
 fi
 
-
-box64 wine64 "$@"
+if [ ! "-d" $GLIBC_PREFIX/opt/wine/lib64 ]
+then
+     box64 wine64 "$@"
+else
+    mkdir -p $PREFIX/var/run/shm
+    export WINEESYNC=1
+    proot --bind=$PREFIX/var/run/shm:/dev/shm box64 wine64 "$@"
+fi
