@@ -7,8 +7,20 @@ cachedir=$HOME/.local/cache
 
 mkdir -p $cachedir
 
-[[ ! -f $cachedir/box64_$1.tar.xz ]] && wget https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box64/box64_$1.tar.xz -P $cachedir
-[[ ! -f $cachedir/box86_$1.tar.xz ]] && wget https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box86/box86_$1.tar.xz -P $cachedir
+remotebox64sha1sum="$(curl -sL https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box64/box64_$1.tar.xz | sha1sum | awk '{print $1}')"
+localbox64sha1sum="$(sha1sum $cachedir/box64_$1.tar.xz)"
+remotebox86sha1sum="$(curl -sL https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box86/box86_$1.tar.xz | sha1sum | awk '{print $1}')"
+localbox86sha1sum="$(sha1sum $cachedir/box86_$1.tar.xz)"
+
+if [ $remotebox64sha1sum != $localbox64sha1sum ]
+then
+     wget https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box64/box64_$1.tar.xz -P $cachedir
+fi
+
+if [ -f $remotebox86sha1sum != $localbox86sha1sum ]
+then
+     wget https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box86/box86_$1.tar.xz -P $cachedir
+fi
 
 tar -xf $cachedir/box64_$1.tar.xz -C $PREFIX/glibc/bin
 if [ -d $PREFIX/glibc/bin/x64lib ] 

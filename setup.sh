@@ -3,12 +3,96 @@
 if [ "$(ls $PREFIX | grep glibc)" == "glibc" ]
 then
      echo -e "I have detected an already existing install. I will proceed to wipe it now".
-     rm -rf /sdcard/glibc_prefix.tar.xz
-     rm -rf /sdcard/wine-8.0-amd64.tar.xz
-     rm -rf /sdcard/wine-8.14-amd64.tar.xz
      rm -rf $PREFIX/glibc
 fi
 
+cleanup(){
+
+rm -rf $HOME/glibc_prefix.tar.xz $HOME/wine-8.14-amd64.tar.xz ~/setup.sh
+exit
+
+}
+
+install_repo_files(){
+
+git clone https://github.com/Pipetto-crypto/androBox.git -b androBoxNew
+
+for item in $HOME/androBox/scripts/*
+do
+   if [ ! -d $item ]
+   then
+        chmod +x $item && mv $item $PREFIX/bin
+   else
+        chmod -R 777 $item 
+        cp -r $item $PREFIX/glibc/opt
+   fi
+done
+
+mv $HOME/androBox/androBox $PREFI/bin && chmod +x $PREFIX/bin/androBox
+
+mkdir -p /sdcard/androBox
+mv $HOME/androBox/configs/* /sdcard/androBox
+
+}
+
+install_glibc_pfx(){
+
+glibc_sha1sum="2401d6bef70834d71211daf1822f215bd4709d92"
+[[ ! -f $HOME/glibc_prefix.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/glibc_prefix/glibc_prefix.tar.xz -P $HOME
+
+if [ -f $HOME/glibc_prefix.tar.xz ]
+then
+     curr_glibc_sha1sum="$(sha1sum $HOME/glibc_prefix.tar.xz | awk '{print $1}')"
+     if [ curr_glibc_sha1sum == glibc_sha1sum ]
+     then
+          tar -xf $HOME/glibc_prefix.tar.xz -C $PREFIX
+     else
+          echo -e "glibc archive sha1sum mismatch, leaving..."
+          cleanup
+     fi
+else
+     echo -e "Unable to find the glibc archive, leaving..."
+     cleanup
+fi
+
+}
+
+install_wine(){
+
+wine_sha1sum="de6b03eb3eea7a6b8b0598b43973e9a5ec6bdc08"
+
+echo -e  "\nInstalling latest wine devel"
+
+[[ ! -f $HOME/wine-8.14-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-8.14-amd64.tar.xz -P $HOME
+if [ -f $HOME/wine-8.14-amd64.tar.xz ]]
+then
+     curr_wine_sha1sum="$(sha1sum $HOME/wine-8.14-amd64.tar.xz | awk '{print $1}')"
+     if [ curr_wine_sha1sum == wine_sha1sum ]
+     then
+          tar -xf $HOME/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt
+          mv $PREFIX/glibc/opt/wine-*-amd64 $PREFIX/glibc/opt/wine
+     else
+          echo -e "wine archive sha1sum mismatch, leaving..."
+          cleanup
+     fi
+else
+     echo -e "Unable to find the wine archive, leaving..."
+     cleanup
+fi
+
+}
+
+
+do_prefix_creation(){
+
+env BOX64_LD_LIBRARY_PATH=$PREFIX/glibc/lib/x86_64-linux-gnu \
+BOX64_PATH=$PREFIX/glibc/opt/wine/bin \
+LD_PRELOAD= \
+wine64 wineboot >/dev/null 2>&1
+sleep 3
+pfxupdate
+
+}
 
 echo -e "\nInstalling required dependencies"
 
@@ -44,64 +128,16 @@ then
      rm -rf /sdcard/tmp.txt
 fi
 
-[[ ! -f /sdcard/glibc_prefix.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/glibc_prefix/glibc_prefix.tar.xz -P /sdcard
+install_glibc_pfx
 
-if [ -f /sdcard/glibc_prefix.tar.xz ]
-then
-     tar -xf /sdcard/glibc_prefix.tar.xz -C $PREFIX
-else
-     echo -e "It seems that the glibc prefix didn't download properly, exiting now. Please make sure you have a good internet connection and retry"
-     exit
-fi
+install_wine
 
-echo -e "
-1.Wine 8.0 Stable(Adreno 7xx users recommended)
-2.Wine 8.14 Devel
-"
-read -p "Select a wine version to install:" installchoice
-
-case $installchoice in
-1) 
-    [[ ! -f /sdcard/wine-8.0-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-8.0/wine-8.0-amd64.tar.xz -P /sdcard
-    tar -xf /sdcard/wine-8.0-amd64.tar.xz -C $PREFIX/glibc/opt
-    ;;
-2)
-    [[ ! -f /sdcard/wine-8.14-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-8.14-amd64.tar.xz -P /sdcard
-    tar -xf /sdcard/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt
-    ;;
-esac
-
-mv $PREFIX/glibc/opt/wine-*-amd64 $PREFIX/glibc/opt/wine
-
-git clone https://github.com/Pipetto-crypto/androBox.git -b androBoxNew
-
-for item in $HOME/androBox/scripts/*
-do
-   if [ ! -d $item ]
-   then
-        chmod +x $item && mv $item $PREFIX/bin
-   else
-        cp -r $item  $PREFIX/glibc/opt
-   fi
-done
-
-mv $HOME/androBox/androBox $PATH && chmod +x $PATH/androBox
-
-mkdir -p /sdcard/androBox
-mv $HOME/androBox/configs/* /sdcard/androBox
+install_repo_files
 
 echo "check_certificate = off" > $HOME/.wgetrc
 
 rm -rf $HOME/androBox && rm -rf $HOME/.wine
-wine wineboot
-sleep 3
-pfxupdate
 
-cat > $HOME/.androBox <<- EOM
-#androBox configuration file
+do_prefix_creation
 
-checkres=enabled
-services=disabled
-EOM
- 
-rm -rf ~/setup.sh
+cleanup
