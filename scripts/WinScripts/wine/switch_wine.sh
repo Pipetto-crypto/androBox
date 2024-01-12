@@ -18,8 +18,10 @@ case $1 in
     ;;
 ge8-13)
     [[ ! -f $cachedir/wine-lutris-GE-Proton8-13-x86_64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-ge-8.13/wine-lutris-GE-Proton8-13-x86_64.tar.xz -P $cachedir
+    ;;
 9.0)
     [[ ! -f $cachedir/wine-$1-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-$1-rc4/wine-$1-amd64.tar.xz -P $cachedir
+    ;;
 esac 
 
 rm -rf $PREFIX/glibc/opt/wine
