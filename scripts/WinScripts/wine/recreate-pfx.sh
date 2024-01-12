@@ -6,7 +6,7 @@ unset LD_LIBRARY_PATH
 $PREFIX/glibc/opt/WinScripts/exit.sh
 
 rm -rf $HOME/.wine
-WINEDLLOVERRIDES="mscoree=" wine wineboot
+WINEESYNC=0 WINEDLLOVERRIDES="mscoree=" wine wineboot
 sleep 3
 pfxupdate
 user="$(ls $HOME/.wine/drive_c/users | grep -e '^u')"

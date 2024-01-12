@@ -8,7 +8,7 @@ fi
 
 cleanup(){
 
-rm -rf $HOME/glibc_prefix.tar.xz $HOME/wine-8.14-amd64.tar.xz ~/setup.sh
+rm -rf $HOME/glibc_prefix.tar.xz $HOME/wine-9.0-amd64.tar.xz ~/setup.sh
 exit
 
 }
@@ -59,18 +59,17 @@ fi
 
 install_wine(){
 
-wine_sha1sum="de6b03eb3eea7a6b8b0598b43973e9a5ec6bdc08"
+wine_sha1sum="726b6d3b163ba5ef8f7eb12184470fc485c246f8"
 
 echo -e  "\nInstalling latest wine devel"
 
-[[ ! -f $HOME/wine-8.14-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-8.14-amd64.tar.xz -P $HOME
-if [ -f $HOME/wine-8.14-amd64.tar.xz ]
+[[ ! -f $HOME/wine-9.0-amd64.tar.xz ]] && https://github.com/Pipetto-crypto/androBox/releases/download/wine-9.0-rc4/wine-9.0-amd64.tar.xz -P $HOME
+if [ -f $HOME/wine-9.0-amd64.tar.xz ]
 then
-     curr_wine_sha1sum="$(sha1sum $HOME/wine-8.14-amd64.tar.xz | awk '{print $1}')"
+     curr_wine_sha1sum="$(sha1sum $HOME/wine-9.0-amd64.tar.xz | awk '{print $1}')"
      if [ "$curr_wine_sha1sum" == "$wine_sha1sum" ]
      then
-          tar -xf $HOME/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt
-          mv $PREFIX/glibc/opt/wine-*-amd64 $PREFIX/glibc/opt/wine
+          tar -xf $HOME/wine-9.0-amd64.tar.xz -C $PREFIX/glibc/opt
      else
           echo -e "wine archive sha1sum mismatch, leaving..."
           cleanup

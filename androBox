@@ -281,7 +281,7 @@ do
        1)
           killwine
           rm -rf $HOME/.wine
-          WINEDLLOVERRIDES="mscoree=" wine wineboot
+          WINEESYNC=0 WINEDLLOVERRIDES="mscoree=" wine wineboot
           pfxupdate
           user="$(ls $HOME/.wine/drive_c/users | grep -e '^u')"
           mkdir -p $HOME/.wine/drive_c/users/$user/AppData/Local/ProcessLasso/config
