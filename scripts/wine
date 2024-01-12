@@ -73,7 +73,7 @@ unset LD_PRELOAD
 export GLIBC_PREFIX=/data/data/com.termux/files/usr/glibc
 export PATH=$GLIBC_PREFIX/bin:$PATH
 export BOX64_PATH=$GLIBC_PREFIX/opt/wine/bin
-export BOX64_LD_LIBRARY_PATH=$GLIBC_PREFIX/opt/wine/lib/wine/i386-unix:$GLIBC_PREFIX/opt/wine/lib/wine/x86_64-unix:$GLIBC_PREFIX/lib/x86_64-linux-gnu
+export BOX64_LD_LIBRARY_PATH=$GLIBC_PREFIX/opt/wine/lib/wine/i386-unix:$GLIBC_PREFIX/opt/wine/lib/wine/x86_64-unix:$GLIBC_PREFIX/lib/x86_64-linux-gnu:$GLIBC_PREFIX/lib32/i386-linux-gnu
 export BOX64_BASH=$HOME/box_bash/bash_x64
 export BOX64_RCFILE=/sdcard/androBox/box64.box64rc
 export BOX86_RCFILE=/sdcard/androBox/box86.box86rc
