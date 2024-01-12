@@ -1,9 +1,9 @@
 #!/bin/bash
 
-if [ "$(ls $PREFIX | grep glibc)" == "glibc" ]
+if [ "$(ls $PREFIX | grep glibc)" == "glibc" ] || [ -d /sdcard/androBox ]
 then
      echo -e "I have detected an already existing install. I will proceed to wipe it now".
-     rm -rf $PREFIX/glibc
+     rm -rf $PREFIX/glibc /sdcard/androBox
 fi
 
 cleanup(){
@@ -28,7 +28,7 @@ do
    fi
 done
 
-mv $HOME/androBox/androBox $PREFI/bin && chmod +x $PREFIX/bin/androBox
+mv $HOME/androBox/androBox $PREFIX/bin && chmod +x $PREFIX/bin/androBox
 
 mkdir -p /sdcard/androBox
 mv $HOME/androBox/configs/* /sdcard/androBox
@@ -43,7 +43,7 @@ glibc_sha1sum="2401d6bef70834d71211daf1822f215bd4709d92"
 if [ -f $HOME/glibc_prefix.tar.xz ]
 then
      curr_glibc_sha1sum="$(sha1sum $HOME/glibc_prefix.tar.xz | awk '{print $1}')"
-     if [ curr_glibc_sha1sum == glibc_sha1sum ]
+     if [ $curr_glibc_sha1sum == $glibc_sha1sum ]
      then
           tar -xf $HOME/glibc_prefix.tar.xz -C $PREFIX
      else
@@ -64,10 +64,10 @@ wine_sha1sum="de6b03eb3eea7a6b8b0598b43973e9a5ec6bdc08"
 echo -e  "\nInstalling latest wine devel"
 
 [[ ! -f $HOME/wine-8.14-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-8.14-amd64.tar.xz -P $HOME
-if [ -f $HOME/wine-8.14-amd64.tar.xz ]]
+if [ -f $HOME/wine-8.14-amd64.tar.xz ]
 then
      curr_wine_sha1sum="$(sha1sum $HOME/wine-8.14-amd64.tar.xz | awk '{print $1}')"
-     if [ curr_wine_sha1sum == wine_sha1sum ]
+     if [ "$curr_wine_sha1sum" == "$wine_sha1sum" ]
      then
           tar -xf $HOME/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt
           mv $PREFIX/glibc/opt/wine-*-amd64 $PREFIX/glibc/opt/wine
@@ -88,7 +88,7 @@ do_prefix_creation(){
 env BOX64_LD_LIBRARY_PATH=$PREFIX/glibc/lib/x86_64-linux-gnu \
 BOX64_PATH=$PREFIX/glibc/opt/wine/bin \
 LD_PRELOAD= \
-wine64 wineboot >/dev/null 2>&1
+$PREFIX/glibc/bin/box64 wine64 wineboot >/dev/null 2>&1
 sleep 3
 pfxupdate
 
@@ -96,7 +96,6 @@ pfxupdate
 
 echo -e "\nInstalling required dependencies"
 
-termux-change-repo
 pkg upgrade -y
 pkg install x11-repo tur-repo -y
 pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity openbox file xorg-xrandr xterm iconv termux-exec nnn -y 
