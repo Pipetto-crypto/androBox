@@ -63,7 +63,7 @@ wine_sha1sum="726b6d3b163ba5ef8f7eb12184470fc485c246f8"
 
 echo -e  "\nInstalling latest wine devel"
 
-[[ ! -f $HOME/wine-9.0-amd64.tar.xz ]] && https://github.com/Pipetto-crypto/androBox/releases/download/wine-9.0-rc4/wine-9.0-amd64.tar.xz -P $HOME
+[[ ! -f $HOME/wine-9.0-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-9.0-rc4/wine-9.0-amd64.tar.xz -P $HOME
 if [ -f $HOME/wine-9.0-amd64.tar.xz ]
 then
      curr_wine_sha1sum="$(sha1sum $HOME/wine-9.0-amd64.tar.xz | awk '{print $1}')"
