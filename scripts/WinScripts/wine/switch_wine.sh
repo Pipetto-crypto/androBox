@@ -6,6 +6,24 @@ WINEPREFIX=${WINEPREFIX:-$HOME/.wine}
 
 cachedir=$HOME/.local/cache
 
+recreate_pfx(){
+
+rm -rf $HOME/.wine
+WINEESYNC=0 WINEDLLOVERRIDES="mscoree=" wine wineboot
+sleep 3                                                                   
+pfxupdate
+sleep 3
+
+}
+
+rebuild_pfx(){
+
+WINEESYNC=0 WINEDLLOVERRIDES="mscoree=" wine wineboot -u
+sleep 3                                                                   
+pfxupdate
+sleep 3
+
+}
 
 $PREFIX/glibc/opt/WinScripts/exit.sh
 
@@ -34,11 +52,14 @@ else
      mv $PREFIX/glibc/opt/wine-$1-amd64 $PREFIX/glibc/opt/wine
 fi
 
-rm -rf $HOME/.wine
-WINEESYNC=0 WINEDLLOVERRIDES="mscoree=" wine wineboot
-sleep 3
-pfxupdate
-sleep 3
+if [ "$3" == "--no-wipe-pfx" ]
+then
+    rebuild_pfx
+else
+    recreate_pfx
+fi
+
+
 if [ "$2" == "--cli" ]
 then
      exit
