@@ -152,7 +152,7 @@ echo -e "\nTrying to apply correct resolution, the desktop will restart multiple
 sleep 3
 
 export screenres="$(xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)"
-[[ -z $(grep -w "checkres=disabled" $HOME/.androBox) ]] && [[ -z $(ps -aux | grep "[w]atch" | awk '{print $2}') ]] && $PREFIX/glibc/opt/WinScripts/checkres.sh &
+[[ -z $(ps -aux | grep "[w]atch" | awk '{print $2}') ]] && $PREFIX/glibc/opt/WinScripts/checkres.sh &
 
 echo -e "\nLaunching..."
 
