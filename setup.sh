@@ -60,7 +60,6 @@ fi
 install_wine(){
 
 wine_sha1sum="a94354f6f15b492b8cb6e94291ff3b2147883100"
-
 echo -e  "\nInstalling latest wine devel"
 
 [[ ! -f $HOME/wine-9.0-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-9.0-rc4/wine-9.0-amd64.tar.xz -P $HOME
@@ -87,6 +86,7 @@ do_prefix_creation(){
 env BOX64_LD_LIBRARY_PATH=$PREFIX/glibc/lib/x86_64-linux-gnu \
 BOX64_PATH=$PREFIX/glibc/opt/wine/bin \
 LD_PRELOAD= \
+WINEESYNC=0 \
 $PREFIX/glibc/bin/box64 wine64 wineboot >/dev/null 2>&1
 sleep 3
 pfxupdate
