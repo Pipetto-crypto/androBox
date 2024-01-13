@@ -39,4 +39,9 @@ WINEESYNC=0 WINEDLLOVERRIDES="mscoree=" wine wineboot
 sleep 3
 pfxupdate
 sleep 3
-$PREFIX/glibc/opt/WinScripts/restart.sh
+if [ "$2" == "--cli" ]
+then
+     exit
+else
+     $PREFIX/glibc/opt/WinScripts/restart.sh
+fi
