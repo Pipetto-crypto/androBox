@@ -87,8 +87,10 @@ env BOX64_LD_LIBRARY_PATH=$PREFIX/glibc/lib/x86_64-linux-gnu \
 BOX64_PATH=$PREFIX/glibc/opt/wine/bin \
 LD_PRELOAD= \
 WINEESYNC=0 \
+BOX64_LOG=1 \
+WINEDEBUG="+err" \
 WINEDLLOVERRIDES="mscoree=" \
-$PREFIX/glibc/bin/box64 wine64 wineboot >/dev/null 2>&1
+$PREFIX/glibc/bin/box64 wine64 wineboot >$HOME/wine_log.txt 2>&1
 sleep 3
 pfxupdate
 
