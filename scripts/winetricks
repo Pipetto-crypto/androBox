@@ -4,8 +4,10 @@ unset LD_PRELOAD
 unset LD_LIBRARY_PATH
 
 export DISPLAY=:0
+export GLIBC_PREFIX=/data/data/com.termux/files/usr/glibc
 
 env BOX64_PATH=$PREFIX/glibc/opt/wine/bin \
+BOX64_LD_LIBRARY_PATH=$GLIBC_PREFIX/opt/wine/lib/wine/i386-unix:$GLIBC_PREFIX/opt/wine/lib/wine/x86_64-unix:$GLIBC_PREFIX/lib/x86_64-linux-gnu:$GLIBC_PREFIX/lib32/i386-linux-gnu \
 PATH=$PREFIX/glibc/opt/wine/bin:$PATH \
 BOX64_NOERROR=1 \
 BOX86_NOERROR=1 \
