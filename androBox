@@ -209,13 +209,12 @@ tar -xf /sdcard/glibc_prefix.tar.xz -C $PREFIX
 
 reinstallwine(){
 
-rm -rf /sdcard/wine-8.14-amd64.tar.xz && rm -rf $PREFIX/glibc/opt/wine
-if [ ! -f $HOME/.local/cache/wine-8.14-amd64.tar.xz ]
+mkdir -p $HOME/.local/cache
+rm -rf $PREFIX/glibc/opt/wine
+if [ ! -f $HOME/.local/cache/wine-9.0-amd64.tar.xz ]
 then
-     wget https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-8.14-amd64.tar.xz -P /sdcard
-     tar -xf /sdcard/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt && mv $PREFIX/glibc/opt/wine-8.14-amd64  $PREFIX/glibc/opt/wine
-else
-     tar -xf $HOME/.local/cache/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt && mv $PREFIX/glibc/opt/wine-8.14-amd64  $PREFIX/glibc/opt/wine
+     wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-9.0-rc4/wine-9.0-amd64.tar.xz -P $HOME/.local/cache
+     tar -xf $HOME/.local/cache/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt
 fi
 
 }
@@ -233,6 +232,15 @@ uninstall(){
 rm -rf $PREFIX/glibc
 rm -rf Configurator.py install_dxvk remove_dxwrapper install_dxvk_async remove_wined3d install_dxvk_gplasync startup.bat install_dxwrapper update-scripts apply_patch install_wined3d wine box64switch mesaswitch winedesktop box86switch pfxupdate winetricks install_d3d8to9 remove_d8vk winetricks_x86 install_d8vk remove_dxvk androBox
 exit
+
+}
+
+recreate_pfx(){
+
+killwine
+rm -rf $HOME/.wine
+WINEESYNC=0 WINEDLLOVERRIDES="mscoree=" wine wineboot
+pfxupdate
 
 }
 
@@ -279,13 +287,7 @@ do
        read -p "Select an option: " tbshmenu
        case $tbshmenu in
        1)
-          killwine
-          rm -rf $HOME/.wine
-          WINEESYNC=0 WINEDLLOVERRIDES="mscoree=" wine wineboot
-          pfxupdate
-          user="$(ls $HOME/.wine/drive_c/users | grep -e '^u')"
-          mkdir -p $HOME/.wine/drive_c/users/$user/AppData/Local/ProcessLasso/config
-          cp -r $PREFIX/glibc/opt/Programs/ProcessLasso/prolasso.ini $HOME/.wine/drive_c/users/u*/AppData/Local/ProcessLasso/config
+          recreate_pfx
           ;;
        2)
           killwine
