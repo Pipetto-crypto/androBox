@@ -59,7 +59,7 @@ fi
 
 install_wine(){
 
-wine_sha1sum="726b6d3b163ba5ef8f7eb12184470fc485c246f8"
+wine_sha1sum="a94354f6f15b492b8cb6e94291ff3b2147883100"
 
 echo -e  "\nInstalling latest wine devel"
 
