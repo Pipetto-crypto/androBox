@@ -28,6 +28,10 @@ do
    fi
 done
 
+wget https://github.com/Pipetto-crypto/androBox-extra/raw/master/programs.tar.xz -P $HOME
+tar -xf $HOME/programs.tar.xz -C $HOME
+mv $HOME/Programs $PREFIX/glibc/opt
+
 mv $HOME/androBox/androBox $PREFIX/bin && chmod +x $PREFIX/bin/androBox
 
 mkdir -p /sdcard/androBox
