@@ -25,4 +25,5 @@ if [ ! -L "$pfx/dosdevices/g:" ];then mkdir -p $HOME/.cache/winetricks && ln -sf
 if [ ! -L "$pfx/dosdevices/t:" ];then ln -sf ~/.local/cache "$pfx/dosdevices/t:";fi
 if [ ! -L "$pfx/dosdevices/a:" ];then ln -sf /sdcard/Android/data/com.termux/files "$pfx/dosdevices/a:";fi
 mkdir -p $HOME/.wine/drive_c/users/wine/AppData/Local/ProcessLasso/config
+cp $PREFIX/glibc/opt/Programs/wget.exe $HOME/.wine/drive_c/windows/system32
 cp -r $PREFIX/glibc/opt/Programs/ProcessLasso/prolasso.ini $HOME/.wine/drive_c/users/wine/AppData/Local/ProcessLasso/config
