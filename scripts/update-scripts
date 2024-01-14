@@ -6,7 +6,7 @@ unset LD_LIBRARY_PATH
 cd $HOME
 
 
-git clone https://github.com/Pipetto-crypto/androBox.git -b androBoxNew >/dev/null 2>&1
+git clone --depth=1 https://github.com/Pipetto-crypto/androBox.git -b androBoxNew >/dev/null 2>&1
 wget https://github.com/Pipetto-crypto/androBox-extra/raw/master/programs.tar.xz -P $HOME
 tar -xf $HOME/programs.tar.xz -C $HOME
 chmod -R a+x ~/androBox/scripts ~/androBox/scripts/WinScripts
