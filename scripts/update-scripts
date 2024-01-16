@@ -10,10 +10,15 @@ git clone --depth=1 https://github.com/Pipetto-crypto/androBox.git -b androBoxNe
 wget https://github.com/Pipetto-crypto/androBox-extra/raw/master/programs.tar.xz -P $HOME
 tar -xf $HOME/programs.tar.xz -C $HOME
 chmod -R a+x ~/androBox/scripts ~/androBox/scripts/WinScripts
-rm -rf $PREFIX/glibc/opt/WinScripts && cp -r ~/androBox/scripts/WinScripts $PREFIX/glibc/opt && rm -rf ~/androBox/scripts/WinScripts
-rm -rf $PREFIX/glibc/opt/Programs && mv $HOME/Programs $PREFIX/glibc/opt
-rm -rf $PREFIX/glibc/opt/WinStartMenu && cp -r ~/androBox/scripts/WinStartMenu $PREFIX/glibc/opt && rm -rf ~/androBox/scripts/WinStartMenu
+if [ -d $HOME/androBox ]
+then
+     rm -rf $PREFIX/glibc/opt/WinScripts && cp -r ~/androBox/scripts/WinScripts $PREFIX/glibc/opt && rm -rf ~/androBox/scripts/WinScripts
+     rm -rf $PREFIX/glibc/opt/WinStartMenu && cp -r ~/androBox/scripts/WinStartMenu $PREFIX/glibc/opt && rm -rf ~/androBox/scripts/WinStartMenu
+     echo "$(git ls-remote --heads https://github.com/Pipetto-crypto/androBox.git | grep refs/heads/androBoxNew | awk '{print $1}')" > /sdcard/androBox/.lastupdated
+fi
+
+[[ -d $HOME/Programs ]] && rm -rf $PREFIX/glibc/opt/Programs && mv $HOME/Programs $PREFIX/glibc/opt
 mv ~/androBox/scripts/* $PREFIX/bin
 rm -rf ~/androBox $HOME/programs.tar.xz
 pfxupdate
-echo "$(git ls-remote --heads https://github.com/Pipetto-crypto/androBox.git | grep refs/heads/androBoxNew | awk '{print $1}')" > /sdcard/androBox/.lastupdated 
+
