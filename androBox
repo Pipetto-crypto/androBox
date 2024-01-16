@@ -65,21 +65,23 @@ echo "$log"
 apply_last_patch(){
 
 echo -e "\nChecking for available patches..."
-lastavailablepatch="$(curl -sL https://github.com/Pipetto-crypto/androBox/raw/androBoxNew/patches/patch.tar.xz | sha1sum | awk '{print $1}')"
 lastinstalledpatch="$(cat /sdcard/androBox/.patch1sum)"
 isonline="$(ping -w1 -q -c1 google.com &>/dev/null && echo $?)"
 
-if [ "$lastavailablepatch" == "$lastinstalledpatch" ]
+if [ "$isonline" == "0" ]
 then
-     echo -e "\nLast patch is already installed."
-elif [ "$isonline" == "0" ]
-then
-     printf "\nYou are downloading a new patch which commit message is:%s\n" "$(getcommitmessage patches)"
-     echo -e "\nInstalling last patch..."
-     apply_patch >/dev/null 2>&1
-     echo -e "\nLast patch installed."
+     lastavailablepatch="$(curl -sL https://github.com/Pipetto-crypto/androBox/raw/androBoxNew/patches/patch.tar.xz | sha1sum | awk '{print $1}')"
+     if [ "$lastavailablepatch" == "$lastinstalledpatch" ]
+     then
+           echo -e "\nLast patch is already installed."
+     else
+           printf "\nYou are downloading a new patch which commit message is:%s\n" "$(getcommitmessage patches)"
+           echo -e "\nInstalling last patch..."
+           apply_patch >/dev/null 2>&1
+           echo -e "\nLast patch installed..."
+     fi
 else
-     echo -e "\nI am not capable of find any new patch online, enable your Internet connection next time."
+     echo -e "\nI am not capable of finding any new patch online, enable your internet connection next time."
 fi
 
 }
@@ -89,13 +91,14 @@ update_scripts(){
 isonline="$(ping -w1 -q -c1 google.com &>/dev/null && echo $?)"
 echo -e "\nChecking for available scripts update..."
 touch /sdcard/androBox/.lastupdated
-lastavailablecommit="$(git ls-remote --heads https://github.com/Pipetto-crypto/androBox.git | grep refs/heads/androBoxNew | awk '{print $1}')"
 lastinstalledcommit="$(cat /sdcard/androBox/.lastupdated | head -n1)"
 lastinstalledcommitmessage="$(cat /sdcard/androBox/.lastupdated | tail -n1)"
-lastavailablecommitmessage="$(getcommitmessage scripts)"
+
 
 if [ "$isonline" == "0" ]
 then
+     lastavailablecommit="$(git ls-remote --heads https://github.com/Pipetto-crypto/androBox.git | grep refs/heads/androBoxNew | awk '{print $1}')"
+     lastavailablecommitmessage="$(getcommitmessage scripts)"
      if [ "$lastavailablecommit" == "$lastinstalledcommit" ] || [[ "$lastavailablecommitmessage" =~ "$lastinstalledcommitmessage" ]]
      then
           echo -e "\nNo new updates found."
@@ -107,7 +110,7 @@ then
           echo "$lastavailablecommitmessage" >> /sdcard/androBox/.lastupdated
      fi
 else
-     echo -e "\nI am not capable of finding any new update, enable your Internet connection next time."
+     echo -e "\nI am not capable of finding any new update, enable your internet connection next time."
 fi
 
 
@@ -252,6 +255,7 @@ case "$1" in
      echo -e "Skipping updates checking"
      ;;
 *)
+     echo -e "\nStarting auto-updater, you can disable auto-updater by launching with the -nc flag"
      update_androbox
      update_scripts
      apply_last_patch
