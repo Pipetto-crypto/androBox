@@ -9,8 +9,7 @@ rm -rf $HOME/.wine
 WINEESYNC=0 WINEDLLOVERRIDES="mscoree=" wine wineboot
 sleep 3
 pfxupdate
-user="$(ls $HOME/.wine/drive_c/users | grep -e '^u')"
-mkdir -p $HOME/.wine/drive_c/users/$user/AppData/Local/ProcessLasso/config
-cp -r $PREFIX/glibc/opt/Programs/ProcessLasso/prolasso.ini $HOME/.wine/drive_c/users/u*/AppData/Local/ProcessLasso/config
+wine Z:\\\usr\\\glibc\\\opt\\\WinScripts\\\dxvk\\\install_dxvk_dev.bat >/dev/null 2>&1
+wine Z:\\\usr\\\glibc\\\opt\\\WinScripts\\\dxvk\\\install_d8vk.bat >/dev/null 2>&1
 sleep 3
 $PREFIX/glibc/opt/WinScripts/restart.sh
