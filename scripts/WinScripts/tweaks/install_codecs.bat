@@ -11,7 +11,7 @@ echo Installing...
 
 if NOT EXIST "T:\K-Lite_Codec_Pack_1780_Basic.exe"\ (
 
-wget.exe -q https://files3.codecguide.com/K-Lite_Codec_Pack_1780_Basic.exe -P T:\
+curl.exe -sL -O --output-dir https://files3.codecguide.com/K-Lite_Codec_Pack_1780_Basic.exe
 
 )
 

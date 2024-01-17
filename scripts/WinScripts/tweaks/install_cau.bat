@@ -1,4 +1,4 @@
 @echo off
 
-start /B Z:\usr\glibc\opt\Programs\CAU.exe
-start /unix /data/data/com.termux/files/usr/bin/winetricks mfc42
+start /W Z:\usr\glibc\opt\Programs\CAU.exe
+start /W Z:\usr\glibc\opt\WinScripts\tweaks\install_mediafoundation32.bat

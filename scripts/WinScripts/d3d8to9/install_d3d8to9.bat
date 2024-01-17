@@ -11,7 +11,7 @@ echo Installing...
 
 if NOT EXIST "T:\d3d8.dll"\ (
 
-wget.exe -q https://github.com/crosire/d3d8to9/releases/download/v1.11.1/d3d8.dll -P T:\
+curl.exe -sL -O --output-dir T:\ https://github.com/crosire/d3d8to9/releases/download/v1.11.1/d3d8.dll
 
 )
 

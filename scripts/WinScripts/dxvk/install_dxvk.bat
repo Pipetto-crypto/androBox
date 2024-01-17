@@ -13,7 +13,7 @@ set dxvkver=%1
 
 if NOT EXIST "T:\dxvk-%dxvkver%.tar.gz"\ (
 
-wget.exe -q https://github.com/doitsujin/dxvk/releases/download/v%dxvkver%/dxvk-%dxvkver%.tar.gz -P T:\
+curl.exe -sL -O --output-dir T:\ https://github.com/doitsujin/dxvk/releases/download/v%dxvkver%/dxvk-%dxvkver%.tar.gz
 
 )
 

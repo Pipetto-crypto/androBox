@@ -11,7 +11,7 @@ echo Installing...
 
 if NOT EXIST "T:\d8vk-v1.0.tar.gz"\ (
 
-wget.exe -q https://github.com/AlpyneDreams/d8vk/releases/download/d8vk-v1.0/d8vk-v1.0.tar.gz -P T:\
+curl.exe -sL -O --output-dir T:\ https://github.com/AlpyneDreams/d8vk/releases/download/d8vk-v1.0/d8vk-v1.0.tar.gz
 
 )
 

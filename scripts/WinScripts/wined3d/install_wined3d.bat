@@ -13,7 +13,7 @@ set wined3dver=%1
 
 if NOT EXIST "T:\WineD3DForWindows_%wined3dver%.zip"\ (
 
-wget.exe https://downloads.fdossena.com/Projects/WineD3D/Builds/WineD3DForWindows_%wined3dver%.zip -P T:\
+curl.exe -sL -O --output-dir T:\ https://downloads.fdossena.com/Projects/WineD3D/Builds/WineD3DForWindows_%wined3dver%.zip
 
 )
 

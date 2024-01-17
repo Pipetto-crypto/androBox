@@ -11,7 +11,7 @@ set PATH=%PATH%;F:\;C:\Program Files (x86)\GnuWin32\bin
 
 if NOT EXIST "T:\dxwrapper.zip"\ (
 
-wget.exe -q https://github.com/elishacloud/dxwrapper/releases/download/v1.0.6542.21/dxwrapper.zip -P T:\
+curl.exe -sL -O --output-dir T:\ https://github.com/elishacloud/dxwrapper/releases/download/v1.0.6542.21/dxwrapper.zip
 
 )
 

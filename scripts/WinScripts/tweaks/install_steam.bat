@@ -14,13 +14,13 @@ echo Installing...
 
 if NOT EXIST "T:\arial32.exe"\ (
 
-wget.exe -q https://github.com/pushcx/corefonts/raw/master/arial32.exe -P T:\
+curl.exe -sL -O --output-dir T:\ https://github.com/pushcx/corefonts/raw/master/arial32.exe
 
 )
 
 if NOT EXIST "T:\arial32b.exe"\ (
 
-wget.exe -q https://github.com/pushcx/corefonts/raw/master/arial32b.exe -P T:\
+curl.exe -sL -O --output-dir T:\ https://github.com/pushcx/corefonts/raw/master/arial32b.exe
 
 )
 
@@ -41,7 +41,7 @@ rmdir /Q /S T:\arial
 
 if NOT EXIST "T:\SteamSetup.exe"\ (
 
-wget.exe -q https://cdn.cloudflare.steamstatic.com/client/installer/SteamSetup.exe -P T:\
+curl.exe -sL -O --output-dir T:\ https://cdn.cloudflare.steamstatic.com/client/installer/SteamSetup.exe
 
 )
 

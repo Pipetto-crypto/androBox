@@ -13,7 +13,7 @@ set dxvkver=%1
 
 if NOT EXIST "T:\dxvk-async-%dxvkver%.tar.gz"\ (
 
-wget.exe -q https://github.com/Sporif/dxvk-async/releases/download/%dxvkver%/dxvk-async-%dxvkver%.tar.gz -P T:\
+curl.exe -sL -O --output-dir T:\ https://github.com/Sporif/dxvk-async/releases/download/%dxvkver%/dxvk-async-%dxvkver%.tar.gz
 
 )
 

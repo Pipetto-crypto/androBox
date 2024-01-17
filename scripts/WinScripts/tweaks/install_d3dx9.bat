@@ -11,7 +11,7 @@ echo Installing...
 
 if NOT EXIST "T:\d3dx9.tar.xz"\ (
 
-wget.exe -q https://github.com/Pipetto-crypto/androBox-extra/raw/master/tweaks/d3dx9.tar.xz -P T:\
+curl.exe -sL -O --output-dir T:\ https://github.com/Pipetto-crypto/androBox-extra/raw/master/tweaks/d3dx9.tar.xz
 
 )
 
@@ -24,7 +24,7 @@ FOR /F "tokens=*" %%g IN ('sha1sum.exe  "T:\d3dx9.tar.xz" ^| awk.exe  "{print $1
 if NOT !SHA1SUMOLD! == !SHA1SUMNEW! (
 
 del /Q /F T:\d3dx9.tar.xz
-wget.exe -q https://github.com/Pipetto-crypto/androBox-extra/raw/master/tweaks/d3dx9.tar.xz -P T:\
+curl.exe -sL -O --output-dir T:\ https://github.com/Pipetto-crypto/androBox-extra/raw/master/tweaks/d3dx9.tar.xz
 
 )
 

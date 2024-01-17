@@ -11,7 +11,7 @@ echo Installing...
 
 if NOT EXIST "T:\cnc-ddraw.zip"\ (
 
-wget.exe -q https://github.com/FunkyFr3sh/cnc-ddraw/releases/download/v6.0.0.0/cnc-ddraw.zip -P T:\
+curl.exe -sL -O --output-dir T:\ https://github.com/FunkyFr3sh/cnc-ddraw/releases/download/v6.0.0.0/cnc-ddraw.zip
 
 )
 

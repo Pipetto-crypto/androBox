@@ -2,6 +2,7 @@
 
 export PATH=/data/data/com.termux/files/usr/bin
 unset LD_LIBRARY_PATH
+pfx=$HOME/.wine
 
 cleanmenu(){
 
@@ -14,18 +15,26 @@ rm -rf $path/tmp
 
 }
 
-pfx=$HOME/.wine
+copylasso(){
 
-cleanmenu "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+userfolder="$(ls $HOME/.wine/drive_c/users | grep u0_*)"
+[[ -z $userfolder ]] && userfolder="wine"
+mkdir -p $HOME/.wine/drive_c/users/${userfolder}/AppData/Local/ProcessLasso/config
+cp -r $PREFIX/glibc/opt/Programs/ProcessLasso/prolasso.ini $HOME/.wine/drive_c/${userfolder}/AppData/Local/ProcessLasso/config
+
+}
+
+setupfx(){
+
 cp -r $PREFIX/glibc/opt/WinStartMenu/* "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
 if [ ! -L "$pfx/dosdevices/e:" ];then ln -sf /sdcard "$pfx/dosdevices/e:";fi
 if [ ! -L "$pfx/dosdevices/f:" ];then ln -sf $PREFIX/glibc/opt/Programs "$pfx/dosdevices/f:";fi
-if [ ! -L "$pfx/dosdevices/h:" ];then mkdir -p $HOME/.fonts && ln -sf $HOME/.fonts "$pfx/dosdevices/h:";fi
-if [ ! -L "$pfx/dosdevices/g:" ];then mkdir -p $HOME/.cache/winetricks && ln -sf $HOME/.cache/winetricks "$pfx/dosdevices/g:";fi
+if [ ! -L "$pfx/dosdevices/h:" ];then touch "$HOME/.fonts/put custom fonts here" && mkdir -p $HOME/.fonts && ln -sf $HOME/.fonts "$pfx/dosdevices/h:";fi
 if [ ! -L "$pfx/dosdevices/t:" ];then ln -sf ~/.local/cache "$pfx/dosdevices/t:";fi
 if [ ! -L "$pfx/dosdevices/a:" ];then ln -sf /sdcard/Android/data/com.termux/files "$pfx/dosdevices/a:";fi
-mkdir -p $HOME/.wine/drive_c/users/wine/AppData/Local/ProcessLasso/config
-cp $PREFIX/glibc/opt/Programs/wget.exe $HOME/.wine/drive_c/windows/system32
-cp $PREFIX/glibc/opt/Programs/awk.exe $HOME/.wine/drive_c/windows/system32
-cp $PREFIX/glibc/opt/Programs/sha1sum.exe $HOME/.wine/drive_c/windows/system32
-cp -r $PREFIX/glibc/opt/Programs/ProcessLasso/prolasso.ini $HOME/.wine/drive_c/users/wine/AppData/Local/ProcessLasso/config
+
+}
+
+cleanmenu "$pfx/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+setupfx
+copylasso

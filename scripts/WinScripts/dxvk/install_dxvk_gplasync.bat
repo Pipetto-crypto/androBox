@@ -13,7 +13,7 @@ set dxvkver=%1
 
 if NOT EXIST "T:\dxvk-gplasync-v%dxvkver%.tar.gz"\ (
 
-wget.exe -q https://gitlab.com/Ph42oN/dxvk-gplasync/-/raw/main/releases/dxvk-gplasync-v%dxvkver%.tar.gz -P T:\
+curl.exe -sL -O --output-dir T:\ https://gitlab.com/Ph42oN/dxvk-gplasync/-/raw/main/releases/dxvk-gplasync-v%dxvkver%.tar.gz
 
 )
 

@@ -11,7 +11,7 @@ echo Installing...
 
 if NOT EXIST "T:\vcredist.tar.xz"\ (
 
-wget.exe -q https://github.com/Pipetto-crypto/androBox-extra/raw/master/tweaks/vcredist.tar.xz -P T:\
+curl.exe -sL -O --output-dir T:\ https://github.com/Pipetto-crypto/androBox-extra/raw/master/tweaks/vcredist.tar.xz
 
 )
 
@@ -24,7 +24,7 @@ FOR /F "tokens=*" %%g IN ('sha1sum.exe  "T:\vcredist.tar.xz" ^| awk.exe  "{print
 if NOT !SHA1SUMOLD! == !SHA1SUMNEW! (
 
 del /Q /F T:\vcredist.tar.xz
-wget.exe -q https://github.com/Pipetto-crypto/androBox-extra/raw/master/tweaks/vcredist.tar.xz -P T:\
+curl.exe -sL -O --output-dir T:\ https://github.com/Pipetto-crypto/androBox-extra/raw/master/tweaks/vcredist.tar.xz
 
 )
 

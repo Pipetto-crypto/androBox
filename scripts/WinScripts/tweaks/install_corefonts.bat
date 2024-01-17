@@ -13,7 +13,7 @@ echo Installing...
 FOR %%f in (arial32, arialb32, andale32, comic32, courie32, georgi32, impact32, times32, trebuc32, verdan32, webdin32) do (
 
 if NOT EXIST "T:\%%f.exe"\ (
-wget.exe -q https://github.com/pushcx/corefonts/raw/master/%%f.exe -P T:\
+curl.exe -sL -O --output-dir T:\ https://github.com/pushcx/corefonts/raw/master/%%f.exe
 )
 
 cd /D T:\

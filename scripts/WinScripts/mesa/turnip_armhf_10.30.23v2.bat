@@ -1,4 +1,4 @@
 @echo off
 
-start /unix /data/data/com.termux/files/usr/bin/mesaswitch armhf turnip 10.30.23 v2
+Z:\usr\glibc\opt\WinScripts\mesa\install_mesa.bat armhf turnip 10.30.23 v2
 
