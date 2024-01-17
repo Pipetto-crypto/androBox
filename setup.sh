@@ -100,12 +100,6 @@ pfxupdate
 
 }
 
-echo -e "\nInstalling required dependencies"
-
-pkg upgrade -y
-pkg install x11-repo tur-repo -y
-pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity openbox file xorg-xrandr xterm iconv termux-exec nnn -y 
-
 if [ ! -d ~/storage ]
 then
      echo -e "\nGranting internal storage permissions"
@@ -132,6 +126,12 @@ then
      [[ ! -f /sdcard/tmp.txt ]] && echo -e "Seems like storage permissions are not set properly. I can't do anything else, set them manually and retry" && exit
      rm -rf /sdcard/tmp.txt
 fi
+
+echo -e "\nInstalling required dependencies"
+
+pkg upgrade -y
+pkg install x11-repo tur-repo -y
+pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity openbox file xorg-xrandr xterm iconv termux-exec nnn -y 
 
 install_glibc_pfx
 
