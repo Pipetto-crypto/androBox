@@ -12,6 +12,8 @@ rm -rf $HOME/.wine
 WINEESYNC=0 WINEDLLOVERRIDES="mscoree=" wine wineboot
 sleep 3                                                                   
 pfxupdate
+wine Z:\\\usr\\\glibc\\\opt\\\WinScripts\\\dxvk\\\install_dxvk_dev.bat >/dev/null 2>&1
+wine Z:\\\usr\\\glibc\\\opt\\\WinScripts\\\dxvk\\\install_d8vk.bat >/dev/null 2>&1
 sleep 3
 
 }
@@ -21,6 +23,8 @@ rebuild_pfx(){
 WINEESYNC=0 WINEDLLOVERRIDES="mscoree=" wine wineboot -u
 sleep 3                                                                   
 pfxupdate
+wine Z:\\\usr\\\glibc\\\opt\\\WinScripts\\\dxvk\\\install_dxvk_dev.bat >/dev/null 2>&1
+wine Z:\\\usr\\\glibc\\\opt\\\WinScripts\\\dxvk\\\install_d8vk.bat >/dev/null 2>&1
 sleep 3
 
 }
@@ -29,16 +33,16 @@ $PREFIX/glibc/opt/WinScripts/exit.sh
 
 case $1 in
 8.0)
-    [[ ! -f $cachedir/wine-$1-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-$1/wine-$1-amd64.tar.xz -P $cachedir
+    [[ ! -f $cachedir/wine-$1-amd64.tar.xz ]] && wget -q https://github.com/Pipetto-crypto/androBox/releases/download/wine-$1/wine-$1-amd64.tar.xz -P $cachedir
     ;;
 8.14)
-    [[ ! -f $cachedir/wine-$1-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-$1-amd64.tar.xz -P $cachedir
+    [[ ! -f $cachedir/wine-$1-amd64.tar.xz ]] && wget -q https://github.com/Pipetto-crypto/androBox/releases/download/wine/wine-$1-amd64.tar.xz -P $cachedir
     ;;
 ge8-13)
-    [[ ! -f $cachedir/wine-lutris-GE-Proton8-13-x86_64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-ge-8.13/wine-lutris-GE-Proton8-13-x86_64.tar.xz -P $cachedir
+    [[ ! -f $cachedir/wine-lutris-GE-Proton8-13-x86_64.tar.xz ]] && wget -q https://github.com/Pipetto-crypto/androBox/releases/download/wine-ge-8.13/wine-lutris-GE-Proton8-13-x86_64.tar.xz -P $cachedir
     ;;
 9.0)
-    [[ ! -f $cachedir/wine-$1-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-$1-rc4/wine-$1-amd64.tar.xz -P $cachedir
+    [[ ! -f $cachedir/wine-$1-amd64.tar.xz ]] && wget -q https://github.com/Pipetto-crypto/androBox/releases/download/wine-$1-rc4/wine-$1-amd64.tar.xz -P $cachedir
     ;;
 esac 
 

@@ -11,7 +11,7 @@ mkdir -p $cachedir/mesa/aarch64/zink
 mkdir -p $cachedir/mesa/armhf/turnip
 mkdir -p $cachedir/mesa/armhf/zink
 
-[[ ! -f ${cachedir}/mesa/${arch}/${type}/${type}_${date}${revision}.tar.xz ]] && wget https://github.com/Pipetto-crypto/mesa-builds/raw/master/${arch}/${type}/${type}_${date}${revision}.tar.xz -P ${cachedir}/mesa/${arch}/${type}
+[[ ! -f ${cachedir}/mesa/${arch}/${type}/${type}_${date}${revision}.tar.xz ]] && wget -q https://github.com/Pipetto-crypto/mesa-builds/raw/master/${arch}/${type}/${type}_${date}${revision}.tar.xz -P ${cachedir}/mesa/${arch}/${type}
 
 if [ $arch == "armhf" ]
 then

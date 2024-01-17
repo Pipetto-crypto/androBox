@@ -15,7 +15,7 @@ exit
 
 install_repo_files(){
 
-git clone --depth=1 https://github.com/Pipetto-crypto/androBox.git -b androBoxNew
+git clone --depth=1 https://github.com/Pipetto-crypto/androBox.git -b androBoxNew >/dev/null 2>&1
 
 for item in $HOME/androBox/scripts/*
 do
@@ -28,9 +28,9 @@ do
    fi
 done
 
-wget https://github.com/Pipetto-crypto/androBox-extra/raw/master/programs.tar.xz -P $HOME
-tar -xf $HOME/programs.tar.xz -C $HOME
-mv $HOME/Programs $PREFIX/glibc/opt
+wget -q https://github.com/Pipetto-crypto/androBox-extra/raw/master/programs.tar.xz -P $HOME
+rm -rf $HOME/Programs && tar -xf $HOME/programs.tar.xz -C $HOME
+rm -rf $PREFIX/glibc/opt/Programs && mv $HOME/Programs $PREFIX/glibc/opt
 
 mv $HOME/androBox/androBox $PREFIX/bin && chmod +x $PREFIX/bin/androBox
 
@@ -42,7 +42,7 @@ mv $HOME/androBox/configs/* /sdcard/androBox
 install_glibc_pfx(){
 
 glibc_sha1sum="2401d6bef70834d71211daf1822f215bd4709d92"
-[[ ! -f $HOME/glibc_prefix.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/glibc_prefix/glibc_prefix.tar.xz -P $HOME
+[[ ! -f $HOME/glibc_prefix.tar.xz ]] && wget -q https://github.com/Pipetto-crypto/androBox/releases/download/glibc_prefix/glibc_prefix.tar.xz -P $HOME
 
 if [ -f $HOME/glibc_prefix.tar.xz ]
 then
@@ -66,7 +66,7 @@ install_wine(){
 wine_sha1sum="a94354f6f15b492b8cb6e94291ff3b2147883100"
 echo -e  "\nInstalling latest wine devel"
 
-[[ ! -f $HOME/wine-9.0-amd64.tar.xz ]] && wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-9.0-rc4/wine-9.0-amd64.tar.xz -P $HOME
+[[ ! -f $HOME/wine-9.0-amd64.tar.xz ]] && wget -q https://github.com/Pipetto-crypto/androBox/releases/download/wine-9.0-rc4/wine-9.0-amd64.tar.xz -P $HOME
 if [ -f $HOME/wine-9.0-amd64.tar.xz ]
 then
      curr_wine_sha1sum="$(sha1sum $HOME/wine-9.0-amd64.tar.xz | awk '{print $1}')"
@@ -131,9 +131,9 @@ fi
 
 echo -e "\nInstalling required dependencies"
 
-pkg upgrade -y
-pkg install x11-repo tur-repo -y
-pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity openbox file xorg-xrandr xterm iconv termux-exec nnn -y 
+pkg upgrade -y >/dev/null 2>&1 
+pkg install x11-repo tur-repo -y >/dev/null 2>&1
+pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity openbox file xorg-xrandr xterm iconv termux-exec nnn -y  >/dev/null 2>&1
 
 install_glibc_pfx
 

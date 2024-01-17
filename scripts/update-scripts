@@ -7,7 +7,7 @@ cd $HOME
 
 
 git clone --depth=1 https://github.com/Pipetto-crypto/androBox.git -b androBoxNew >/dev/null 2>&1
-wget https://github.com/Pipetto-crypto/androBox-extra/raw/master/programs.tar.xz -P $HOME
+wget -q https://github.com/Pipetto-crypto/androBox-extra/raw/master/programs.tar.xz -P $HOME
 tar -xf $HOME/programs.tar.xz -C $HOME
 chmod -R a+x ~/androBox/scripts ~/androBox/scripts/WinScripts
 if [ -d $HOME/androBox ]
@@ -21,4 +21,5 @@ fi
 mv ~/androBox/scripts/* $PREFIX/bin
 rm -rf ~/androBox $HOME/programs.tar.xz
 pfxupdate
+
 

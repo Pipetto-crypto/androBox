@@ -15,13 +15,13 @@ localbox86sha1sum="$(sha1sum $cachedir/box86_$1.tar.xz)"
 if [ "$remotebox64sha1sum" != "$localbox64sha1sum" ]
 then
      rm -rf $cachedir/box64_$1.tar.xz
-     wget https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box64/box64_$1.tar.xz -P $cachedir
+     wget -q https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box64/box64_$1.tar.xz -P $cachedir
 fi
 
 if [ "$remotebox86sha1sum" != "$localbox86sha1sum" ]
 then
      rm -rf $cachedir/box86_$1.tar.xz
-     wget https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box86/box86_$1.tar.xz -P $cachedir
+     wget -q https://github.com/Pipetto-crypto/box86_box64_debs/raw/master/box86/box86_$1.tar.xz -P $cachedir
 fi
 
 tar -xf $cachedir/box64_$1.tar.xz -C $PREFIX/glibc/bin
