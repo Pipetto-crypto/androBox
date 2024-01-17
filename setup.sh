@@ -97,6 +97,8 @@ WINEDLLOVERRIDES="mscoree=" \
 $PREFIX/glibc/bin/box64 wine64 wineboot >$HOME/wine_log.txt 2>&1
 sleep 3
 pfxupdate
+wine Z:\\\usr\\\glibc\\\opt\\\WinScripts\\\dxvk\\\install_dxvk_dev.bat >/dev/null 2>&1
+wine Z:\\\usr\\\glibc\\\opt\\\WinScripts\\\dxvk\\\install_d8vk.bat >/dev/null 2>&1
 
 }
 
