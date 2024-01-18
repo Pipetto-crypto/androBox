@@ -20,7 +20,7 @@ copylasso(){
 userfolder="$(ls $HOME/.wine/drive_c/users | grep u0_*)"
 [[ -z $userfolder ]] && userfolder="wine"
 mkdir -p $HOME/.wine/drive_c/users/${userfolder}/AppData/Local/ProcessLasso/config
-cp -r $PREFIX/glibc/opt/Programs/ProcessLasso/prolasso.ini $HOME/.wine/drive_c/${userfolder}/AppData/Local/ProcessLasso/config
+cp -r $PREFIX/glibc/opt/Programs/ProcessLasso/prolasso.ini $HOME/.wine/drive_c/users/${userfolder}/AppData/Local/ProcessLasso/config
 
 }
 
