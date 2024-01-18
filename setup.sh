@@ -1,10 +1,14 @@
 #!/bin/bash
 
+clean_old_files(){
+
 if [ "$(ls $PREFIX | grep glibc)" == "glibc" ] || [ -d /sdcard/androBox ]
 then
      echo -e "I have detected an already existing install. I will proceed to wipe it now".
      rm -rf $PREFIX/glibc /sdcard/androBox
 fi
+
+}
 
 cleanup(){
 
@@ -102,6 +106,8 @@ wine Z:\\\usr\\\glibc\\\opt\\\WinScripts\\\dxvk\\\install_d8vk.bat >/dev/null 2>
 
 }
 
+check_storage_permission() {
+
 if [ ! -d ~/storage ]
 then
      echo -e "\nGranting internal storage permissions"
@@ -129,11 +135,17 @@ then
      rm -rf /sdcard/tmp.txt
 fi
 
+}
+
+check_storage_permission
+
+clean_old_files
+
 echo -e "\nInstalling required dependencies"
 
-pkg upgrade -y >/dev/null 2>&1 
-pkg install x11-repo tur-repo -y >/dev/null 2>&1
-pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity openbox file xorg-xrandr xterm iconv termux-exec nnn -y  >/dev/null 2>&1
+pkg upgrade -y
+pkg install x11-repo tur-repo -y 
+pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity openbox file xorg-xrandr xterm iconv termux-exec nnn -y
 
 install_glibc_pfx
 
