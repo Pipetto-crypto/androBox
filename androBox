@@ -198,14 +198,15 @@ source $TMPDIR/.myvars
 
 killwine(){
 
-$PREFIX/glibc/opt/WinScripts/exit.sh
+kill -9 $(pgrep wine) >/dev/null 2>&1
+kill -9 $(pgrep wine64) >/dev/null 2>&1
 
 }
 
 reinstallglibcprefix(){
 
 rm -rf /sdcard/glibc_prefix.tar.xz && rm -rf $PREFIX/glibc
-wget https://github.com/Pipetto-crypto/androBox/releases/download/glibc_prefix/glibc_prefix.tar.xz -P /sdcard
+wget -q https://github.com/Pipetto-crypto/androBox/releases/download/glibc_prefix/glibc_prefix.tar.xz -P /sdcard
 tar -xf /sdcard/glibc_prefix.tar.xz -C $PREFIX
 
 }
@@ -216,7 +217,7 @@ mkdir -p $HOME/.local/cache
 rm -rf $PREFIX/glibc/opt/wine
 if [ ! -f $HOME/.local/cache/wine-9.0-amd64.tar.xz ]
 then
-     wget https://github.com/Pipetto-crypto/androBox/releases/download/wine-9.0-rc4/wine-9.0-amd64.tar.xz -P $HOME/.local/cache
+     wget -q https://github.com/Pipetto-crypto/androBox/releases/download/wine-9.0-rc4/wine-9.0-amd64.tar.xz -P $HOME/.local/cache
      tar -xf $HOME/.local/cache/wine-8.14-amd64.tar.xz -C $PREFIX/glibc/opt
 fi
 
@@ -242,8 +243,10 @@ recreate_pfx(){
 
 killwine
 rm -rf $HOME/.wine
-WINEESYNC=0 WINEDLLOVERRIDES="mscoree=" wine wineboot
+WINEESYNC=0 WINEDLLOVERRIDES="mscoree=" wine wineboot >/dev/null 2>&1
 pfxupdate
+wine Z:\\\usr\\\glibc\\\opt\\\WinScripts\\\dxvk\\\install_dxvk_dev.bat >/dev/null 2>&1
+wine Z:\\\usr\\\glibc\\\opt\\\WinScripts\\\dxvk\\\install_d8vk.bat >/dev/null 2>&1
 
 }
 
