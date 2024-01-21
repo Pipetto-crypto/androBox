@@ -1,10 +1,10 @@
 # androBox
 
-androBox is a x86 emulator using Termux, Box86 and Box64. Unlikely similiar projects, this one runs completely natively on Android without chroot/proot resulting in greater speed, all thanks to Glibc-for-Termux project.
+androBox is a series of wrapper scripts for box86/box64 by ptitseb, meant to work in Termux. Unlike similiar projects, this one runs completely natively on Android without chroot/proot resulting in greater speed, all thanks to Glibc-for-Termux project.
 
 # Requirments
 
-An Android phone preferably running Android 10 or newer, Termux from F-Droid  and Termux-X11 apk.
+An Android phone preferably running Android 11 or newer, Termux from F-Droid and Termux-X11 apk.
 
 # Install
 
