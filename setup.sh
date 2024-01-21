@@ -14,6 +14,7 @@ fi
 
 cleanup(){
 
+echo -e "\nSetup complete, to enter type androBox in terminal. Cleaning stale files up..."
 rm -rf $HOME/glibc_prefix.tar.xz $HOME/wine-9.0-amd64.tar.xz ~/setup.sh
 exit
 
