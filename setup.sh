@@ -145,6 +145,7 @@ wine_command /data/data/com.termux/files/usr/glibc/opt/WinScripts/d8vk/install_d
 
 check_storage_permission() {
 
+chmod 400 $PREFIX/libexec/termux-am/am.apk
 if [ ! -d ~/storage ]
 then
      echo -e "\nGranting internal storage permissions"
