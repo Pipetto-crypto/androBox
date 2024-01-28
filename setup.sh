@@ -180,9 +180,9 @@ install_packages(){
 
 echo -e "\nInstalling required dependencies"
 
-pkg upgrade -y
-pkg install x11-repo tur-repo -y
-pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity openbox file xorg-xrandr xterm iconv termux-exec nnn -y
+pkg upgrade -y -o Dpkg::Options::="--force-confdef"
+pkg install x11-repo tur-repo -y -o Dpkg::Options::="--force-confdef"
+pkg install pulseaudio git virglrenderer-android mesa wget fontconfig freetype libpng termux-x11-nightly cabextract zenity openbox file xorg-xrandr xterm iconv termux-exec nnn -y -o Dpkg::Options::="--force-confdef"
 
 }
 
