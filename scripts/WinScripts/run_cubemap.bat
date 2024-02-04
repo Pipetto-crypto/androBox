@@ -1,4 +1,4 @@
 @echo off
 
 pushd F:\EnvMapping
-CubeMap.exe
+CubeMap.exe >NUL 2>&1 
